@@ -23,7 +23,7 @@ import QuizCard from "@/components/cards/QuizCard";
 import { IconPhoto, IconDownload, IconArrowRight } from "@tabler/icons-react";
 import Category from "@/types/category/Category"; //Category from "@/types/category/Category";
 import QuizBank from "@/types/quizBank/QuizBank";
-import Link from "../../../node_modules/next/link";
+import Link from "next/link";
 
 interface CategoryQuizBanks extends Category {
   quizBanks: QuizBank[];
