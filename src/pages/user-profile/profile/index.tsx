@@ -44,8 +44,12 @@ import {
   IconMenu2,
   IconUniverse,
   IconSchool,
+  IconCheckbox,
+  IconPlayerRecordFilled,
+  IconPlayerRecord,
 } from "@tabler/icons-react";
-import React, { useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
+import { BreadCrumbsItem } from "@/components/layouts/UserLayout";
 const user = {
   name: "Jane Spoonfighter",
   email: "janspoon@fighter.dev",
@@ -57,10 +61,32 @@ const user = {
 
 const tabs = ["Your Banks", "Favorite Banks", "History Quizzes"];
 const PRIMARY_COL_HEIGHT = rem(300);
+
 const navbarItems = [
   {
     title: "Test",
     link: "/",
+    author: "Quynh",
+    // icon: <IconHome size="1rem" stroke={1.5} />,
+  },
+];
+const groceries = [
+  {
+    question_type: "Multichoice",
+    question: "Quy khung",
+    answers: ["Answer 1", "Answer 2", "Answer 3", "Answer 4"],
+    icon_typeQuestion: <IconCheckbox size="1rem" stroke={1.5} />,
+    icon_choice: <IconPlayerRecordFilled size="1rem" stroke={1.5} />,
+    icon_nochoice: <IconPlayerRecord size="1rem" stroke={1.5} />,
+    // icon: <IconHome size="1rem" stroke={1.5} />,
+  },
+  {
+    question_type: "Multichoice",
+    question: "Quy khung 2 2 2 2 2 2 2 2 2 2 2 ",
+    answers: ["Answer 1", "Answer 2", "Answer 3", "Answer 4"],
+    icon_typeQuestion: <IconCheckbox size="1rem" stroke={1.5} />,
+    icon_choice: <IconPlayerRecordFilled size="1rem" stroke={1.5} />,
+    icon_nochoice: <IconPlayerRecord size="1rem" stroke={1.5} />,
     // icon: <IconHome size="1rem" stroke={1.5} />,
   },
 ];
@@ -76,9 +102,61 @@ const index = () => {
       {tab}
     </Tabs.Tab>
   ));
+
   const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 -
       var(--mantine-spacing-md) / 2)`;
+  const navbarItem = navbarItems.map((item, index) => (
+    <div
+      key={index}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <div style={{ fontWeight: "bold" }}> {item.title}</div>
+      <div style={{ fontSize: "10px" }}>theo {item.author}</div>
+    </div>
+  ));
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const [query, setQuery] = useState("");
+  const [hovered, setHovered] = useState(-1);
+  const filtered = groceries.filter((item) =>
+    item.question.toLowerCase().includes(query.toLowerCase())
+  );
 
+  const items = filtered.map((item, index) => (
+    <div
+      // data-list-item
+      // key={item}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        background: hovered === index ? "#f5f5f5" : "white",
+
+        width: "100%",
+        height: "100%",
+        border: "1px solid #f5f5f5",
+        paddingBottom: "10px",
+        paddingTop: "10px",
+      }}
+    >
+      <div>
+        {item.icon_typeQuestion} {item.question}
+      </div>
+      <div>
+        {item.icon_choice} {item.answers[0]}
+      </div>
+      <div>
+        {item.icon_choice} {item.answers[1]}
+      </div>
+      <div>
+        {item.icon_choice} {item.answers[2]}
+      </div>
+      <div>
+        {item.icon_nochoice} {item.answers[3]}
+      </div>
+    </div>
+  ));
   return (
     <UserLayout title="Profile">
       <Container my="md">
@@ -219,7 +297,7 @@ const index = () => {
                   </Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="Your_banks" mt={10}>
-                  <Grid gutter="md" h={SECONDARY_COL_HEIGHT}>
+                  <Grid gutter="md">
                     <Grid.Col span={4}>
                       <SimpleGrid cols={1}>
                         <div
@@ -282,13 +360,71 @@ const index = () => {
                       style={{ border: "2px solid #f5f5f5", borderRadius: 5 }}
                       mt={10}
                       bg={"#white"}
+                      h={PRIMARY_COL_HEIGHT}
                     >
                       <Grid.Col
                         style={{ border: "2px solid #f5f5f5", borderRadius: 5 }}
                         // mt={10}
                         bg={"#f5f5f5"}
                         h={"100%"}
-                      ></Grid.Col>
+                      >
+                        <>
+                          <div
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            {navbarItem}
+                          </div>
+                          <div
+                            // value={query}
+                            onChange={(
+                              event: ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setQuery(event.target.value);
+                              setHovered(-1);
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key === "ArrowDown") {
+                                event.preventDefault();
+                                setHovered((current) => {
+                                  const nextIndex =
+                                    current + 1 >= filtered.length
+                                      ? current
+                                      : current + 1;
+                                  viewportRef.current
+                                    ?.querySelectorAll("[data-list-item]")
+                                    ?.[nextIndex]?.scrollIntoView({
+                                      block: "nearest",
+                                    });
+                                  return nextIndex;
+                                });
+                              }
+
+                              if (event.key === "ArrowUp") {
+                                event.preventDefault();
+                                setHovered((current) => {
+                                  const nextIndex =
+                                    current - 1 < 0 ? current : current - 1;
+                                  viewportRef.current
+                                    ?.querySelectorAll("[data-list-item]")
+                                    ?.[nextIndex]?.scrollIntoView({
+                                      block: "nearest",
+                                    });
+                                  return nextIndex;
+                                });
+                              }
+                            }}
+                            // placeholder="Search groceries"
+                          ></div>
+                          <ScrollArea
+                            h={150}
+                            type="always"
+                            mt="md"
+                            viewportRef={viewportRef}
+                          >
+                            {items}
+                          </ScrollArea>
+                        </>
+                      </Grid.Col>
                     </Grid.Col>
                   </Grid>
                 </Tabs.Panel>
