@@ -3,6 +3,7 @@ import {
   Avatar,
   Burger,
   Button,
+  Card,
   Container,
   Fieldset,
   Flex,
@@ -17,6 +18,9 @@ import {
   UnstyledButton,
   rem,
   useMantineTheme,
+  Image,
+  TextInput,
+  ScrollArea,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import cx from "clsx";
@@ -36,8 +40,12 @@ import {
   IconHistory,
   IconShare,
   IconEdit,
+  IconBurger,
+  IconMenu2,
+  IconUniverse,
+  IconSchool,
 } from "@tabler/icons-react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 const user = {
   name: "Jane Spoonfighter",
   email: "janspoon@fighter.dev",
@@ -49,6 +57,13 @@ const user = {
 
 const tabs = ["Your Banks", "Favorite Banks", "History Quizzes"];
 const PRIMARY_COL_HEIGHT = rem(300);
+const navbarItems = [
+  {
+    title: "Test",
+    link: "/",
+    // icon: <IconHome size="1rem" stroke={1.5} />,
+  },
+];
 
 const index = () => {
   const iconStyle = { width: rem(16), height: rem(16) };
@@ -56,18 +71,18 @@ const index = () => {
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
-  const items = tabs.map((tab) => (
+  const item = tabs.map((tab) => (
     <Tabs.Tab value={tab} key={tab}>
       {tab}
     </Tabs.Tab>
   ));
   const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 -
       var(--mantine-spacing-md) / 2)`;
+
   return (
     <UserLayout title="Profile">
       <Container my="md">
         <SimpleGrid cols={{ base: 2, sm: 1 }} spacing="md">
-          {/* <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} /> */}
           <Grid gutter="md" h={SECONDARY_COL_HEIGHT}>
             <Grid.Col h={SECONDARY_COL_HEIGHT}>
               <Grid>
@@ -206,18 +221,74 @@ const index = () => {
                 <Tabs.Panel value="Your_banks" mt={10}>
                   <Grid gutter="md" h={SECONDARY_COL_HEIGHT}>
                     <Grid.Col span={4}>
-                      <Skeleton
-                        height={SECONDARY_COL_HEIGHT}
-                        radius="md"
-                        animate={false}
-                      />
+                      <SimpleGrid cols={1}>
+                        <div
+                          style={{
+                            border: "1px solid #f5f5f5",
+                            borderRadius: 5,
+                            padding: 5,
+                          }}
+                        >
+                          1 results
+                        </div>
+                        <div style={{ height: SECONDARY_COL_HEIGHT }}>
+                          <Card
+                            shadow="sm"
+                            padding="xl"
+                            component="a"
+                            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                            target="_blank"
+                          >
+                            <Card.Section>
+                              <Image
+                                src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+                                h={100}
+                                alt="No way!"
+                              />
+                            </Card.Section>
+
+                            <Text fw={500} size="lg" mt="md">
+                              Test
+                            </Text>
+
+                            {/* <Text mt="xs" c="dimmed" size="sm"> */}
+                            <SimpleGrid cols={2}>
+                              <div>
+                                <SimpleGrid cols={1}>
+                                  <div
+                                    style={{
+                                      margin: "auto",
+                                    }}
+                                  >
+                                    {<IconMenu2 style={iconStyle} />} 0
+                                  </div>
+                                </SimpleGrid>
+                              </div>
+                              <div>
+                                <SimpleGrid cols={1}>
+                                  <div>
+                                    {<IconSchool style={iconStyle} />} 0
+                                  </div>
+                                </SimpleGrid>
+                              </div>
+                            </SimpleGrid>
+                            {/* </Text> */}
+                          </Card>
+                        </div>
+                      </SimpleGrid>
                     </Grid.Col>
-                    <Grid.Col span={8}>
-                      <Skeleton
-                        height={SECONDARY_COL_HEIGHT}
-                        radius="md"
-                        animate={false}
-                      />
+                    <Grid.Col
+                      span={8}
+                      style={{ border: "2px solid #f5f5f5", borderRadius: 5 }}
+                      mt={10}
+                      bg={"#white"}
+                    >
+                      <Grid.Col
+                        style={{ border: "2px solid #f5f5f5", borderRadius: 5 }}
+                        // mt={10}
+                        bg={"#f5f5f5"}
+                        h={"100%"}
+                      ></Grid.Col>
                     </Grid.Col>
                   </Grid>
                 </Tabs.Panel>
