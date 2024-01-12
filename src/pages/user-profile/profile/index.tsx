@@ -47,6 +47,9 @@ import {
   IconCheckbox,
   IconPlayerRecordFilled,
   IconPlayerRecord,
+  IconArrowsLeftRight,
+  IconSearch,
+  IconDotsVertical,
 } from "@tabler/icons-react";
 import React, { ChangeEvent, useRef, useState } from "react";
 import { BreadCrumbsItem } from "@/components/layouts/UserLayout";
@@ -373,6 +376,91 @@ const index = () => {
                             style={{ display: "flex", flexDirection: "column" }}
                           >
                             {navbarItem}
+                            <Grid.Col h={SECONDARY_COL_HEIGHT}>
+                              <Grid>
+                                <Grid.Col span={2} p={0} mt={10}>
+                                  <Menu
+                                    trigger="hover"
+                                    openDelay={100}
+                                    closeDelay={400}
+                                  >
+                                    <Menu.Target>
+                                      <Button>Play</Button>
+                                    </Menu.Target>
+
+                                    <Menu.Dropdown>
+                                      <Menu.Item
+                                        leftSection={
+                                          <IconSettings
+                                            style={{
+                                              width: rem(14),
+                                              height: rem(14),
+                                            }}
+                                          />
+                                        }
+                                      >
+                                        Settings
+                                      </Menu.Item>
+                                      <Menu.Divider />
+                                      <Menu.Item
+                                        leftSection={
+                                          <IconMessageCircle
+                                            style={{
+                                              width: rem(14),
+                                              height: rem(14),
+                                            }}
+                                          />
+                                        }
+                                      >
+                                        Messages
+                                      </Menu.Item>
+                                    </Menu.Dropdown>
+                                  </Menu>
+                                </Grid.Col>
+                                <Grid.Col span={1} p={0} mt={10}>
+                                  <Menu
+                                    trigger="hover"
+                                    openDelay={100}
+                                    closeDelay={400}
+                                  >
+                                    <Menu.Target>
+                                      <Button p={3} variant="subtle">
+                                        <IconDotsVertical />
+                                      </Button>
+                                    </Menu.Target>
+
+                                    <Menu.Dropdown>
+                                      <Menu.Item
+                                        leftSection={
+                                          <IconSettings
+                                            style={{
+                                              width: rem(14),
+                                              height: rem(14),
+                                            }}
+                                          />
+                                        }
+                                      >
+                                        Settings
+                                      </Menu.Item>
+                                      <Menu.Divider />
+                                      <Menu.Item
+                                        leftSection={
+                                          <IconMessageCircle
+                                            style={{
+                                              width: rem(14),
+                                              height: rem(14),
+                                            }}
+                                          />
+                                        }
+                                      >
+                                        Messages
+                                      </Menu.Item>
+                                    </Menu.Dropdown>
+                                  </Menu>
+                                </Grid.Col>
+                                <Grid.Col span={"auto"}></Grid.Col>
+                              </Grid>
+                            </Grid.Col>
                           </div>
                           <div
                             // value={query}
