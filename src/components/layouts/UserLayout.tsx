@@ -18,6 +18,7 @@ import {
     IconMoon,
     IconSun,
 } from "@tabler/icons-react"
+import classes from "./SwitchSchemeBtn.module.css"
 import { useRouter } from "next/router"
 
 const APP_NAME = "Qizz"
@@ -112,11 +113,14 @@ const UserLayout = ({ title, breadcrumbs, children }: UserLayoutProps) => {
                                 aria-label="Toggle color scheme"
                                 radius="md"
                             >
-                                {colorScheme === "dark" ? (
-                                    <IconSun stroke={1.5} />
-                                ) : (
-                                    <IconMoon stroke={1.5} />
-                                )}
+                                <IconSun
+                                    stroke={1.5}
+                                    className={classes.light}
+                                />
+                                <IconMoon
+                                    stroke={1.5}
+                                    className={classes.dark}
+                                />
                             </ActionIcon>
                         </Group>
                     </Group>
