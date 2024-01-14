@@ -1,24 +1,9 @@
-import {
-    ActionIcon,
-    AppShell,
-    Breadcrumbs,
-    Burger,
-    Group,
-    Image,
-    NavLink,
-    useComputedColorScheme,
-    useMantineColorScheme,
-} from "@mantine/core"
+import { AppShell, Breadcrumbs } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import Head from "next/head"
 import Link from "next/link"
-import {
-    IconHome,
-    IconInfoCircle,
-    IconMoon,
-    IconSun,
-} from "@tabler/icons-react"
-import { useRouter } from "next/router"
+import { IconHome, IconInfoCircle } from "@tabler/icons-react"
+import { Header, Navbar } from "./layoutComponents"
 
 const APP_NAME = "Qizz"
 
@@ -31,15 +16,6 @@ interface UserLayoutProps {
     title?: string
     breadcrumbs?: BreadCrumbsItem[]
     children: React.ReactNode
-}
-
-const logoUrl = "/next.svg"
-const Logo = () => {
-    return (
-        <Link href="/">
-            <Image src={logoUrl} alt="Qizz" h={20} fit="contain" />
-        </Link>
-    )
 }
 
 const navbarItems = [
@@ -59,16 +35,6 @@ const UserLayout = ({ title, breadcrumbs, children }: UserLayoutProps) => {
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure()
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true)
 
-    const { colorScheme, setColorScheme } = useMantineColorScheme({
-        keepTransitions: true,
-    })
-    const computedColorScheme = useComputedColorScheme("light")
-
-    const toggleColorScheme = () => {
-        setColorScheme(computedColorScheme === "dark" ? "light" : "dark")
-    }
-
-    const router = useRouter()
     return (
         <>
             <Head>
@@ -86,53 +52,14 @@ const UserLayout = ({ title, breadcrumbs, children }: UserLayoutProps) => {
                 }}
                 padding="md"
             >
-                <AppShell.Header>
-                    <Group h="100%" px="md" justify="space-between">
-                        <Group h="100%">
-                            <Burger
-                                opened={mobileOpened}
-                                onClick={toggleMobile}
-                                hiddenFrom="sm"
-                                size="sm"
-                            />
-                            <Burger
-                                opened={desktopOpened}
-                                onClick={toggleDesktop}
-                                visibleFrom="sm"
-                                size="sm"
-                            />
-                            <Logo />
-                        </Group>
-                        <Group>
-                            <ActionIcon
-                                color="gray"
-                                size="lg"
-                                variant="outline"
-                                onClick={toggleColorScheme}
-                                aria-label="Toggle color scheme"
-                                radius="md"
-                            >
-                                {colorScheme === "dark" ? (
-                                    <IconSun stroke={1.5} />
-                                ) : (
-                                    <IconMoon stroke={1.5} />
-                                )}
-                            </ActionIcon>
-                        </Group>
-                    </Group>
-                </AppShell.Header>
-                <AppShell.Navbar p="md">
-                    {navbarItems.map((item, index) => (
-                        <NavLink
-                            href={item.link || "#"}
-                            key={index}
-                            label={item.title}
-                            leftSection={item.icon}
-                            variant="light"
-                            active={router.pathname === item.link}
-                        />
-                    ))}
-                </AppShell.Navbar>
+                <Header
+                    burger
+                    mobileOpened={mobileOpened}
+                    desktopOpened={desktopOpened}
+                    toggleDesktop={toggleDesktop}
+                    toggleMobile={toggleMobile}
+                />
+                <Navbar navbarItems={navbarItems} />
                 <AppShell.Main>
                     {breadcrumbs && (
                         <Breadcrumbs mb={"sm"}>

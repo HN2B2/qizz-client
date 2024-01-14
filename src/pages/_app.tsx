@@ -11,7 +11,7 @@ import { ModalsProvider } from "@mantine/modals"
 import { Notifications } from "@mantine/notifications"
 import type { AppProps } from "next/app"
 
-const theme = createTheme({})
+export const theme = createTheme({})
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
