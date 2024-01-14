@@ -1,9 +1,9 @@
-interface User {
+export default interface User {
     id: number
     name: string
     username: string
-    email: string
-    password: string
-    createdAt: string
-    updatedAt: string
+    // email: string
+    // password: string
+    // createdAt: string
+    // updatedAt: string
 }

@@ -1,98 +1,57 @@
 import { UserLayout } from "@/components/layouts"
 import {
-    Avatar,
-    Button,
-    Container,
-    Flex,
-    Group,
-    NumberFormatter,
-    Paper,
-    Stack,
-    Text,
-    Title,
-} from "@mantine/core"
-import { IconEdit, IconShare3 } from "@tabler/icons-react"
+    UserFavorites,
+    UserHistory,
+    UserProfile,
+    UserQuizzes,
+} from "@/components/profile"
+import { User, UserStats } from "@/types/user"
+import { Container, Paper, Tabs } from "@mantine/core"
 import { useState } from "react"
 
-const mockUser = {
-    displayName: "QuynhNt",
+const mockUser: User = {
+    id: 1,
+    name: "QuynhNt",
     username: "quynhNt",
 }
 
-const mockStats = {
+const mockStats: UserStats = {
     totalQuizzes: 0,
     totalFavorites: 0,
 }
 
-const UserProfile = () => {
+const UserProfilePage = () => {
     const [user, setUser] = useState(mockUser)
     const [stats, setStats] = useState(mockStats)
 
     return (
         <UserLayout>
             <Container size="xl">
+                <UserProfile user={user} stats={stats} />
                 <Paper p="lg" radius="md" shadow="sm">
-                    <Flex justify="space-between">
-                        <Group gap="xl" align="start">
-                            <Avatar src="" size={142} />
-                            <Stack gap={1}>
-                                <Title order={3}>{user.displayName}</Title>
-                                <Text c="blue">@{user.username}</Text>
-                            </Stack>
-                        </Group>
-                        <Stack justify="space-between">
-                            <Group gap="sm" justify="flex-end">
-                                <Button
-                                    variant="gradient"
-                                    gradient={{
-                                        from: "blue",
-                                        to: "cyan",
-                                        deg: 90,
-                                    }}
-                                    leftSection={<IconShare3 size={14} />}
-                                >
-                                    Share profile
-                                </Button>
-                                <Button
-                                    variant="gradient"
-                                    gradient={{
-                                        from: "blue",
-                                        to: "cyan",
-                                        deg: 90,
-                                    }}
-                                    leftSection={<IconEdit size={14} />}
-                                >
-                                    Edit profile
-                                </Button>
-                            </Group>
-                            <Group gap="xl" justify="flex-end">
-                                <Stack align="center" gap={2}>
-                                    <Title order={3}>
-                                        <NumberFormatter
-                                            value={stats.totalQuizzes}
-                                        />
-                                    </Title>
-                                    <Text tt="uppercase" size="sm">
-                                        Quiz
-                                    </Text>
-                                </Stack>
-                                <Stack align="center" gap={2}>
-                                    <Title order={3}>
-                                        <NumberFormatter
-                                            value={stats.totalFavorites}
-                                        />
-                                    </Title>
-                                    <Text tt="uppercase" size="sm">
-                                        Favorites
-                                    </Text>
-                                </Stack>
-                            </Group>
-                        </Stack>
-                    </Flex>
+                    <Tabs radius="md" defaultValue="quizzes">
+                        <Tabs.List mb="md">
+                            <Tabs.Tab value="quizzes">Quizzes</Tabs.Tab>
+                            <Tabs.Tab value="favorites">Favorites</Tabs.Tab>
+                            <Tabs.Tab value="history">History</Tabs.Tab>
+                        </Tabs.List>
+
+                        <Tabs.Panel value="quizzes">
+                            <UserQuizzes />
+                        </Tabs.Panel>
+
+                        <Tabs.Panel value="favorites">
+                            <UserFavorites />
+                        </Tabs.Panel>
+
+                        <Tabs.Panel value="history">
+                            <UserHistory />
+                        </Tabs.Panel>
+                    </Tabs>
                 </Paper>
             </Container>
         </UserLayout>
     )
 }
 
-export default UserProfile
+export default UserProfilePage
