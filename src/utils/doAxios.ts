@@ -2,7 +2,7 @@ import axios from "axios"
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
 
-axios.defaults.baseURL = process.env.API_URL || "http://localhost:6868"
+axios.defaults.baseURL = process.env.API_URL || "http://localhost:6868/v1"
 
 // get access token from local storage
 const accessToken = localStorage.getItem("accessToken")
