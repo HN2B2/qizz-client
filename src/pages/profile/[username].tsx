@@ -5,14 +5,19 @@ import {
     UserProfile,
     UserQuizzes,
 } from "@/components/profile"
-import { User, UserStats } from "@/types/user"
+import { UserResponse, UserStats } from "@/types/user"
+import { UserRole } from "@/types/user/UserResponse"
 import { Container, Paper, Tabs } from "@mantine/core"
 import { useState } from "react"
 
-const mockUser: User = {
+const mockUser: UserResponse = {
     id: 1,
-    name: "QuynhNt",
+    displayName: "QuynhNt",
     username: "quynhNt",
+    email: "abc@qizz.tech",
+    role: UserRole.USER,
+    createdAt: "2021-08-01T00:00:00.000Z",
+    modifiedAt: "2021-08-01T00:00:00.000Z",
 }
 
 const mockStats: UserStats = {
