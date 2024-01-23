@@ -1,4 +1,4 @@
-import { User, UserStats } from "@/types/user"
+import { UserResponse, UserStats } from "@/types/user"
 import {
     Avatar,
     Button,
@@ -13,7 +13,7 @@ import {
 import { IconEdit, IconShare3 } from "@tabler/icons-react"
 
 interface UserProfileProps {
-    user: User
+    user: UserResponse
     stats: UserStats
 }
 
@@ -24,7 +24,7 @@ const UserProfile = ({ user, stats }: UserProfileProps) => {
                 <Group gap="xl" align="start">
                     <Avatar src="" size={142} />
                     <Stack gap={1}>
-                        <Title order={3}>{user.name}</Title>
+                        <Title order={3}>{user.displayName}</Title>
                         <Text c="blue">@{user.username}</Text>
                     </Stack>
                 </Group>
