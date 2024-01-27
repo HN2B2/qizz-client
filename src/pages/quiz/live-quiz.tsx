@@ -11,7 +11,7 @@ import {
   Switch,
   Text,
 } from "@mantine/core";
-import { DateInput, DatePickerInput } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
 import { IconChevronDown } from "@tabler/icons-react";
 import React, { useState } from "react";
 const hour: number = new Date().getHours();
@@ -51,28 +51,6 @@ const LiveQuiz = () => {
             <Text style={{ fontWeight: "500" }}>Participant attempts</Text>
           </Flex>
         </Paper>
-
-        {/* <Paper p="lg" radius="md" shadow="sm" mt={20}>
-          <Text style={{ fontWeight: "bold" }}>Mastery and Learning</Text>
-          <Divider my="md" />
-          <Stack>
-            <Flex justify={"space-between"}>
-              <Text style={{ fontWeight: "500" }}>
-                Set a start time for the activity
-              </Text>
-              <Switch checked={checked} onChange={() => setChecked(!checked)} />
-            </Flex>
-            <Flex justify={"space-between"}>
-              {checked ? clickOnSwitch() : null}
-            </Flex>
-          </Stack>
-
-          <Divider my="md" />
-
-          <Flex justify={"space-between"}>
-            <Text style={{ fontWeight: "500" }}>Turn number</Text>
-          </Flex>
-        </Paper> */}
 
         <Paper p="lg" radius="md" shadow="sm" mt={20}>
           <Text style={{ fontWeight: "bold" }}>Question and Answer</Text>

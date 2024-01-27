@@ -5,7 +5,7 @@ import QuizQuestions from "@/components/quiz/QuizQuestions";
 import Quiz from "@/types/quiz/Quiz";
 import Question from "@/types/question/Question";
 import QuizQuestion from "@/types/quiz/QuizQuestion";
-import { User, UserStats } from "@/types/user";
+import { UserStats } from "@/types/user";
 
 import {
   Button,
@@ -25,8 +25,6 @@ import {
   IconTriangleInvertedFilled,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
-import { UserHistory } from "@/components/profile";
-import { useRouter } from "next/router";
 const mockQuiz: Quiz = {
   quizId: 1,
   mode: "Quiz",
