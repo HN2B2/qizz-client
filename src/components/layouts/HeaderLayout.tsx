@@ -2,13 +2,9 @@ import { AppShell, Breadcrumbs } from "@mantine/core"
 import Head from "next/head"
 import Link from "next/link"
 import { Header } from "./layoutComponents"
+import { BreadCrumbsItem } from "."
 
 const APP_NAME = "Qizz"
-
-export type BreadCrumbsItem = {
-    title: string
-    link?: string
-}
 
 interface UserLayoutProps {
     title?: string

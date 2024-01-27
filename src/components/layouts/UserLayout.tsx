@@ -4,13 +4,9 @@ import Head from "next/head"
 import Link from "next/link"
 import { IconHome, IconInfoCircle } from "@tabler/icons-react"
 import { Header, Navbar } from "./layoutComponents"
+import { BreadCrumbsItem } from "."
 
 const APP_NAME = "Qizz"
-
-export type BreadCrumbsItem = {
-    title: string
-    link?: string
-}
 
 interface UserLayoutProps {
     title?: string
