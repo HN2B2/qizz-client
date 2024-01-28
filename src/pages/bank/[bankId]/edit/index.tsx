@@ -61,6 +61,7 @@ import ShareButton from "@/components/sharing/ShareButton";
 import { QuestionType } from "@/types/question/QuestionType";
 import CreateQuestionButton from "@/components/questions/createQuestions/CreateQuestionButton";
 import type { Question as QuestionData } from "@/types/question";
+import { GetServerSidePropsContext } from "next";
 const groceries = [
   "🍎 Apples",
   "🍌 Bananas",
@@ -268,5 +269,10 @@ const EditBank = () => {
     </UserLayout>
   );
 };
+
+// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+//   // get cookie
+//   const cookie = context.req.headers.cookie;
+// }
 
 export default EditBank;

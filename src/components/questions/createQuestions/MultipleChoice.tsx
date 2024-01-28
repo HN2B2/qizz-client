@@ -1,4 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useEditor } from "@tiptap/react";
+import Highlight from "@tiptap/extension-highlight";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import Superscript from "@tiptap/extension-superscript";
+import SubScript from "@tiptap/extension-subscript";
+import Image from "@tiptap/extension-image";
+import Youtube from "@tiptap/extension-youtube";
+import { RichTextEditor, Link } from "@mantine/tiptap";
 import {
   ActionIcon,
   Box,
@@ -16,6 +26,10 @@ import {
   rem,
 } from "@mantine/core";
 import { IconPlus, IconTrash, IconX } from "@tabler/icons-react";
+import { TextEditor } from "@/components/common";
+import classes from "./MultipleChoice.module.css";
+import { useLocalStorage } from "@mantine/hooks";
+import { Question } from "@/types/question";
 interface Answer {
   answer: string;
   isCorrect: boolean;
@@ -29,7 +43,7 @@ const AnswerColor: Record<string, string> = {
   index5: "orange",
 };
 
-const MultipleChoice = () => {
+const MultipleChoice = ({ question }: { question: Question }) => {
   const [data, setData] = useState<Answer[]>([
     { answer: "", isCorrect: false },
     { answer: "", isCorrect: false },
@@ -54,9 +68,40 @@ const MultipleChoice = () => {
 
     setData(data.filter((item, i) => i !== index));
   };
+
+  const [value, setValue] = useLocalStorage({
+    key: "question-draft",
+  });
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Link,
+      Superscript,
+      SubScript,
+      Highlight,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+        alignments: ["center"],
+      }),
+      Image.configure({
+        allowBase64: true,
+        inline: true,
+      }),
+      Youtube.configure({
+        inline: false,
+        autoplay: true,
+      }),
+    ],
+    content: value,
+  });
+
   return (
     <Container size={"lg"}>
-      <Paper p={"xl"} radius={"lg"}>
+      <Paper p={"lg"} radius={"lg"}>
+        <Box mb={"md"}>
+          <TextEditor editor={editor} />
+        </Box>
         <Group justify={"space-between"} align={"center"} wrap="nowrap">
           <Group gap={16} grow justify="space-between" w={"100%"}>
             {data.map((answer, index) => (
@@ -79,7 +124,6 @@ const MultipleChoice = () => {
                     <Checkbox
                       color="rgb(0,0,0,0.2)"
                       variant="filled"
-                      radius={"lg"}
                       checked={answer.isCorrect || false}
                       onClick={(event) => {
                         handleIsCorrect(event.currentTarget.checked, index);
@@ -104,15 +148,20 @@ const MultipleChoice = () => {
 
                 <Textarea
                   autosize
-                  mt={4}
+                  mt={8}
                   onChange={(event) =>
                     handleAnswer(event.currentTarget.value, index)
                   }
                   className="answer"
                   variant="unstyled"
-                  p={"xs"}
-                  bg={"rgb(0,0,0,0.2)"}
+                  p={8}
                   value={answer.answer}
+                  minRows={5}
+                  maxRows={5}
+                  color={"white"}
+                  placeholder="Type your answer here"
+                  classNames={{ input: classes.input }}
+                  size="xl"
                 >
                   {answer.answer || ""}
                 </Textarea>
