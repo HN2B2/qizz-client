@@ -1,4 +1,5 @@
 import { UserLayout } from "@/components/layouts";
+import { Participants } from "@/components/quiz";
 import Quiz from "@/types/quiz/Quiz";
 import {
   Box,
@@ -8,12 +9,17 @@ import {
   Group,
   Paper,
   Stack,
+  Tabs,
   Text,
+  rem,
 } from "@mantine/core";
 import {
   IconCalendar,
   IconEdit,
   IconMail,
+  IconMessageCircle,
+  IconPhoto,
+  IconSettings,
   IconTrash,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
@@ -37,6 +43,7 @@ const mockQuiz: Quiz = {
 };
 const ReportDetail = () => {
   const [quiz, setQuiz] = useState(mockQuiz);
+  const iconStyle = { width: rem(12), height: rem(12) };
   return (
     <UserLayout>
       <Stack>
@@ -68,7 +75,7 @@ const ReportDetail = () => {
             <Flex justify={"space-between"} mt={10}>
               <Paper p="sm" radius="md" withBorder>
                 <Flex>
-                  <Stack>
+                  <Stack gap={5}>
                     <Text>Accuracy</Text>
                     <Text></Text>
                   </Stack>
@@ -76,7 +83,7 @@ const ReportDetail = () => {
               </Paper>
               <Paper p="sm" radius="md" withBorder>
                 <Flex>
-                  <Stack gap={10}>
+                  <Stack gap={5}>
                     <Text>Total Students</Text>
                     <Text>{quiz.totalJoins}</Text>
                   </Stack>
@@ -84,7 +91,7 @@ const ReportDetail = () => {
               </Paper>
               <Paper p="sm" radius="md" withBorder>
                 <Flex>
-                  <Stack>
+                  <Stack gap={5}>
                     <Text>Question</Text>
                     <Text>{quiz.totalQuestions}</Text>
                   </Stack>
@@ -108,7 +115,38 @@ const ReportDetail = () => {
             </Flex>
           </Stack>
         </Paper>
-        <Paper p="lg" radius="md" shadow="sm"></Paper>
+        <Paper p="lg" radius="md" shadow="sm">
+          <Tabs defaultValue="gallery">
+            <Tabs.List>
+              <Tabs.Tab
+                value="participants"
+                leftSection={<IconPhoto style={iconStyle} />}
+              >
+                Participants
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="questions"
+                leftSection={<IconMessageCircle style={iconStyle} />}
+              >
+                Questions
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="overview"
+                leftSection={<IconSettings style={iconStyle} />}
+              >
+                Overview
+              </Tabs.Tab>
+            </Tabs.List>
+
+            <Tabs.Panel value="participants">
+              <Participants />
+            </Tabs.Panel>
+
+            <Tabs.Panel value="questions">Messages tab content</Tabs.Panel>
+
+            <Tabs.Panel value="overview">Settings tab content</Tabs.Panel>
+          </Tabs>
+        </Paper>
       </Stack>
     </UserLayout>
   );
