@@ -30,17 +30,6 @@ interface UserProfileProps {
 }
 
 const UserProfile = ({ user, stats }: UserProfileProps) => {
-  const editProfileForm = useForm({
-    initialValues: {
-      displayName: user.displayName,
-      username: user.username,
-    },
-    validate: {
-      displayName: (value) => (value.length < 3 ? "Too short" : null),
-      username: (value) => (value.length < 3 ? "Too short" : null),
-    },
-  });
-
   return (
     <Paper p="lg" radius="md" shadow="sm" mb="md">
       <Flex justify="space-between">
@@ -55,7 +44,7 @@ const UserProfile = ({ user, stats }: UserProfileProps) => {
               <Text c="blue">@{user.username}</Text>
             </Stack>
 
-            <EditProfileBtn user={user} stats={stats} />
+            <EditProfileBtn user={user} />
           </Stack>
         </Group>
         <Stack justify="space-between">
