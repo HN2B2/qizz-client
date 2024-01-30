@@ -2,7 +2,7 @@ import { UserLayout } from "@/components/layouts";
 import { Participants } from "@/components/quiz";
 import Quiz from "@/types/quiz/Quiz";
 import {
-  Box,
+  Modal,
   Button,
   Divider,
   Flex,
@@ -12,7 +12,10 @@ import {
   Tabs,
   Text,
   rem,
+  UnstyledButton,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconQuestionMark, IconTargetArrow } from "@tabler/icons-react";
 import {
   IconCalendar,
   IconEdit,
@@ -21,6 +24,7 @@ import {
   IconPhoto,
   IconSettings,
   IconTrash,
+  IconUsersGroup,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 const mockQuiz: Quiz = {
@@ -44,14 +48,46 @@ const mockQuiz: Quiz = {
 const ReportDetail = () => {
   const [quiz, setQuiz] = useState(mockQuiz);
   const iconStyle = { width: rem(12), height: rem(12) };
+  const [opened, { open, close }] = useDisclosure(false);
+  const [editing, setEditing] = useState(false);
+  const [editedName, setEditedName] = useState(quiz.name);
+  const handleIconClick = () => {
+    setEditing(true);
+  };
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedName(event.target.value);
+  };
+
+  const handleSave = async () => {
+    try {
+      // const updatedName = await saveQuizNameToBackend(editedName);
+      setEditing(false); // Turn off editing mode
+      setQuiz({ ...quiz, name: editedName }); // Update the quiz name in the state
+    } catch (error) {
+      // Handle error
+    }
+  };
+
   return (
     <UserLayout>
       <Stack>
         <Flex justify={"space-between"}>
           <Stack>
             <Group>
-              <h2>{quiz.name}</h2>
-              {<IconEdit />}
+              {editing ? (
+                <input value={editedName} onChange={handleNameChange} />
+              ) : (
+                <h2>{quiz.name}</h2>
+              )}
+              <UnstyledButton onClick={handleIconClick}>
+                {<IconEdit />}
+              </UnstyledButton>
+              {editing && (
+                <Button variant="default" size="sm" onClick={handleSave}>
+                  Save
+                </Button>
+              )}
               <Button variant="default" size="sm">
                 Completed
               </Button>
@@ -73,29 +109,32 @@ const ReportDetail = () => {
           <Divider />
           <Stack>
             <Flex justify={"space-between"} mt={10}>
-              <Paper p="sm" radius="md" withBorder>
-                <Flex>
+              <Paper p="sm" radius="md" withBorder w={"20%"}>
+                <Group>
+                  <IconTargetArrow />
                   <Stack gap={5}>
                     <Text>Accuracy</Text>
-                    <Text></Text>
+                    <Text>20%</Text>
                   </Stack>
-                </Flex>
+                </Group>
               </Paper>
-              <Paper p="sm" radius="md" withBorder>
-                <Flex>
+              <Paper p="sm" radius="md" withBorder w={"20%"}>
+                <Group>
+                  <IconUsersGroup />
                   <Stack gap={5}>
                     <Text>Total Students</Text>
                     <Text>{quiz.totalJoins}</Text>
                   </Stack>
-                </Flex>
+                </Group>
               </Paper>
-              <Paper p="sm" radius="md" withBorder>
-                <Flex>
+              <Paper p="sm" radius="md" withBorder w={"20%"}>
+                <Group>
+                  <IconQuestionMark />
                   <Stack gap={5}>
                     <Text>Question</Text>
                     <Text>{quiz.totalQuestions}</Text>
                   </Stack>
-                </Flex>
+                </Group>
               </Paper>
             </Flex>
             <Flex justify={"space-between"}>
@@ -104,7 +143,7 @@ const ReportDetail = () => {
               </Group>
 
               <Group>
-                <Button variant="default" p={5}>
+                <Button variant="default" p={5} onClick={open}>
                   {<IconTrash />}
                 </Button>
                 <Divider orientation="vertical" />
@@ -148,6 +187,29 @@ const ReportDetail = () => {
           </Tabs>
         </Paper>
       </Stack>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Are you sure you want to delete this report?"
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+      >
+        <Flex
+          mih={50}
+          gap="md"
+          justify="flex-end"
+          align="center"
+          direction="row"
+          wrap="wrap"
+        >
+          <Button variant="light">Cancel</Button>
+          <Button variant="light" color="red">
+            Delete
+          </Button>
+        </Flex>
+      </Modal>
     </UserLayout>
   );
 };

@@ -12,6 +12,7 @@ import {
   Table,
   Avatar,
   Modal,
+  ScrollArea,
 } from "@mantine/core";
 import {} from "@mantine/charts";
 import {
@@ -111,33 +112,94 @@ const elements = [
     numberNot: 1,
     score: 300,
   },
+  {
+    avatar: "",
+    createdAt: "2022-10-10",
+    username: "B",
+    numberRight: 2,
+    numberWrong: 3,
+    numberNot: 1,
+    score: 300,
+  },
+  {
+    avatar: "",
+    createdAt: "2022-10-10",
+    username: "D",
+    numberRight: 2,
+    numberWrong: 3,
+    numberNot: 1,
+    score: 300,
+  },
 ];
 
 const ParticipantDetails = () => {
   return (
     <Stack>
-      <Stack>
-        <Flex justify={"space-between"}>
-          <Avatar src="" size={50} radius="xl" />
-        </Flex>
-      </Stack>
+      <ScrollArea h={500}>
+        <Stack>
+          <Flex justify={"space-between"}>
+            <Avatar src="" size={50} radius="xl" />
+          </Flex>
+        </Stack>
+      </ScrollArea>
     </Stack>
   );
 };
 const Participants = () => {
   const [ascending, setAscending] = useState(true);
   const [opened, { open, close }] = useDisclosure(false);
+  const [sortedElements, setSortedElements] = useState(elements);
+  const [selectedSortOption, setSelectedSortOption] = useState("Accuracy");
   // const [selectedElement, setSelectedElement] = useState< | null>(null);
 
-  const handleClickSort = () => {
-    setAscending(!ascending);
-  };
   // const handleClick = elements.map((element)) => {
   //   setSelectedElement(element);
   //   open();
   // };
 
-  const rows = elements.map((element) => (
+  const handleSortChange = ({
+    sortOption,
+    IconSort,
+  }: {
+    sortOption: string;
+    IconSort: boolean;
+  }) => {
+    let sortedArray;
+    switch (sortOption) {
+      case "Accuracy":
+        sortedArray = [...sortedElements].sort((a, b) => {
+          if (IconSort) {
+            return (
+              a.numberRight / (a.numberNot + a.numberRight + a.numberWrong) -
+              b.numberRight / (b.numberNot + b.numberRight + b.numberWrong)
+            );
+          } else {
+            return (
+              -a.numberRight / (a.numberNot + a.numberRight + a.numberWrong) +
+              b.numberRight / (b.numberNot + b.numberRight + b.numberWrong)
+            );
+          }
+        });
+        break;
+      case "Points":
+        sortedArray = [...sortedElements].sort((a, b) => {
+          return (
+            a.numberRight / (a.numberNot + a.numberRight + a.numberWrong) -
+            b.numberRight / (b.numberNot + b.numberRight + b.numberWrong)
+          );
+        });
+        break;
+      // Add cases for other sort options
+      default:
+        sortedArray = sortedElements;
+    }
+    setSortedElements(sortedArray);
+  };
+  const handleClickSort = (sortOption: string) => {
+    setAscending(!ascending);
+    handleSortChange({ sortOption, IconSort: ascending });
+  };
+  const sortedRows = sortedElements.map((element) => (
     <Table.Tr key={element.username} onClick={() => open()}>
       <Table.Td w={"20%"}>
         <Group>
@@ -189,13 +251,23 @@ const Participants = () => {
         <Group>
           <Text>Sort by: </Text>
           <Select
-            defaultValue={"All games"}
+            value={selectedSortOption}
+            // onChange={(e) => {
+            //   if (e != null) {
+            //     setSelectedSortOption(e.target.value);
+            //   }
+            // }}
+            onChange={(e) => console.log(e)}
             rightSection={<IconChevronDown size={14} stroke={1.5} />}
             size="sm"
             data={["Accuracy", "Points", "Score", "Name", "Submission time"]}
           />
         </Group>
-        <ActionIcon onClick={handleClickSort} variant="default" size="lg">
+        <ActionIcon
+          onClick={() => handleClickSort(selectedSortOption)}
+          variant="default"
+          size="lg"
+        >
           {ascending ? <IconSortAscending /> : <IconSortDescending />}
         </ActionIcon>
       </Flex>
@@ -222,18 +294,21 @@ const Participants = () => {
               <Text size="sm">Unattempted</Text>
             </Group>
           </Flex>
-          <Table>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Name</Table.Th>
-                <Table.Th></Table.Th>
-                <Table.Th>Accuracy</Table.Th>
-                <Table.Th>Points</Table.Th>
-                <Table.Th>Score</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
-          </Table>
+          <ScrollArea h={500}>
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Name</Table.Th>
+                  <Table.Th></Table.Th>
+                  <Table.Th>Accuracy</Table.Th>
+                  <Table.Th>Points</Table.Th>
+                  <Table.Th>Score</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{sortedRows}</Table.Tbody>
+            </Table>
+          </ScrollArea>
+
           <Modal
             size={"60%"}
             opened={opened}
