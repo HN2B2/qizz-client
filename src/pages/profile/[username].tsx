@@ -11,6 +11,8 @@ import { UserRole } from "@/types/user/UserResponse";
 import { Container, Paper, Tabs } from "@mantine/core";
 import { useState } from "react";
 import useUser from "../hooks/useUser";
+import { GetServerSidePropsContext } from "next";
+import { instance } from "@/utils";
 
 const mockStats: UserStats = {
   totalQuizzes: 0,
@@ -75,5 +77,21 @@ const UserProfilePage = () => {
     </UserLayout>
   );
 };
+
+// export async function getServerSideProps(context: GetServerSidePropsContext) {
+//   try {
+//     const { username } = context.query;
+//     const { data } = await instance.get<UserResponse>(`/user/${username}`);
+//     return {
+//       props: {
+//         user: data,
+//       },
+//     };
+//   } catch (error) {
+//     return {
+//       notFound: true,
+//     };
+//   }
+// }
 
 export default UserProfilePage;

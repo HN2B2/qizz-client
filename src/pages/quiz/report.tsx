@@ -1,4 +1,5 @@
 import { UserLayout } from "@/components/layouts";
+
 import {
   Button,
   Checkbox,
@@ -17,10 +18,14 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { IconChevronDown, IconDotsVertical } from "@tabler/icons-react";
-import React, { useState } from "react";
+import { log } from "console";
+import { link } from "fs";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/router";
+import React, { Component, useState } from "react";
 const elements = [
   {
-    Type: 6,
+    Type: 1,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -29,7 +34,7 @@ const elements = [
     Actions: "C",
   },
   {
-    Type: 6,
+    Type: 2,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -38,7 +43,7 @@ const elements = [
     Actions: "C",
   },
   {
-    Type: 6,
+    Type: 3,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -47,7 +52,7 @@ const elements = [
     Actions: "C",
   },
   {
-    Type: 6,
+    Type: 4,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -56,7 +61,7 @@ const elements = [
     Actions: "C",
   },
   {
-    Type: 7,
+    Type: 5,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -69,7 +74,9 @@ const Report = () => {
   const [valueStart, setValueStart] = useState<Date | null>(null);
   const [valueEnd, setValueEnd] = useState<Date | null>(null);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
+  const handleRowClick = () => {
+    window.location.href = `/quiz/report-detail`;
+  };
   const rows = elements.map((element) => (
     <Table.Tr
       key={element.QuizName}
@@ -78,6 +85,7 @@ const Report = () => {
           ? "var(--mantine-color-blue-light)"
           : undefined
       }
+      onClick={handleRowClick}
     >
       <Table.Td>
         <Checkbox
