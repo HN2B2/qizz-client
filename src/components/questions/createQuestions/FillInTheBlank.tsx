@@ -1,4 +1,5 @@
 import { TextEditor } from "@/components/common";
+import { useMyContext } from "@/pages/bank/[bankId]/edit/create";
 import { Question } from "@/types/question";
 import {
   Box,
@@ -27,6 +28,7 @@ import React, { useEffect, useState } from "react";
 
 const FillInTheBlank = ({ question }: { question: Question }) => {
   const [answer, setAnswer] = useState<string>("");
+  const { dataQuestion, updateDataQuestion } = useMyContext();
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -48,18 +50,38 @@ const FillInTheBlank = ({ question }: { question: Question }) => {
         autoplay: true,
       }),
     ],
+    content: "",
+    onUpdate: ({ editor }) => {
+      let newData = dataQuestion;
+      newData = {
+        ...newData,
+        content: editor.getHTML(),
+      };
+      updateDataQuestion(newData);
+    },
   });
 
-  const answerForm = useForm({
-    initialValues: {
-      answer: "",
-    },
-    validate: {
-      // regex validation
-      answer: (value) =>
-        /^[0-9a-zA-Z\s]{1,20}$/.test(value) ? null : "Invalid answer",
-    },
-  });
+  // const answerForm = useForm({
+  //   initialValues: {
+  //     answer: "",
+  //   },
+  //   validate: {
+  //     // regex validation
+  //     answer: (value) =>
+  //       /^[0-9a-zA-Z\s]{1,20}$/.test(value) ? null : "Invalid answer",
+  //   },
+  // });
+  // console.log(answerForm.values);
+  const handleChange = (value: string) => {
+    let newData = dataQuestion;
+    newData = {
+      ...newData,
+      correctAnswersMetadata: `["${value}"]`,
+    };
+    updateDataQuestion(newData);
+  };
+  console.log(dataQuestion);
+
   return (
     <Container size={"lg"}>
       <Paper p={"lg"} radius={"lg"}>
@@ -71,15 +93,21 @@ const FillInTheBlank = ({ question }: { question: Question }) => {
             placeholder="Type answer here"
             w={"400px"}
             size="lg"
-            {...answerForm.getInputProps("answer")}
+            // {...answerForm.getInputProps("answer")}
             maxLength={20}
+            onChange={(e) => handleChange(e.target.value)}
           />
         </Group>
         <Stack align="center">
           <Title order={5}>Player Preview</Title>
           <PinInput
-            length={answerForm.getInputProps("answer").value.length || 5}
-            value={answerForm.getInputProps("answer").value}
+            // length={answerForm.getInputProps("answer").value.length || 5}
+            // value={answerForm.getInputProps("answer").value}
+            length={dataQuestion.correctAnswersMetadata?.length - 4 || 5}
+            value={dataQuestion.correctAnswersMetadata?.slice(
+              2,
+              dataQuestion.correctAnswersMetadata.length - 2
+            )}
             placeholder=""
             type={/^[0-9a-zA-Z\s]{1,20}$/}
           />

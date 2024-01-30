@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useEditor } from "@tiptap/react";
+import React, { useContext, useEffect, useState } from "react";
+import { Editor, useEditor } from "@tiptap/react";
 import Highlight from "@tiptap/extension-highlight";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -30,10 +30,20 @@ import { TextEditor } from "@/components/common";
 import classes from "./MultipleChoice.module.css";
 import { useLocalStorage } from "@mantine/hooks";
 import { Question } from "@/types/question";
+import DataContext, { useMyContext } from "@/pages/bank/[bankId]/edit/create";
 interface Answer {
   answer: string;
   isCorrect: boolean;
 }
+
+// interface DataQuestionContext {
+//   dataQuestion: Question;
+//   setDataQuestion: React.Dispatch<React.SetStateAction<Question>>;
+//   // handleIsCorrect: (checked: boolean, index: number) => void;
+//   // handleAnswer: (value: string, index: number) => void;
+//   // handleDelete: (index: number) => void;
+//   handleQuestion: () => Promise<void>;
+// }
 
 const AnswerColor: Record<string, string> = {
   index1: "red",
@@ -72,6 +82,7 @@ const MultipleChoice = ({ question }: { question: Question }) => {
   const [value, setValue] = useLocalStorage({
     key: "question-draft",
   });
+  // const [textValue, setTextValue] = useState<string>();
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -93,8 +104,34 @@ const MultipleChoice = ({ question }: { question: Question }) => {
         autoplay: true,
       }),
     ],
-    content: value,
+    content: "",
+    onUpdate: ({ editor }) => {
+      let newData = dataQuestion;
+      newData = {
+        ...newData,
+        content: editor.getHTML(),
+      };
+      updateDataQuestion(newData);
+    },
   });
+  // console.log(textValue);
+  const { dataQuestion, updateDataQuestion } = useMyContext();
+  // console.log(dataQuestion);
+  useEffect(() => {
+    let newData = dataQuestion;
+    newData = {
+      ...newData,
+      answersMetadata: `[${data
+        .filter((answer) => answer.answer !== "")
+        .map((answer, index) => `"${answer.answer}"`)
+        .join(", ")}]`,
+      correctAnswersMetadata: `[${data
+        .filter((answer) => answer.isCorrect)
+        .map((answer) => `"${answer.answer}"`)
+        .join(", ")}]`,
+    };
+    updateDataQuestion(newData);
+  }, [data]);
 
   return (
     <Container size={"lg"}>

@@ -60,8 +60,10 @@ import Sharing from "@/components/sharing/Sharing";
 import ShareButton from "@/components/sharing/ShareButton";
 import { QuestionType } from "@/types/question/QuestionType";
 import CreateQuestionButton from "@/components/questions/createQuestions/CreateQuestionButton";
-import type { Question as QuestionData } from "@/types/question";
-import { GetServerSidePropsContext } from "next";
+import type { Question, Question as QuestionData } from "@/types/question";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { instance } from "@/utils";
+import { Bank } from "@/types/bank";
 const groceries = [
   "🍎 Apples",
   "🍌 Bananas",
@@ -99,7 +101,12 @@ const dataQuestions: QuestionData[] = [
   },
 ];
 
-const EditBank = () => {
+interface Props {
+  bankData: Bank;
+  questionData: QuestionData;
+}
+
+const EditBank = ({ bankData, questionData }: Props) => {
   const form = useForm({
     initialValues: {
       name: "Untitled Quiz",
@@ -112,6 +119,8 @@ const EditBank = () => {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
     },
   });
+  console.log(bankData);
+  console.log(questionData);
 
   const [image, setImage] = useState<FileWithPath[]>([]);
 
@@ -270,9 +279,38 @@ const EditBank = () => {
   );
 };
 
-// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-//   // get cookie
-//   const cookie = context.req.headers.cookie;
-// }
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    const { req, query } = context;
+    // const { page = PAGE, keyword } = query;
+    const res = await instance.get(`/bank/${query.bankId}`, {
+      withCredentials: true,
+      headers: {
+        Cookie: req.headers.cookie || "",
+      },
+    });
+    const res1 = await instance.get(`/question/all/bankId/${query.bankId}`, {
+      withCredentials: true,
+      headers: {
+        Cookie: req.headers.cookie || "",
+      },
+    });
+    const bankData = res.data;
+    const questionData = res1.data;
+    return {
+      props: {
+        bankData,
+        questionData,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
+    };
+  }
+};
 
 export default EditBank;

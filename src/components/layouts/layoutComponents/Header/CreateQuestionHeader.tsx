@@ -1,4 +1,6 @@
+import { useMyContext } from "@/pages/bank/[bankId]/edit/create";
 import { QuestionType } from "@/types/question/QuestionType";
+import { instance } from "@/utils";
 import {
   AppShell,
   Button,
@@ -9,6 +11,7 @@ import {
   Text,
   rem,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import {
   IconAlarm,
@@ -20,7 +23,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 
 const questionTypes = [
   {
@@ -84,15 +87,146 @@ const questionTypeLabel: Record<QuestionType, string> = {
 
 const CreateQuestionHeader = () => {
   const router = useRouter();
-  const { questionId, type } = router.query;
-
-  const handleCreateNewQuestion = () => {
-    notifications.show({
-      color: "green",
-      title: "ABC",
-      message: "Create question successfully",
+  const { questionId, type, bankId } = router.query;
+  const { dataQuestion, updateDataQuestion } = useMyContext();
+  useEffect(() => {
+    updateDataQuestion({
+      ...dataQuestion,
+      duration: 15,
+      point: 1,
     });
+    console.log(dataQuestion);
+  }, []);
+
+  const handleTime = (value: string | null) => {
+    let newData = dataQuestion;
+    newData = {
+      ...newData,
+      duration: Number(value),
+    };
+    updateDataQuestion(newData);
   };
+  const handlePoint = (value: string | null) => {
+    let newData = dataQuestion;
+    newData = {
+      ...newData,
+      point: Number(value),
+    };
+    // newData.point = value;
+    updateDataQuestion(newData);
+  };
+
+  const createQuestionForm = useForm({
+    initialValues: {
+      content: "",
+      point: 1,
+      duration: 15,
+      type: "",
+      answersMetadata: "",
+      correctAnswersMetadata: "",
+      questionIndex: -1,
+      disabled: false,
+      quizBankId: 0,
+    },
+    validate: {
+      content: (value) => (value ? null : "Content is required"),
+      point: (value) => (value >= 1 && value <= 4 ? null : "Invalid point"),
+      duration: (value) =>
+        times.some((time) => time.value === value.toString())
+          ? null
+          : "Invalid duration",
+      type: (value) =>
+        QuestionType[value as keyof typeof QuestionType]
+          ? null
+          : "Invalid type",
+      answersMetadata: (value) => {
+        switch (dataQuestion.type) {
+          case QuestionType.MULTIPLE_CHOICE:
+            return /^\[\s*("[^"]*"\s*,\s*){1,4}"[^"]*"\s*\]$/.test(value)
+              ? null
+              : "Invalid answers, minimum answer is 2 and maximum answer is 5";
+          case QuestionType.FILL_IN_THE_BLANK:
+            // return value.length > 0 ? null : "Invalid answers";
+            return null;
+        }
+      },
+      correctAnswersMetadata: (value) => {
+        switch (dataQuestion.type) {
+          case QuestionType.MULTIPLE_CHOICE:
+            return /^\[\s*("[^"]*"\s*,\s*){0,4}"[^"]*"\s*\]$/.test(value)
+              ? null
+              : "Invalid correct answers, minimum correct answer is 1 and maximum is 5";
+          case QuestionType.FILL_IN_THE_BLANK:
+            return /^\[".*"\]$/.test(value) ? null : "Invalid correct answers";
+        }
+      },
+      disabled: (value) =>
+        typeof value === "boolean" ? null : "Invalid request",
+      quizBankId: (value) =>
+        typeof value === "number" ? null : "Invalid request",
+    },
+  });
+
+  const handleQuestion = async () => {
+    dataQuestion.type = QuestionType[type as keyof typeof QuestionType];
+    dataQuestion.questionIndex = -1;
+    dataQuestion.quizBankId = Number(bankId);
+    dataQuestion.disabled = false;
+
+    createQuestionForm.setFieldValue("content", dataQuestion.content);
+    createQuestionForm.setFieldValue("point", dataQuestion.point);
+    createQuestionForm.setFieldValue("duration", dataQuestion.duration);
+    createQuestionForm.setFieldValue("type", dataQuestion.type);
+    createQuestionForm.setFieldValue(
+      "answersMetadata",
+      dataQuestion.answersMetadata
+    );
+    createQuestionForm.setFieldValue(
+      "correctAnswersMetadata",
+      dataQuestion.correctAnswersMetadata
+    );
+    createQuestionForm.setFieldValue(
+      "questionIndex",
+      dataQuestion.questionIndex
+    );
+    createQuestionForm.setFieldValue("disabled", dataQuestion.disabled);
+    createQuestionForm.setFieldValue("quizBankId", dataQuestion.quizBankId);
+
+    createQuestionForm.validate();
+    console.log(createQuestionForm.values);
+
+    if (!createQuestionForm.isValid()) {
+      notifications.show({
+        color: "red",
+        title: "Error",
+        message: Object.values(createQuestionForm.errors)[0],
+      });
+
+      return;
+    }
+
+    try {
+      const { data } = await instance.post(
+        "/question",
+        createQuestionForm.values
+      );
+      if (data) {
+        console.log(data);
+      }
+      notifications.show({
+        color: "green",
+        title: "SUCCESS",
+        message: "Create question successfully",
+      });
+      router.push({
+        pathname: "/bank/[bankId]/edit",
+        query: { bankId },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <AppShell.Header>
       <Group h="100%" justify="space-between" w={"100%"} px={8}>
@@ -134,6 +268,7 @@ const CreateQuestionHeader = () => {
             defaultValue={times[1].value}
             allowDeselect={false}
             title="Test"
+            onChange={(value) => handleTime(value)}
           />
 
           <Select
@@ -143,12 +278,13 @@ const CreateQuestionHeader = () => {
             data={points}
             defaultValue={points[0].value}
             allowDeselect={false}
+            onChange={(value) => handlePoint(value)}
           />
 
           <Button
             variant="filled"
             leftSection={<IconDeviceFloppy size={"1rem"} />}
-            onClick={handleCreateNewQuestion}
+            onClick={handleQuestion}
           >
             Save question
           </Button>
