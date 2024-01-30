@@ -1,19 +1,28 @@
 import { UserResponse, UserStats } from "@/types/user";
+import { getServerErrorNoti, instance } from "@/utils";
 import {
   Avatar,
   Button,
+  Divider,
   Flex,
   Group,
   Modal,
   NumberFormatter,
   Paper,
+  PasswordInput,
   Stack,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
+import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import { IconEdit, IconShare3 } from "@tabler/icons-react";
+import ChangePasswordBtn from "./ChangePasswordBtn";
+import EditProfileBtn from "./EditProfileBtn";
 
 interface UserProfileProps {
   user: UserResponse;
@@ -21,15 +30,32 @@ interface UserProfileProps {
 }
 
 const UserProfile = ({ user, stats }: UserProfileProps) => {
-  const [opened, { open, close }] = useDisclosure(false);
+  const editProfileForm = useForm({
+    initialValues: {
+      displayName: user.displayName,
+      username: user.username,
+    },
+    validate: {
+      displayName: (value) => (value.length < 3 ? "Too short" : null),
+      username: (value) => (value.length < 3 ? "Too short" : null),
+    },
+  });
+
   return (
     <Paper p="lg" radius="md" shadow="sm" mb="md">
       <Flex justify="space-between">
         <Group gap="xl" align="start">
-          <Avatar src="" size={142} />
-          <Stack gap={1}>
-            <Title order={3}>{user.displayName}</Title>
-            <Text c="blue">@{user.username}</Text>
+          <Dropzone onDrop={(files) => console.log(files)} radius="50%" p={0}>
+            <Avatar src="/logo/logo-1-color.png" size={142} p={20} />
+          </Dropzone>
+
+          <Stack gap={1} justify="space-between" h={"100%"}>
+            <Stack gap={1}>
+              <Title order={3}>{user.displayName}</Title>
+              <Text c="blue">@{user.username}</Text>
+            </Stack>
+
+            <EditProfileBtn user={user} stats={stats} />
           </Stack>
         </Group>
         <Stack justify="space-between">
@@ -45,18 +71,8 @@ const UserProfile = ({ user, stats }: UserProfileProps) => {
             >
               Share profile
             </Button>
-            <Button
-              variant="gradient"
-              gradient={{
-                from: "blue",
-                to: "cyan",
-                deg: 90,
-              }}
-              leftSection={<IconEdit size={14} />}
-              onClick={open}
-            >
-              Edit profile
-            </Button>
+
+            <ChangePasswordBtn />
           </Group>
           <Group gap="xl" justify="flex-end">
             <Stack align="center" gap={2}>
@@ -78,37 +94,6 @@ const UserProfile = ({ user, stats }: UserProfileProps) => {
           </Group>
         </Stack>
       </Flex>
-      <Modal opened={opened} onClose={close} title="Edit Profile">
-        <Stack>
-          <Flex justify={"space-between"}>
-            <TextInput
-              variant="default"
-              label="Display Name"
-              defaultValue={user.displayName}
-            />
-            <TextInput
-              variant="default"
-              label="User Name"
-              defaultValue={user.username}
-            />
-          </Flex>
-          <Flex justify="right" gap={10}>
-            <Button variant="light" onClick={close}>
-              Cancel
-            </Button>
-            <Button
-              variant="gradient"
-              gradient={{
-                from: "blue",
-                to: "cyan",
-                deg: 90,
-              }}
-            >
-              Save
-            </Button>
-          </Flex>
-        </Stack>
-      </Modal>
     </Paper>
   );
 };
