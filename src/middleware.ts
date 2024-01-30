@@ -27,6 +27,9 @@ export const middleware = async (req: NextRequest) => {
         (await verifyAuth(token).catch((error) => {
             console.error(error)
         }))
+    if(req.nextUrl.pathname === "/auth/profile" && verifiedToken) {
+      return NextResponse.json(decodedUserData);
+    }
 
     if (req.nextUrl.pathname === "/auth/logout") {
         const response = NextResponse.redirect(new URL("/auth/login", req.url))

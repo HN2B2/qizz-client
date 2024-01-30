@@ -5,6 +5,11 @@ export const instance = axios.create({
     withCredentials: true,
 })
 
+export const localInstance = axios.create({
+    baseURL: process.env.APP_URl || "http://localhost:3000", 
+    withCredentials: true,
+})
+
 export const getServerErrorNoti = (error: any) => {
     if (axios.isAxiosError(error) && error.response && error.response.data) {
         const { data } = error.response
