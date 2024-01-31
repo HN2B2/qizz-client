@@ -13,6 +13,8 @@ import {
   Input,
   Select,
   HoverCard,
+  Tooltip,
+  Flex,
 } from "@mantine/core";
 import {
   IconAlarm,
@@ -27,6 +29,7 @@ import MultipleChoice from "./questionsType/MultipleChoice";
 import FillInTheBlank from "./questionsType/FillInTheBlank";
 import { QuestionType } from "@/types/question/QuestionType";
 import { Question } from "@/types/question";
+import EditQuestionButton from "./editQuestions/EditQuestionButton";
 
 const times = [
   {
@@ -85,50 +88,35 @@ const Question = ({ type, data }: Props) => {
   return (
     <Paper shadow="md" withBorder my={"sm"}>
       <Group justify="space-between">
-        <Pill.Group p={8}>
+        {/* <Pill.Group p={8}>
           <Pill p={0} radius={0}>
-            <IconGripVertical></IconGripVertical>
+            
           </Pill>
-          <Pill variant="transparent">Question {data.questionIndex}</Pill>
+          
           {/* <Button variant="default">Third</Button> */}
-        </Pill.Group>
+        {/* </Pill.Group>
+         */}
+        <Flex align={"center"} pl={20}>
+          <IconGripVertical></IconGripVertical>
+          <Pill variant="transparent">Question {data.questionIndex}</Pill>
+        </Flex>
         <Button.Group p={8}>
-          <HoverCard shadow="md" position="top" closeDelay={0}>
-            <HoverCard.Target>
-              <Button variant="default" p={6} mx={4}>
-                <IconPencil size={16}></IconPencil>Edit
-              </Button>
-            </HoverCard.Target>
-            <HoverCard.Dropdown bg={"#000"}>
-              <Text size="sm" c={"#fff"}>
-                Edit this question
-              </Text>
-            </HoverCard.Dropdown>
-          </HoverCard>
-          <HoverCard shadow="md" position="top" closeDelay={0}>
-            <HoverCard.Target>
-              <Button variant="default" p={6} mx={4}>
-                <IconCopyPlus size={16}></IconCopyPlus>
-              </Button>
-            </HoverCard.Target>
-            <HoverCard.Dropdown bg={"#000"}>
-              <Text size="sm" c={"#fff"}>
-                Duplicate this question
-              </Text>
-            </HoverCard.Dropdown>
-          </HoverCard>
-          <HoverCard shadow="md" position="top" closeDelay={0}>
-            <HoverCard.Target>
-              <Button variant="default" p={6} mx={4}>
-                <IconTrash size={16}></IconTrash>
-              </Button>
-            </HoverCard.Target>
-            <HoverCard.Dropdown bg={"#000"}>
-              <Text size="sm" c={"#fff"}>
-                Delete this question
-              </Text>
-            </HoverCard.Dropdown>
-          </HoverCard>
+          <Tooltip label="Edit this question" position="top">
+            {/* <Button variant="default" p={6} mx={4}>
+              <IconPencil size={16}></IconPencil>Edit
+            </Button> */}
+            <EditQuestionButton questionId={data.questionId} type={type} />
+          </Tooltip>
+          <Tooltip label="Duplicate this question" position="top">
+            <Button variant="default" p={6} mx={4}>
+              <IconCopyPlus size={16}></IconCopyPlus>
+            </Button>
+          </Tooltip>
+          <Tooltip label="Delete this question" position="top">
+            <Button variant="default" p={6} mx={4}>
+              <IconTrash size={16}></IconTrash>
+            </Button>
+          </Tooltip>
         </Button.Group>
       </Group>
       {/* <FillInTheBlank></FillInTheBlank> */}
@@ -153,42 +141,31 @@ const Question = ({ type, data }: Props) => {
         />
       </Paper> */}
       <Group p={8}>
-        <HoverCard shadow="md" position="top" closeDelay={0}>
-          <HoverCard.Target>
-            <Select
-              w={150}
-              //   label=""
-              leftSection={<IconAlarm></IconAlarm>}
-              placeholder="Pick value"
-              data={times}
-              defaultValue={data.duration.toString()}
-              allowDeselect={false}
-            />
-          </HoverCard.Target>
-          <HoverCard.Dropdown bg={"#000"}>
-            <Text c={"#fff"} size="sm">
-              Set time alloted to answer this question
-            </Text>
-          </HoverCard.Dropdown>
-        </HoverCard>
-        <HoverCard position="top" shadow="md" closeDelay={0}>
-          <HoverCard.Target>
-            <Select
-              w={150}
-              //   label=""
-              leftSection={<IconTrophy></IconTrophy>}
-              placeholder="Pick value"
-              data={points}
-              defaultValue={data.point.toString()}
-              allowDeselect={false}
-            />
-          </HoverCard.Target>
-          <HoverCard.Dropdown bg={"#000"}>
-            <Text size="sm" c={"#fff"}>
-              Change question points
-            </Text>
-          </HoverCard.Dropdown>
-        </HoverCard>
+        <Tooltip
+          label="Set time alloted to answer this question"
+          position="bottom"
+        >
+          <Select
+            w={150}
+            //   label=""
+            leftSection={<IconAlarm></IconAlarm>}
+            placeholder="Pick value"
+            data={times}
+            defaultValue={data.duration.toString()}
+            allowDeselect={false}
+          />
+        </Tooltip>
+        <Tooltip label="Change question points" position="bottom">
+          <Select
+            w={150}
+            //   label=""
+            leftSection={<IconTrophy></IconTrophy>}
+            placeholder="Pick value"
+            data={points}
+            defaultValue={data.point.toString()}
+            allowDeselect={false}
+          />
+        </Tooltip>
       </Group>
     </Paper>
   );

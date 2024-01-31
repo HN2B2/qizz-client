@@ -1,16 +1,8 @@
-import { useMyContext } from "@/pages/bank/[bankId]/edit/create";
+import { useEditContext } from "@/pages/bank/[bankId]/edit/edit-question/[id]";
+import { Question } from "@/types/question";
 import { QuestionType } from "@/types/question/QuestionType";
 import { instance } from "@/utils";
-import {
-  AppShell,
-  Button,
-  Group,
-  HoverCard,
-  Menu,
-  Select,
-  Text,
-  rem,
-} from "@mantine/core";
+import { AppShell, Button, Group, Menu, Select, rem } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import {
@@ -85,19 +77,24 @@ const questionTypeLabel: Record<QuestionType, string> = {
   [QuestionType.FILL_IN_THE_BLANK]: "Fill in the blank",
 };
 
-const CreateQuestionHeader = () => {
+const EditQuestionHeader = () => {
   const router = useRouter();
   const { questionId, type, bankId } = router.query;
-  const { dataQuestion, updateDataQuestion } = useMyContext();
-  useEffect(() => {
-    updateDataQuestion({
-      ...dataQuestion,
-      duration: 30,
-      point: 1,
-    });
-    console.log(dataQuestion);
-  }, []);
-  // console.log(dataQuestion);
+  const {
+    dataQuestion,
+    updateDataQuestion,
+  }: {
+    dataQuestion: Question;
+    updateDataQuestion: React.Dispatch<React.SetStateAction<Question>>;
+  } = useEditContext();
+  //   useEffect(() => {
+  //     updateDataQuestion({
+  //       ...dataQuestion,
+  //       duration: 30,
+  //       point: 1,
+  //     });
+  //     console.log(dataQuestion);
+  //   }, []);
   const handleTime = (value: string | null) => {
     let newData = dataQuestion;
     newData = {
@@ -119,14 +116,13 @@ const CreateQuestionHeader = () => {
   const createQuestionForm = useForm({
     initialValues: {
       content: dataQuestion.content,
-      point: 1,
-      duration: 30,
+      point: dataQuestion.point,
+      duration: dataQuestion.duration,
       type: dataQuestion.type,
       answersMetadata: dataQuestion.answersMetadata,
       correctAnswersMetadata: dataQuestion.correctAnswersMetadata,
       questionIndex: -1,
       disabled: false,
-      quizBankId: dataQuestion.quizBankId,
     },
     validate: {
       content: (value) => (value ? null : "Content is required"),
@@ -165,8 +161,8 @@ const CreateQuestionHeader = () => {
       },
       disabled: (value) =>
         typeof value === "boolean" ? null : "Invalid request",
-      quizBankId: (value) =>
-        typeof value === "number" ? null : "Invalid request",
+      // quizBankId: (value) =>
+      //   typeof value === "number" ? null : "Invalid request",
     },
   });
 
@@ -210,12 +206,14 @@ const CreateQuestionHeader = () => {
 
     handleSubmit();
   };
-
   const handleSubmit = async () => {
+    // console.log(createQuestionForm.values);
+    console.log(dataQuestion);
+
     try {
-      const { data } = await instance.post(
-        "/question",
-        createQuestionForm.values
+      const { data } = await instance.put(
+        `/question/${dataQuestion.questionId}`,
+        dataQuestion
       );
       if (data) {
         console.log(data);
@@ -252,7 +250,8 @@ const CreateQuestionHeader = () => {
               {questionTypes.map((item) => (
                 <Menu.Item key={item.type} leftSection={item.icon}>
                   <Link
-                    href={` /bank/${questionId}/edit/create?type=${item.type}`}
+                    // href={` /bank/${questionId}/edit/create?type=${item.type}`}
+                    href={`/`}
                   >
                     {item.label}
                   </Link>
@@ -268,8 +267,8 @@ const CreateQuestionHeader = () => {
             leftSection={<IconAlarm size={"1rem"} />}
             placeholder="Pick value"
             data={times}
-            // defaultValue={times[1].value}
-            value={times[1].value}
+            // defaultValue={dataQuestion.duration}
+            value={dataQuestion.duration.toString()}
             allowDeselect={false}
             title="Test"
             onChange={(value) => handleTime(value)}
@@ -280,8 +279,8 @@ const CreateQuestionHeader = () => {
             leftSection={<IconTrophy size={"1rem"} />}
             placeholder="Pick value"
             data={points}
-            // defaultValue={points[0].value}
-            value={points[0].value}
+            // defaultValue={dataQuestion.point}
+            value={dataQuestion.point.toString()}
             allowDeselect={false}
             onChange={(value) => handlePoint(value)}
           />
@@ -299,4 +298,4 @@ const CreateQuestionHeader = () => {
   );
 };
 
-export default CreateQuestionHeader;
+export default EditQuestionHeader;

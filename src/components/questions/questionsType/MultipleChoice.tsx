@@ -7,9 +7,15 @@ interface Props {
   data: Question;
 }
 const MultipleChoice = ({ data }: Props) => {
+  const answersMetadata: string[] = JSON.parse(
+    data.answersMetadata.replaceAll("'", '"')
+  );
+  const correctAnswersMetadata: string[] = JSON.parse(
+    data.correctAnswersMetadata.replaceAll("'", '"')
+  );
   return (
-    <Paper px="xl" py="xs">
-      <Text>{data.content}</Text>
+    <Paper px="xl" py="xs" shadow="xs">
+      <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
       <Divider
         my="sm"
         variant="dashed"
@@ -21,9 +27,9 @@ const MultipleChoice = ({ data }: Props) => {
         }
       />
       <SimpleGrid cols={2} verticalSpacing="sm">
-        {data.answersMetadata?.map((answer, index) => (
+        {answersMetadata.map((answer, index) => (
           <Box my={0} display={"flex"} key={index}>
-            {data.correctAnswersMetadata?.includes(answer) ? (
+            {correctAnswersMetadata.includes(answer) ? (
               <IconCheck height={"100%"} color="green" size={14}></IconCheck>
             ) : (
               <IconX height={"100%"} color="red" size={14}></IconX>

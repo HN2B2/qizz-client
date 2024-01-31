@@ -26,9 +26,12 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React, { useEffect, useState } from "react";
 
-const FillInTheBlank = () => {
+const EditFillInTheBlank = () => {
   const [answer, setAnswer] = useState<string>("");
   const { dataQuestion, updateDataQuestion } = useMyContext();
+  const correctAnswersMetadata: string[] = JSON.parse(
+    dataQuestion?.correctAnswersMetadata
+  );
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -50,7 +53,7 @@ const FillInTheBlank = () => {
         autoplay: true,
       }),
     ],
-    content: "",
+    content: dataQuestion.content,
     onUpdate: ({ editor }) => {
       let newData = dataQuestion;
       newData = {
@@ -61,17 +64,6 @@ const FillInTheBlank = () => {
     },
   });
 
-  // const answerForm = useForm({
-  //   initialValues: {
-  //     answer: "",
-  //   },
-  //   validate: {
-  //     // regex validation
-  //     answer: (value) =>
-  //       /^[0-9a-zA-Z\s]{1,20}$/.test(value) ? null : "Invalid answer",
-  //   },
-  // });
-  // console.log(answerForm.values);
   const handleChange = (value: string) => {
     let newData = dataQuestion;
     newData = {
@@ -94,6 +86,7 @@ const FillInTheBlank = () => {
             size="lg"
             // {...answerForm.getInputProps("answer")}
             maxLength={20}
+            value={correctAnswersMetadata[0]}
             onChange={(e) => handleChange(e.target.value)}
           />
         </Group>
@@ -102,11 +95,8 @@ const FillInTheBlank = () => {
           <PinInput
             // length={answerForm.getInputProps("answer").value.length || 5}
             // value={answerForm.getInputProps("answer").value}
-            length={dataQuestion.correctAnswersMetadata?.length - 4 || 5}
-            value={dataQuestion.correctAnswersMetadata?.slice(
-              2,
-              dataQuestion.correctAnswersMetadata.length - 2
-            )}
+            length={correctAnswersMetadata[0].length || 5}
+            value={correctAnswersMetadata[0]}
             placeholder=""
             type={/^[0-9a-zA-Z\s]{1,20}$/}
           />
@@ -116,4 +106,4 @@ const FillInTheBlank = () => {
   );
 };
 
-export default FillInTheBlank;
+export default EditFillInTheBlank;

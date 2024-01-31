@@ -1,5 +1,6 @@
 import { Category } from "../category";
-import { User } from "../user";
+import ManageBank from "../manageBank/ManageBank";
+import { UserResponse } from "../user";
 
 export default interface Bank {
   quizBankId: number;
@@ -13,7 +14,8 @@ export default interface Bank {
   subCategories?: any;
   draft?: boolean;
   totalQuestions?: number;
-  createdBy?: User;
-  modifiedBy?: User;
+  createdBy: UserResponse;
+  modifiedBy?: UserResponse;
+  manageBanks?: ManageBank[];
   totalUpVotes?: number;
 }

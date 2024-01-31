@@ -5,10 +5,14 @@ interface Props {
   data: Question;
 }
 const FillInTheBlank = ({ data }: Props) => {
-  console.log(data.correctAnswersMetadata);
+  const correctAnswersMetadata: string[] = JSON.parse(
+    data.correctAnswersMetadata.replaceAll("'", '"')
+  );
+  // console.log(data.correctAnswersMetadata);
   return (
-    <Paper px="xl" py="xs">
-      <Text>{data.content}</Text>
+    <Paper px="xl" py="xs" shadow="xs">
+      {/* <Text>{data.content}</Text> */}
+      <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
       <Divider
         my="sm"
         variant="dashed"
@@ -19,7 +23,7 @@ const FillInTheBlank = ({ data }: Props) => {
           </>
         }
       />
-      <Text>{data.correctAnswersMetadata} </Text>
+      <Text>{correctAnswersMetadata[0]} </Text>
     </Paper>
   );
 };

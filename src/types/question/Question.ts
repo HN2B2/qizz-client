@@ -6,8 +6,8 @@ export default interface Question {
   point: number;
   duration: number;
   type: QuestionType;
-  answersMetadata: string[];
-  correctAnswersMetadata: string[];
+  answersMetadata: string;
+  correctAnswersMetadata: string;
   explainAnswer: string;
   questionIndex: number;
   disabled: boolean;

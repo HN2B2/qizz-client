@@ -64,6 +64,9 @@ import type { Question, Question as QuestionData } from "@/types/question";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { instance } from "@/utils";
 import { Bank } from "@/types/bank";
+import { useRouter } from "next/router";
+import { notifications } from "@mantine/notifications";
+import { log } from "console";
 const groceries = [
   "🍎 Apples",
   "🍌 Bananas",
@@ -72,56 +75,40 @@ const groceries = [
   "🍫 Chocolate",
 ];
 
-const dataQuestions: QuestionData[] = [
-  {
-    questionId: 1,
-    content: "What is the capital of France?",
-    point: 1,
-    duration: 15,
-    type: QuestionType.MULTIPLE_CHOICE,
-    answersMetadata: ["Paris", "London", "Berlin", "Madrid"],
-    correctAnswersMetadata: ["Paris"],
-    explainAnswer: "Paris is the capital of France",
-    questionIndex: 1,
-    disabled: false,
-    quizBankId: 1,
-  },
-  {
-    questionId: 2,
-    content: "What is the capital of Vietnam?",
-    point: 2,
-    duration: 30,
-    type: QuestionType.FILL_IN_THE_BLANK,
-    answersMetadata: [],
-    correctAnswersMetadata: ["Hanoi"],
-    explainAnswer: "Hanoi is the capital of VietNam",
-    questionIndex: 2,
-    disabled: false,
-    quizBankId: 1,
-  },
-];
-
 interface Props {
   bankData: Bank;
-  questionData: QuestionData;
+  questionData: QuestionData[];
 }
 
 const EditBank = ({ bankData, questionData }: Props) => {
+  console.log(bankData);
   const form = useForm({
     initialValues: {
-      name: "Untitled Quiz",
-      image: null,
-      email: "",
-      termsOfService: false,
+      quizBankId: bankData.quizBankId,
+      name: bankData.name,
+      featuresImage: bankData.featuresImage,
+      description: bankData.description,
+      quizPublicity: bankData.quizPublicity,
+      publicEditable: bankData.publicEditable,
+      draft: bankData.draft,
+      createdBy: bankData.createdBy,
+      modifiedBy: bankData.modifiedBy,
+      manageBanks: bankData.manageBanks,
+      totalUpvotes: bankData.totalUpVotes,
+      subCategories: bankData.subCategories,
+      totalQuestions: bankData.totalQuestions,
+      createdAt: bankData.createdAt,
+      modifiedAt: bankData.modifiedAt,
+      // email: "",
+      // termsOfService: false,
     },
 
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    },
+    // validate: {
+    //   email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+    // },
   });
-  console.log(bankData);
-  console.log(questionData);
-
+  const router = useRouter();
+  const [bank, setBank] = useState<Bank>(bankData);
   const [image, setImage] = useState<FileWithPath[]>([]);
 
   const previews = image.map((file, index) => {
@@ -165,24 +152,50 @@ const EditBank = ({ bankData, questionData }: Props) => {
         {item}
       </Combobox.Option>
     ));
+  const handleSubmit = async (values: Bank) => {
+    try {
+      const body = {
+        name: values.name,
+        description: values.description,
+        featuresImage: values.featuresImage,
+        quizPublicity: values.quizPublicity,
+        publicEditable: values.publicEditable,
+        draft: false,
+        //2 field email and editable of manageBank: ManageBank[]
+        manageBanks: values.manageBanks?.map((item) => {
+          return {
+            email: item.user.email,
+            editable: item.editable,
+          };
+        }),
+      };
+      console.log(body);
+
+      const { data } = await instance.put(`/bank/${bankData.quizBankId}`, body);
+      notifications.show({
+        title: "Success",
+        message: "Bank updated successfully",
+        color: "green",
+      });
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <UserLayout>
-      <Container size="lg">
+      <Container size="lg" bg={"transparent"}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col
-            span={{ base: 12, sm: 8 }}
-            bg="var(--mantine-color-blue-light)"
-            order={{ base: 3, sm: 2 }}
-          >
-            <Flex p="sm">
-              <IconListCheck></IconListCheck>
-              <Text>5 Questions</Text>
-            </Flex>
-            <Group justify="flex-end">
+          <Grid.Col span={{ base: 12, sm: 8 }} order={{ base: 3, sm: 2 }}>
+            <Group justify="space-between">
+              <Flex p="sm">
+                <IconListCheck></IconListCheck>
+                <Text>{questionData.length} Questions</Text>
+              </Flex>
               <CreateQuestionButton></CreateQuestionButton>
             </Group>
-            {dataQuestions.map((question) => (
+            {questionData.map((question) => (
               <Question
                 key={question.questionId}
                 type={question.type}
@@ -198,13 +211,13 @@ const EditBank = ({ bankData, questionData }: Props) => {
               data={dataQuestions[1]}
             /> */}
           </Grid.Col>
-          <Grid.Col
-            span={{ base: 12, sm: 4 }}
-            bg="var(--mantine-color-blue-light)"
-            order={{ base: 1, sm: 3 }}
-          >
-            <form onSubmit={form.onSubmit((values) => console.log(values))}>
-              <Dropzone accept={IMAGE_MIME_TYPE} onDrop={setImage}>
+          <Grid.Col span={{ base: 12, sm: 4 }} order={{ base: 1, sm: 3 }}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+              <Dropzone
+                accept={IMAGE_MIME_TYPE}
+                onDrop={setImage}
+                {...form.getInputProps("featuresImage")}
+              >
                 <Text ta="center">Drop images here</Text>
               </Dropzone>
 
@@ -217,13 +230,13 @@ const EditBank = ({ bankData, questionData }: Props) => {
               <TextInput
                 label="Quiz Name"
                 placeholder="Quiz Name"
-                leftSection={<IconPencil></IconPencil>}
+                leftSection={<IconPencil size={"1rem"}></IconPencil>}
                 variant="filled"
                 {...form.getInputProps("name")}
                 my={"md"}
               />
 
-              <ShareButton></ShareButton>
+              <ShareButton bank={form.values} setBank={setBank}></ShareButton>
               <Text fw={500}>Choose sub category</Text>
               <Combobox
                 store={combobox}

@@ -1,49 +1,36 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Editor, useEditor } from "@tiptap/react";
-import Highlight from "@tiptap/extension-highlight";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import TextAlign from "@tiptap/extension-text-align";
-import Superscript from "@tiptap/extension-superscript";
-import SubScript from "@tiptap/extension-subscript";
-import Image from "@tiptap/extension-image";
-import Youtube from "@tiptap/extension-youtube";
-import { RichTextEditor, Link } from "@mantine/tiptap";
+import { TextEditor } from "@/components/common";
+import { useMyContext } from "@/pages/bank/[bankId]/edit/create";
+import { instance } from "@/utils";
 import {
   ActionIcon,
   Box,
   Button,
   Checkbox,
   Container,
-  Flex,
   Group,
   Paper,
-  Popover,
-  SimpleGrid,
-  Text,
   Textarea,
   Tooltip,
-  rem,
 } from "@mantine/core";
-import { IconPlus, IconTrash, IconX } from "@tabler/icons-react";
-import { TextEditor } from "@/components/common";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import Highlight from "@tiptap/extension-highlight";
+import Image from "@tiptap/extension-image";
+import Subscript from "@tiptap/extension-subscript";
+import Superscript from "@tiptap/extension-superscript";
+import TextAlign from "@tiptap/extension-text-align";
+import Underline from "@tiptap/extension-underline";
+import Youtube from "@tiptap/extension-youtube";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { GetServerSidePropsContext } from "next";
+import { Link } from "@mantine/tiptap";
+import React, { useEffect, useState } from "react";
 import classes from "./MultipleChoice.module.css";
-import { useLocalStorage } from "@mantine/hooks";
-import { Question } from "@/types/question";
-import DataContext, { useMyContext } from "@/pages/bank/[bankId]/edit/create";
+import { useEditContext } from "@/pages/bank/[bankId]/edit/edit-question/[id]";
 interface Answer {
   answer: string;
   isCorrect: boolean;
 }
-
-// interface DataQuestionContext {
-//   dataQuestion: Question;
-//   setDataQuestion: React.Dispatch<React.SetStateAction<Question>>;
-//   // handleIsCorrect: (checked: boolean, index: number) => void;
-//   // handleAnswer: (value: string, index: number) => void;
-//   // handleDelete: (index: number) => void;
-//   handleQuestion: () => Promise<void>;
-// }
 
 const AnswerColor: Record<string, string> = {
   index1: "red",
@@ -53,14 +40,30 @@ const AnswerColor: Record<string, string> = {
   index5: "orange",
 };
 
-const MultipleChoice = () => {
-  const [data, setData] = useState<Answer[]>([
-    { answer: "", isCorrect: false },
-    { answer: "", isCorrect: false },
-    { answer: "", isCorrect: false },
-    { answer: "", isCorrect: false },
-  ]);
+const EditMultipleChoice = () => {
+  console.log("hello");
 
+  const { dataQuestion, updateDataQuestion } = useEditContext();
+
+  const answersMetadata: string[] = JSON.parse(
+    dataQuestion.answersMetadata.replaceAll("'", '"')
+  );
+  const correctAnswersMetadata: string[] = JSON.parse(
+    dataQuestion.correctAnswersMetadata.replaceAll("'", '"')
+  );
+  const [data, setData] = useState<Answer[]>(
+    answersMetadata.map((answer, index) => ({
+      answer,
+      isCorrect: correctAnswersMetadata.includes(answer),
+    }))
+
+    //     [
+    //     { answer: "", isCorrect: false },
+    //     { answer: "", isCorrect: false },
+    //     { answer: "", isCorrect: false },
+    //     { answer: "", isCorrect: false },
+    //   ]
+  );
   const handleIsCorrect = (checked: boolean, index: number) => {
     const newData = [...data];
     newData[index].isCorrect = checked;
@@ -73,23 +76,19 @@ const MultipleChoice = () => {
 
     setData(values);
   };
+
   const handleDelete = (index: number) => {
     //delete element at index index from data and setData for new data
 
     setData(data.filter((item, i) => i !== index));
   };
-
-  const [value, setValue] = useLocalStorage({
-    key: "question-draft",
-  });
-  // const [textValue, setTextValue] = useState<string>();
   const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
       Link,
       Superscript,
-      SubScript,
+      Subscript,
       Highlight,
       TextAlign.configure({
         types: ["heading", "paragraph"],
@@ -104,7 +103,7 @@ const MultipleChoice = () => {
         autoplay: true,
       }),
     ],
-    content: "",
+    content: dataQuestion.content,
     onUpdate: ({ editor }) => {
       let newData = dataQuestion;
       newData = {
@@ -114,9 +113,6 @@ const MultipleChoice = () => {
       updateDataQuestion(newData);
     },
   });
-  // console.log(textValue);
-  const { dataQuestion, updateDataQuestion } = useMyContext();
-  // console.log(dataQuestion);
   useEffect(() => {
     let newData = dataQuestion;
     newData = {
@@ -200,7 +196,7 @@ const MultipleChoice = () => {
                   className="answer"
                   variant="unstyled"
                   p={8}
-                  value={answer.answer}
+                  // value={answer.answer}
                   minRows={5}
                   maxRows={5}
                   color={"white"}
@@ -232,4 +228,4 @@ const MultipleChoice = () => {
   );
 };
 
-export default MultipleChoice;
+export default EditMultipleChoice;
