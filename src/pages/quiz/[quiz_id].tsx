@@ -3,7 +3,7 @@ import { UserLayout } from "@/components/layouts";
 import { QuizInfo } from "@/components/quiz";
 import QuizQuestions from "@/components/quiz/QuizQuestions";
 import Quiz from "@/types/quiz/QuizResponse";
-import Question from "@/types/question/Question";
+import Question from "@/types/question/QuestionResponse";
 import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
 import { UserStats } from "@/types/user";
 

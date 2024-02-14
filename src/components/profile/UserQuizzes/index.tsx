@@ -1,4 +1,4 @@
-import { Bank } from "@/types/bank";
+import { BankResponse } from "@/types/bank";
 import {
   Avatar,
   Card,
@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import React from "react";
 interface QuizzesProps {
-  quizzes: Bank[];
+  quizzes: BankResponse[];
 }
 
 const UserQuizzes = ({ quizzes }: QuizzesProps) => {
