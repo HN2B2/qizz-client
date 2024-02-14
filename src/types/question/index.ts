@@ -1,1 +1,1 @@
-export type { default as Question } from "./Question";
+export type { default as QuestionResponse } from "./QuestionResponse";

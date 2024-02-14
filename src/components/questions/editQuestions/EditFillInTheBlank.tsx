@@ -1,6 +1,7 @@
 import { TextEditor } from "@/components/common";
 import { useMyContext } from "@/pages/bank/[bankId]/edit/create";
-import { Question } from "@/types/question";
+import { useEditContext } from "@/pages/bank/[bankId]/edit/edit-question/[id]";
+import { QuestionResponse } from "@/types/question";
 import {
   Box,
   Container,
@@ -27,8 +28,8 @@ import StarterKit from "@tiptap/starter-kit";
 import React, { useEffect, useState } from "react";
 
 const EditFillInTheBlank = () => {
-  const [answer, setAnswer] = useState<string>("");
-  const { dataQuestion, updateDataQuestion } = useMyContext();
+  // const [answer, setAnswer] = useState<string>("");
+  const { dataQuestion, updateDataQuestion } = useEditContext();
   const correctAnswersMetadata: string[] = JSON.parse(
     dataQuestion?.correctAnswersMetadata
   );

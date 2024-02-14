@@ -1,1 +1,1 @@
-export type { default as Bank } from "./Bank";
+export type { default as BankResponse } from "./BankResponse";
