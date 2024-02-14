@@ -2,9 +2,9 @@ import { UserLayout } from "@/components/layouts";
 
 import { QuizInfo } from "@/components/quiz";
 import QuizQuestions from "@/components/quiz/QuizQuestions";
-import Quiz from "@/types/quiz/Quiz";
+import Quiz from "@/types/quiz/QuizResponse";
 import Question from "@/types/question/Question";
-import QuizQuestion from "@/types/quiz/QuizQuestion";
+import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
 import { UserStats } from "@/types/user";
 
 import {
@@ -25,6 +25,7 @@ import {
   IconTriangleInvertedFilled,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
+import { QuestionType } from "@/types/question/QuestionType";
 const mockQuiz: Quiz = {
   quizId: 1,
   mode: "Quiz",
@@ -45,19 +46,20 @@ const mockQuiz: Quiz = {
 };
 
 const mockQuestion: Question = {
-  question_id: 1,
+  questionId: 1,
   content:
     "ringdkfkeruhgfoiuehfowiehfoewjgehgoehgeigoergherihgdsgdsrgrihfgoewihfowiehgoiewhf",
   point: 10,
-  duration: "10",
-  type: "text",
-  answers_metadata: "A. dsj",
-  correct_answers_metadata: "A. ajdj",
-  explain_answer: "ring",
-  created_at: "2022-10-10",
-  modified_at: "2022-10-10",
+  duration: 10,
+  type: QuestionType.MULTIPLE_CHOICE,
+  answersMetadata: "A. dsj",
+  correctAnswersMetadata: "A. ajdj",
+  explainAnswer: "ring",
+  questionIndex: 1,
+  createdAt: "2022-10-10",
+  modifiedAt: "2022-10-10",
   disabled: false,
-  bank_id: 1,
+  quizBankId: 1,
 };
 
 const mockQuizQuestion: QuizQuestion = {

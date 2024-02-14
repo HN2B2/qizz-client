@@ -1,6 +1,6 @@
 import { Category } from "../category";
-import { QuizBank } from "../quizBank";
-import { User } from "../user";
+import { Bank } from "../bank";
+import { UserResponse } from "../user";
 
 export default interface Quiz {
   quizId: number;
@@ -18,5 +18,5 @@ export default interface Quiz {
   bankId: number;
   totalQuestions: number;
   totalJoins: number;
-  createBy: User["name"];
+  createBy: UserResponse["username"];
 }

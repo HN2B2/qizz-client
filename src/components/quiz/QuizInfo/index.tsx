@@ -1,5 +1,5 @@
-import Quiz from "@/types/quiz/Quiz";
-import { User, UserStats } from "@/types/user";
+import Quiz from "@/types/quiz/QuizResponse";
+import { UserResponse, UserStats } from "@/types/user";
 import {
   Avatar,
   Button,

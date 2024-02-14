@@ -1,4 +1,4 @@
-import { QuizBank } from "@/types/quizBank";
+import { Bank } from "@/types/bank";
 import {
   Avatar,
   Card,
@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import React from "react";
 interface QuizzesProps {
-  quizzes: QuizBank[];
+  quizzes: Bank[];
 }
 
 const UserQuizzes = ({ quizzes }: QuizzesProps) => {
@@ -29,13 +29,13 @@ const UserQuizzes = ({ quizzes }: QuizzesProps) => {
               shadow="sm"
               // mb="md"
               component="a"
-              href={`/quiz/${quiz.id}`}
+              href={`/quiz/${quiz.quizBankId}`}
               mt={5}
             >
               {/* <Paper p="sm" radius="md" shadow="sm" mb="md"> */}
               <Card.Section>
                 <Group>
-                  <Avatar src={quiz.featuredImage} radius={"sm"} />
+                  <Avatar src={quiz.featuresImage} radius={"sm"} />
                   <Stack gap={2}>
                     <Text fw={500} size="lg">
                       {quiz.name}

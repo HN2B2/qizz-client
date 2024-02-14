@@ -1,6 +1,6 @@
-import Quiz from "@/types/quiz/Quiz";
+import Quiz from "@/types/quiz/QuizResponse";
 import Question from "@/types/question/Question";
-import QuizQuestion from "@/types/quiz/QuizQuestion";
+import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
 import {
   Button,
   Flex,
