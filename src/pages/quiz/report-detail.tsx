@@ -1,6 +1,6 @@
 import { UserLayout } from "@/components/layouts";
 import { Participants } from "@/components/quiz";
-import Quiz from "@/types/quiz/Quiz";
+import Quiz from "@/types/quiz/QuizResponse";
 import {
   Modal,
   Button,

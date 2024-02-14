@@ -1,6 +1,6 @@
-import Quiz from "@/types/quiz/Quiz";
+import Quiz from "@/types/quiz/QuizResponse";
 import Question from "@/types/question/Question";
-import QuizQuestion from "@/types/quiz/QuizQuestion";
+import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
 import {
   Button,
   Flex,
@@ -97,11 +97,11 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
         <SimpleGrid cols={2} verticalSpacing="lg" mt={20}>
           <div>
             {<IconCircleFilled size={10} />}
-            {question.answers_metadata}
+            {question.answersMetadata}
           </div>
-          <div>{question.answers_metadata}</div>
-          <div>{question.answers_metadata}</div>
-          <div>{question.answers_metadata}</div>
+          <div>{question.answersMetadata}</div>
+          <div>{question.answersMetadata}</div>
+          <div>{question.answersMetadata}</div>
         </SimpleGrid>
       </Paper>
     </Stack>

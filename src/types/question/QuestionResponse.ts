@@ -10,6 +10,8 @@ export default interface QuestionResponse {
   correctAnswersMetadata: string;
   explainAnswer: string;
   questionIndex: number;
+  createdAt: string;
+  modifiedAt: string;
   disabled: boolean;
   quizBankId: number;
 }
