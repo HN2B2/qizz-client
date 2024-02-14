@@ -41,7 +41,7 @@ const AnswerColor: Record<string, string> = {
 };
 
 const EditMultipleChoice = () => {
-  console.log("hello");
+  // console.log("hello");
 
   const { dataQuestion, updateDataQuestion } = useEditContext();
 

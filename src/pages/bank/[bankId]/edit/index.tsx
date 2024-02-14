@@ -1,5 +1,5 @@
 import { UserLayout } from "@/components/layouts";
-import Question from "@/components/questions/Question";
+import QuestionPaper from "@/components/questions/QuestionPaper";
 import {
   Avatar,
   Box,
@@ -60,10 +60,13 @@ import Sharing from "@/components/sharing/Sharing";
 import ShareButton from "@/components/sharing/ShareButton";
 import { QuestionType } from "@/types/question/QuestionType";
 import CreateQuestionButton from "@/components/questions/createQuestions/CreateQuestionButton";
-import type { Question, Question as QuestionData } from "@/types/question";
+import type {
+  QuestionResponse,
+  QuestionResponse as QuestionData,
+} from "@/types/question";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { instance } from "@/utils";
-import { Bank } from "@/types/bank";
+import { BankResponse } from "@/types/bank";
 import { useRouter } from "next/router";
 import { notifications } from "@mantine/notifications";
 import { log } from "console";
@@ -76,12 +79,12 @@ const groceries = [
 ];
 
 interface Props {
-  bankData: Bank;
+  bankData: BankResponse;
   questionData: QuestionData[];
 }
 
 const EditBank = ({ bankData, questionData }: Props) => {
-  console.log(bankData);
+  // console.log(bankData);
   const form = useForm({
     initialValues: {
       quizBankId: bankData.quizBankId,
@@ -108,7 +111,7 @@ const EditBank = ({ bankData, questionData }: Props) => {
     // },
   });
   const router = useRouter();
-  const [bank, setBank] = useState<Bank>(bankData);
+  const [bank, setBank] = useState<BankResponse>(bankData);
   const [image, setImage] = useState<FileWithPath[]>([]);
 
   const previews = image.map((file, index) => {
@@ -152,7 +155,7 @@ const EditBank = ({ bankData, questionData }: Props) => {
         {item}
       </Combobox.Option>
     ));
-  const handleSubmit = async (values: Bank) => {
+  const handleSubmit = async (values: BankResponse) => {
     try {
       const body = {
         name: values.name,
@@ -169,7 +172,7 @@ const EditBank = ({ bankData, questionData }: Props) => {
           };
         }),
       };
-      console.log(body);
+      // console.log(body);
 
       const { data } = await instance.put(`/bank/${bankData.quizBankId}`, body);
       notifications.show({
@@ -196,7 +199,7 @@ const EditBank = ({ bankData, questionData }: Props) => {
               <CreateQuestionButton></CreateQuestionButton>
             </Group>
             {questionData.map((question) => (
-              <Question
+              <QuestionPaper
                 key={question.questionId}
                 type={question.type}
                 data={question}

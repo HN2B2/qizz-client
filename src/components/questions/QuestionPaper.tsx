@@ -77,7 +77,7 @@ interface Props {
   type: string;
   data: Question;
 }
-const Question = ({ type, data }: Props) => {
+const QuestionPaper = ({ type, data }: Props) => {
   const QuestionTypes: Record<QuestionType, React.ReactNode> = {
     [QuestionType.MULTIPLE_CHOICE]: <MultipleChoice data={data} />,
     [QuestionType.FILL_IN_THE_BLANK]: <FillInTheBlank data={data} />,
@@ -171,4 +171,4 @@ const Question = ({ type, data }: Props) => {
   );
 };
 
-export default Question;
+export default QuestionPaper;

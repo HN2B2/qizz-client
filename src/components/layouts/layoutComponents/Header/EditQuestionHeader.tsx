@@ -1,5 +1,5 @@
 import { useEditContext } from "@/pages/bank/[bankId]/edit/edit-question/[id]";
-import { Question } from "@/types/question";
+import { QuestionResponse } from "@/types/question";
 import { QuestionType } from "@/types/question/QuestionType";
 import { instance } from "@/utils";
 import { AppShell, Button, Group, Menu, Select, rem } from "@mantine/core";
@@ -84,8 +84,8 @@ const EditQuestionHeader = () => {
     dataQuestion,
     updateDataQuestion,
   }: {
-    dataQuestion: Question;
-    updateDataQuestion: React.Dispatch<React.SetStateAction<Question>>;
+    dataQuestion: QuestionResponse;
+    updateDataQuestion: React.Dispatch<React.SetStateAction<QuestionResponse>>;
   } = useEditContext();
   //   useEffect(() => {
   //     updateDataQuestion({
@@ -192,7 +192,7 @@ const EditQuestionHeader = () => {
     createQuestionForm.setFieldValue("quizBankId", dataQuestion.quizBankId);
     // createQuestionForm.setValues(dataQuestion);
     createQuestionForm.validate();
-    console.log(createQuestionForm.values);
+    // console.log(createQuestionForm.values);
 
     if (!createQuestionForm.isValid()) {
       notifications.show({
@@ -208,7 +208,7 @@ const EditQuestionHeader = () => {
   };
   const handleSubmit = async () => {
     // console.log(createQuestionForm.values);
-    console.log(dataQuestion);
+    // console.log(dataQuestion);
 
     try {
       const { data } = await instance.put(
@@ -216,7 +216,7 @@ const EditQuestionHeader = () => {
         dataQuestion
       );
       if (data) {
-        console.log(data);
+        // console.log(data);
       }
       notifications.show({
         color: "green",
@@ -250,8 +250,8 @@ const EditQuestionHeader = () => {
               {questionTypes.map((item) => (
                 <Menu.Item key={item.type} leftSection={item.icon}>
                   <Link
-                    // href={` /bank/${questionId}/edit/create?type=${item.type}`}
-                    href={`/`}
+                    href={` /bank/${bankId}/edit/create?type=${item.type}`}
+                    // href={`/`}
                   >
                     {item.label}
                   </Link>

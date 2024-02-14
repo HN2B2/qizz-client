@@ -2,7 +2,7 @@ import { Category } from "../category";
 import ManageBank from "../manageBank/ManageBank";
 import { UserResponse } from "../user";
 
-export default interface Bank {
+export default interface BankResponse {
   quizBankId: number;
   name: string;
   description?: string | null;

@@ -4,7 +4,7 @@ import {
   MultipleChoice,
 } from "@/components/questions/createQuestions";
 import { Question } from "@/types/question";
-import QuestionRequest from "@/types/question/QuestionRequest";
+// import QuestionRequest from "@/types/question/QuestionRequest";
 import { QuestionType } from "@/types/question/QuestionType";
 import { instance } from "@/utils";
 import { notifications } from "@mantine/notifications";
@@ -26,10 +26,10 @@ const QuestionTypes: Record<QuestionType, React.ReactNode> = {
 //   setDataQuestion: React.Dispatch<React.SetStateAction<{}>>;
 //   handleQuestion: () => Promise<void>;
 // };
-interface MyContextValue {
-  dataQuestion: QuestionRequest;
-  updateDataQuestion: (newValue: QuestionRequest) => void;
-}
+// interface MyContextValue {
+//   dataQuestion: QuestionRequest;
+//   updateDataQuestion: (newValue: QuestionRequest) => void;
+// }
 export const DataContext = createContext<any>({} as any);
 export const useMyContext = () => useContext(DataContext);
 const Create = () => {

@@ -95,9 +95,8 @@ const CreateQuestionHeader = () => {
       duration: 30,
       point: 1,
     });
-    console.log(dataQuestion);
+    // console.log(dataQuestion);
   }, []);
-  // console.log(dataQuestion);
   const handleTime = (value: string | null) => {
     let newData = dataQuestion;
     newData = {
@@ -196,7 +195,7 @@ const CreateQuestionHeader = () => {
     createQuestionForm.setFieldValue("quizBankId", dataQuestion.quizBankId);
     // createQuestionForm.setValues(dataQuestion);
     createQuestionForm.validate();
-    console.log(createQuestionForm.values);
+    // console.log(createQuestionForm.values);
 
     if (!createQuestionForm.isValid()) {
       notifications.show({
@@ -218,7 +217,7 @@ const CreateQuestionHeader = () => {
         createQuestionForm.values
       );
       if (data) {
-        console.log(data);
+        // console.log(data);
       }
       notifications.show({
         color: "green",
@@ -251,9 +250,7 @@ const CreateQuestionHeader = () => {
             <Menu.Dropdown>
               {questionTypes.map((item) => (
                 <Menu.Item key={item.type} leftSection={item.icon}>
-                  <Link
-                    href={` /bank/${questionId}/edit/create?type=${item.type}`}
-                  >
+                  <Link href={` /bank/${bankId}/edit/create?type=${item.type}`}>
                     {item.label}
                   </Link>
                 </Menu.Item>
