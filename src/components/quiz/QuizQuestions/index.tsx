@@ -97,11 +97,11 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
         <SimpleGrid cols={2} verticalSpacing="lg" mt={20}>
           <div>
             {<IconCircleFilled size={10} />}
-            {question.answers_metadata}
+            {question.answersMetadata}
           </div>
-          <div>{question.answers_metadata}</div>
-          <div>{question.answers_metadata}</div>
-          <div>{question.answers_metadata}</div>
+          <div>{question.answersMetadata}</div>
+          <div>{question.answersMetadata}</div>
+          <div>{question.answersMetadata}</div>
         </SimpleGrid>
       </Paper>
     </Stack>
