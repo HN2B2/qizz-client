@@ -9,7 +9,6 @@ import {
     useMantineColorScheme,
 } from "@mantine/core"
 import { IconMoon, IconSun } from "@tabler/icons-react"
-import classes from "./SwitchSchemeBtn.module.css"
 import Link from "next/link"
 import { instance } from "@/utils"
 import { useRouter } from "next/router"
@@ -101,8 +100,22 @@ const Header = ({
                         aria-label="Toggle color scheme"
                         radius="md"
                     >
-                        <IconSun stroke={1.5} className={classes.light} />
-                        <IconMoon stroke={1.5} className={classes.dark} />
+                        <IconSun
+                            stroke={1.5}
+                            className={`${
+                                computedColorScheme === "light"
+                                    ? "hidden"
+                                    : "block"
+                            }`}
+                        />
+                        <IconMoon
+                            stroke={1.5}
+                            className={`${
+                                computedColorScheme === "light"
+                                    ? "block"
+                                    : "hidden"
+                            }`}
+                        />
                     </ActionIcon>
                 </Group>
             </Group>

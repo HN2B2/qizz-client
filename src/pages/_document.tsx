@@ -8,7 +8,7 @@ export default function Document() {
                 <ColorSchemeScript defaultColorScheme="auto" />
                 <link rel="icon" href="/logo/favicon.ico" />
             </Head>
-            <body>
+            <body className="bg-neutral-100 dark:bg-neutral-800">
                 <Main />
                 <NextScript />
             </body>
