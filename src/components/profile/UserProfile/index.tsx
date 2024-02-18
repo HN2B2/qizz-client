@@ -25,7 +25,7 @@ import ChangePasswordBtn from "./ChangePasswordBtn";
 import EditProfileBtn from "./EditProfileBtn";
 
 interface UserProfileProps {
-  user: UserResponse;
+  user: UserResponse | null;
   stats: UserStats;
 }
 
@@ -40,8 +40,8 @@ const UserProfile = ({ user, stats }: UserProfileProps) => {
 
           <Stack gap={1} justify="space-between" h={"100%"}>
             <Stack gap={1}>
-              <Title order={3}>{user.displayName}</Title>
-              <Text c="blue">@{user.username}</Text>
+              <Title order={3}>{user?.displayName || ""}</Title>
+              <Text c="blue">@{user?.username || ""}</Text>
             </Stack>
 
             <EditProfileBtn user={user} />
