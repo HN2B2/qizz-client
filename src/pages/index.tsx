@@ -45,7 +45,7 @@ const Home = () => {
         },
     })
 
-    const { user }: { user: UserResponse } = useUser()
+    const { user } = useUser()
 
     return (
         <HeaderLayout>
