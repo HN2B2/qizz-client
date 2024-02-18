@@ -18,7 +18,7 @@ import { IconChevronDown, IconEdit } from "@tabler/icons-react";
 import { log } from "console";
 import React from "react";
 interface UserProfileProps {
-  user: UserResponse;
+  user: UserResponse | null;
 }
 const EditProfileForm = ({ user }: UserProfileProps) => {
   const editProfileForm = useForm({
@@ -118,7 +118,7 @@ const EditProfileForm = ({ user }: UserProfileProps) => {
         <TextInput
           variant="default"
           label="Email"
-          defaultValue={user.email}
+          defaultValue={user?.email}
           disabled
           w={"100%"}
         />
@@ -126,13 +126,13 @@ const EditProfileForm = ({ user }: UserProfileProps) => {
           <TextInput
             variant="default"
             label="Display Name"
-            placeholder={user.displayName}
+            placeholder={user?.displayName}
             {...editProfileForm.getInputProps("displayName")}
           />
           <TextInput
             variant="default"
             label="Username"
-            placeholder={user.username}
+            placeholder={user?.username}
             {...editProfileForm.getInputProps("username")}
           />
         </Group>
