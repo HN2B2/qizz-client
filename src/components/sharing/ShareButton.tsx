@@ -12,7 +12,7 @@ import {
 import { modals } from "@mantine/modals";
 import React, { useEffect, useState } from "react";
 import Sharing from "./Sharing";
-import { Bank } from "@/types/bank";
+import { BankResponse } from "@/types/bank";
 import { UserResponse } from "@/types/user";
 import { GetServerSidePropsContext } from "next";
 import { instance } from "@/utils";
@@ -24,8 +24,8 @@ import { useForm } from "@mantine/form";
 import AddSharing from "./AddSharing";
 
 interface Prop {
-  bank: Bank;
-  setBank: React.Dispatch<React.SetStateAction<Bank>>;
+  bank: BankResponse;
+  setBank: React.Dispatch<React.SetStateAction<BankResponse>>;
 }
 const ShareButton = ({ bank, setBank }: Prop) => {
   const [bankData, setBankData] = useState(Object.assign({}, bank));
@@ -99,7 +99,7 @@ const ShareButton = ({ bank, setBank }: Prop) => {
     // setBankData({ ...bankData, manageBanks });
     // console.log(bankData); // Logging immediately after setBankData might not reflect the updated state
     // // openModal();
-    <AddSharing></AddSharing>;
+    <AddSharing bank={bankData} setBank={setBankData}></AddSharing>;
   };
   // useEffect(() => {
   //   openModal();
@@ -109,7 +109,7 @@ const ShareButton = ({ bank, setBank }: Prop) => {
       title: "Share this bank to ",
       children: (
         <>
-          <AddSharing></AddSharing>
+          <AddSharing bank={bankData} setBank={setBankData}></AddSharing>
           {/* <TextInput
             variant="default"
             placeholder="Add email or username"
@@ -137,6 +137,26 @@ const ShareButton = ({ bank, setBank }: Prop) => {
             People who have rights to access this bank:
           </Text>
           <Stack gap="xs">
+            <Group justify="space-between">
+              <Group justify="left">
+                <Avatar alt="it's me" m={0} />
+                <Stack gap={0}>
+                  <Text size="sm">{bankData.createdBy.email}</Text>
+                  <Text size="xs">{bankData.createdBy.displayName}</Text>
+                </Stack>
+              </Group>
+              {/* <Select
+                w={150}
+                variant="filled"
+                placeholder="Pick value"
+                data={["Edit", "View", "Delete access right"]}
+                defaultValue={user.editable ? "Edit" : "View"}
+                allowDeselect={false}
+              /> */}
+              <Text p="sm" c={"dimmed"}>
+                Owner
+              </Text>
+            </Group>
             {bankData.manageBanks?.map((user) => (
               <Group justify="space-between">
                 <Group justify="left">

@@ -14,7 +14,7 @@ import {
   useCombobox,
 } from "@mantine/core";
 import { IconLock, IconWorld } from "@tabler/icons-react";
-import { Bank } from "@/types/bank";
+import { BankResponse } from "@/types/bank";
 
 interface Item {
   value: string;
@@ -36,8 +36,8 @@ const groceries: Item[] = [
 ];
 
 interface Props {
-  bankData: Bank;
-  setBankData: React.Dispatch<React.SetStateAction<Bank>>;
+  bankData: BankResponse;
+  setBankData: React.Dispatch<React.SetStateAction<BankResponse>>;
 }
 
 function SelectOption({ value, title, description }: Item) {
