@@ -1,4 +1,4 @@
-import { Category } from "../category";
+import { Category, SubCategory } from "../category";
 import ManageBank from "../manageBank/ManageBank";
 import { UserResponse } from "../user";
 
@@ -11,7 +11,7 @@ export default interface BankResponse {
   modifiedAt: string;
   quizPublicity: boolean;
   publicEditable: boolean;
-  subCategories?: any;
+  subCategories?: SubCategory[];
   draft?: boolean;
   totalQuestions?: number;
   createdBy: UserResponse;

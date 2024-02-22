@@ -1,10 +1,10 @@
-import { Question } from "@/types/question";
+import { QuestionResponse } from "@/types/question";
 import { Box, Divider, Paper, SimpleGrid, Text } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import React from "react";
 
 interface Props {
-  data: Question;
+  data: QuestionResponse;
 }
 const MultipleChoice = ({ data }: Props) => {
   const answersMetadata: string[] = JSON.parse(
@@ -37,26 +37,6 @@ const MultipleChoice = ({ data }: Props) => {
             <Text>{answer}</Text>
           </Box>
         ))}
-        {/* <Box display={"flex"}>
-          <IconCheck height={"100%"} color="green" size={14}></IconCheck>
-          <Text>{data.answersMetadata ? data.answersMetadata[0] : ""}</Text>
-        </Box>
-        <Box my={0} display={"flex"}>
-          <IconX height={"100%"} color="red" size={14}></IconX>
-          <Text>Lorem</Text>
-        </Box>
-        <Box my={0} display={"flex"}>
-          <IconX height={"100%"} color="red" size={14}></IconX>
-          <Text>Lorem</Text>
-        </Box>
-        <Box my={0} display={"flex"}>
-          <IconX height={"100%"} color="red" size={14}></IconX>
-          <Text>Lorem</Text>
-        </Box>
-        <Box my={0} display={"flex"}>
-          <IconX height={"100%"} color="red" size={14}></IconX>
-          <Text>Lorem</Text>
-        </Box> */}
       </SimpleGrid>
     </Paper>
   );

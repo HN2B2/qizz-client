@@ -1,8 +1,8 @@
-import { Question } from "@/types/question";
+import { QuestionResponse } from "@/types/question";
 import { Box, Divider, Paper, SimpleGrid, Text } from "@mantine/core";
 import React from "react";
 interface Props {
-  data: Question;
+  data: QuestionResponse;
 }
 const FillInTheBlank = ({ data }: Props) => {
   const correctAnswersMetadata: string[] = JSON.parse(

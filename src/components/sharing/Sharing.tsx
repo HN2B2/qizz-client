@@ -4,8 +4,6 @@ import { useState } from "react";
 import {
   Combobox,
   Flex,
-  Grid,
-  GridCol,
   Group,
   Input,
   InputBase,
@@ -14,7 +12,7 @@ import {
   useCombobox,
 } from "@mantine/core";
 import { IconLock, IconWorld } from "@tabler/icons-react";
-import { Bank } from "@/types/bank";
+import { BankResponse } from "@/types/bank";
 
 interface Item {
   value: string;
@@ -36,8 +34,8 @@ const groceries: Item[] = [
 ];
 
 interface Props {
-  bankData: Bank;
-  setBankData: React.Dispatch<React.SetStateAction<Bank>>;
+  bankData: BankResponse;
+  setBankData: React.Dispatch<React.SetStateAction<BankResponse>>;
 }
 
 function SelectOption({ value, title, description }: Item) {
@@ -63,20 +61,33 @@ const Sharing = ({ bankData, setBankData }: Props) => {
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  const [value, setValue] = useState<string>("1");
+  const [value, setValue] = useState<string>(
+    bankData.quizPublicity ? "1" : "2"
+  );
+
   const selectedOption = groceries.find((item) => item.value === value);
+
+  const handleChange = (value: string) => {
+    //setBank that bank.quizPublicity = value
+    setBankData({
+      ...bankData,
+      quizPublicity: value === "1" ? true : false,
+    });
+  };
+
+  const handleChangeEdit = (value: string | null) => {
+    //setBank that bank quizEditable = value
+    setBankData({
+      ...bankData,
+      publicEditable: value === "1" ? true : false,
+    });
+  };
 
   const options = groceries.map((item) => (
     <Combobox.Option value={item.value} key={item.value}>
       <SelectOption {...item} />
     </Combobox.Option>
   ));
-
-  // const handleInputChange = (newValue) => {
-  //   setValue(newValue);
-  //   onInputChange(newValue); // Notify the parent component of the value change
-  //   combobox.closeDropdown();
-  // };
 
   return (
     <Flex>
@@ -85,6 +96,7 @@ const Sharing = ({ bankData, setBankData }: Props) => {
         withinPortal={false}
         onOptionSubmit={(val) => {
           setValue(val);
+          handleChange(val);
           combobox.closeDropdown();
         }}
         position="top"
@@ -120,9 +132,10 @@ const Sharing = ({ bankData, setBankData }: Props) => {
         <Select
           w={100}
           data={["Edit", "View"]}
-          defaultValue="Edit"
+          defaultValue={bankData.publicEditable ? "Edit" : "View"}
           bg={"white"}
           variant="subtle"
+          onChange={(val) => handleChangeEdit(val)}
         ></Select>
       )}
     </Flex>

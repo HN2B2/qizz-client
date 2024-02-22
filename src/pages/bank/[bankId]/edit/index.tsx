@@ -1,36 +1,22 @@
 import { UserLayout } from "@/components/layouts";
 import QuestionPaper from "@/components/questions/QuestionPaper";
 import {
-  Avatar,
-  Box,
   Button,
-  Checkbox,
-  Combobox,
-  ComboboxItem,
   Container,
-  CopyButton,
   Flex,
   Grid,
   Group,
   Image,
-  Input,
   InputBase,
-  Menu,
-  MenuDropdown,
-  Modal,
-  Paper,
   Pill,
-  PillsInput,
-  Select,
   SimpleGrid,
-  Stack,
   Text,
   TextInput,
-  rem,
   useCombobox,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
+  IconAdjustments,
   IconArrowsLeftRight,
   IconListCheck,
   IconLock,
@@ -54,29 +40,15 @@ import {
   IMAGE_MIME_TYPE,
 } from "@mantine/dropzone";
 import React, { useState } from "react";
-import { modals } from "@mantine/modals";
-import { useDisclosure } from "@mantine/hooks";
-import Sharing from "@/components/sharing/Sharing";
 import ShareButton from "@/components/sharing/ShareButton";
-import { QuestionType } from "@/types/question/QuestionType";
 import CreateQuestionButton from "@/components/questions/createQuestions/CreateQuestionButton";
-import type {
-  QuestionResponse,
-  QuestionResponse as QuestionData,
-} from "@/types/question";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import type { QuestionResponse as QuestionData } from "@/types/question";
+import { GetServerSidePropsContext } from "next";
 import { instance } from "@/utils";
 import { BankResponse } from "@/types/bank";
 import { useRouter } from "next/router";
 import { notifications } from "@mantine/notifications";
-import { log } from "console";
-const groceries = [
-  "🍎 Apples",
-  "🍌 Bananas",
-  "🥦 Broccoli",
-  "🥕 Carrots",
-  "🍫 Chocolate",
-];
+import CategoryDrawer from "@/components/category/CategoryDrawer";
 
 interface Props {
   bankData: BankResponse;
@@ -84,24 +56,26 @@ interface Props {
 }
 
 const EditBank = ({ bankData, questionData }: Props) => {
-  // console.log(bankData);
+  const [bank, setBank] = useState<BankResponse>(bankData);
+  const [question, setQuestion] = useState<QuestionData[]>(questionData);
+
   const form = useForm({
     initialValues: {
-      quizBankId: bankData.quizBankId,
-      name: bankData.name,
-      featuresImage: bankData.featuresImage,
-      description: bankData.description,
-      quizPublicity: bankData.quizPublicity,
-      publicEditable: bankData.publicEditable,
-      draft: bankData.draft,
-      createdBy: bankData.createdBy,
-      modifiedBy: bankData.modifiedBy,
-      manageBanks: bankData.manageBanks,
-      totalUpvotes: bankData.totalUpVotes,
-      subCategories: bankData.subCategories,
-      totalQuestions: bankData.totalQuestions,
-      createdAt: bankData.createdAt,
-      modifiedAt: bankData.modifiedAt,
+      quizBankId: bank.quizBankId,
+      name: bank.name,
+      featuresImage: bank.featuresImage,
+      description: bank.description,
+      quizPublicity: bank.quizPublicity,
+      publicEditable: bank.publicEditable,
+      draft: bank.draft,
+      createdBy: bank.createdBy,
+      modifiedBy: bank.modifiedBy,
+      manageBanks: bank.manageBanks,
+      totalUpvotes: bank.totalUpVotes,
+      subCategories: bank.subCategories,
+      totalQuestions: bank.totalQuestions,
+      createdAt: bank.createdAt,
+      modifiedAt: bank.modifiedAt,
       // email: "",
       // termsOfService: false,
     },
@@ -111,7 +85,7 @@ const EditBank = ({ bankData, questionData }: Props) => {
     // },
   });
   const router = useRouter();
-  const [bank, setBank] = useState<BankResponse>(bankData);
+
   const [image, setImage] = useState<FileWithPath[]>([]);
 
   const previews = image.map((file, index) => {
@@ -148,13 +122,6 @@ const EditBank = ({ bankData, questionData }: Props) => {
     </Pill>
   ));
 
-  const options = groceries
-    .filter((item) => !value.includes(item))
-    .map((item) => (
-      <Combobox.Option value={item} key={item} active={value.includes(item)}>
-        {item}
-      </Combobox.Option>
-    ));
   const handleSubmit = async (values: BankResponse) => {
     try {
       const body = {
@@ -172,7 +139,6 @@ const EditBank = ({ bankData, questionData }: Props) => {
           };
         }),
       };
-      // console.log(body);
 
       const { data } = await instance.put(`/bank/${bankData.quizBankId}`, body);
       notifications.show({
@@ -181,9 +147,7 @@ const EditBank = ({ bankData, questionData }: Props) => {
         color: "green",
       });
       router.push("/");
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -194,25 +158,19 @@ const EditBank = ({ bankData, questionData }: Props) => {
             <Group justify="space-between">
               <Flex p="sm">
                 <IconListCheck></IconListCheck>
-                <Text>{questionData.length} Questions</Text>
+                <Text>{question.length} Questions</Text>
               </Flex>
               <CreateQuestionButton></CreateQuestionButton>
             </Group>
-            {questionData.map((question) => (
+            {question.map((questionn) => (
               <QuestionPaper
-                key={question.questionId}
-                type={question.type}
-                data={question}
+                key={questionn.questionId}
+                type={questionn.type}
+                data={questionn}
+                bankId={bank.quizBankId}
+                setQuestion={setQuestion}
               />
             ))}
-            {/* <Question
-              type={QuestionType.MULTIPLE_CHOICE}
-              data={dataQuestions[0]}
-            />
-            <Question
-              type={QuestionType.FILL_IN_THE_BLANK}
-              data={dataQuestions[1]}
-            /> */}
           </Grid.Col>
           <Grid.Col span={{ base: 12, sm: 4 }} order={{ base: 1, sm: 3 }}>
             <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -241,48 +199,19 @@ const EditBank = ({ bankData, questionData }: Props) => {
 
               <ShareButton bank={form.values} setBank={setBank}></ShareButton>
               <Text fw={500}>Choose sub category</Text>
-              <Combobox
-                store={combobox}
-                onOptionSubmit={handleValueSelect}
-                withinPortal={false}
-              >
-                <Combobox.DropdownTarget>
-                  <PillsInput pointer onClick={() => combobox.toggleDropdown()}>
+              <Flex>
+                {bank.subCategories && bank.subCategories.length > 0 && (
+                  <InputBase component="div" multiline mr={"sm"}>
                     <Pill.Group>
-                      {values.length > 0 ? (
-                        values
-                      ) : (
-                        <Input.Placeholder>
-                          Pick one or more values
-                        </Input.Placeholder>
-                      )}
-
-                      <Combobox.EventsTarget>
-                        <PillsInput.Field
-                          type="hidden"
-                          onBlur={() => combobox.closeDropdown()}
-                          onKeyDown={(event) => {
-                            if (event.key === "Backspace") {
-                              event.preventDefault();
-                              handleValueRemove(value[value.length - 1]);
-                            }
-                          }}
-                        />
-                      </Combobox.EventsTarget>
+                      {bank.subCategories?.map((item) => (
+                        <Pill key={item.id}>{item.name}</Pill>
+                      ))}
                     </Pill.Group>
-                  </PillsInput>
-                </Combobox.DropdownTarget>
+                  </InputBase>
+                )}
 
-                <Combobox.Dropdown>
-                  <Combobox.Options>
-                    {options.length === 0 ? (
-                      <Combobox.Empty>All options selected</Combobox.Empty>
-                    ) : (
-                      options
-                    )}
-                  </Combobox.Options>
-                </Combobox.Dropdown>
-              </Combobox>
+                <CategoryDrawer bank={bank} setBank={setBank}></CategoryDrawer>
+              </Flex>
 
               <Group justify="flex-end" mt="md">
                 <Button type="submit">Submit</Button>
@@ -300,7 +229,7 @@ export const getServerSideProps = async (
 ) => {
   try {
     const { req, query } = context;
-    // const { page = PAGE, keyword } = query;
+
     const res = await instance.get(`/bank/${query.bankId}`, {
       withCredentials: true,
       headers: {
@@ -322,7 +251,6 @@ export const getServerSideProps = async (
       },
     };
   } catch (error) {
-    console.log(error);
     return {
       notFound: true,
     };
