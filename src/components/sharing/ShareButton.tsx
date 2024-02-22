@@ -3,25 +3,19 @@ import {
   Button,
   CopyButton,
   Group,
+  Modal,
   Select,
   Stack,
-  TagsInput,
   Text,
-  TextInput,
 } from "@mantine/core";
-import { modals } from "@mantine/modals";
 import React, { useEffect, useState } from "react";
 import Sharing from "./Sharing";
-import { BankResponse } from "@/types/bank";
-import { UserResponse } from "@/types/user";
-import { GetServerSidePropsContext } from "next";
+import { BankResponse, BankUpdateRequest } from "@/types/bank";
 import { instance } from "@/utils";
-import ManageBank from "@/types/manageBank/ManageBank";
-import { getHotkeyHandler } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { UserRole } from "@/types/user/UserResponse";
-import { useForm } from "@mantine/form";
 import AddSharing from "./AddSharing";
+// import cloneDeep from 'lodash.clonedeep';
 
 interface Prop {
   bank: BankResponse;
@@ -29,110 +23,85 @@ interface Prop {
 }
 const ShareButton = ({ bank, setBank }: Prop) => {
   const [bankData, setBankData] = useState(Object.assign({}, bank));
+  const [opened, { open, close }] = useDisclosure(false);
 
-  // console.log(value);
-  // const handleSubmit = () => {
-  //   // modals.openConfirmModal({
-  //   //   title: "Please confirm your action",
-  //   //   children: (
-  //   //     <>
-  //   //       <Text size="sm">
-  //   //         This action is so important that you are required to confirm it with
-  //   //         a modal. Please click one of these buttons to proceed.
-  //   //       </Text>
-  //   //       <TagsInput
-  //   //         label="Press Enter to submit a tag"
-  //   //         placeholder="Enter tag"
-  //   //         // defaultValue={[value]}
-  //   //         defaultValue={[value]}
-  //   //         clearable
-  //   //       />
-  //   //     </>
-  //   //   ),
-  //   //   labels: { confirm: "Confirm", cancel: "Cancel" },
-  //   //   onCancel: () => modals.closeAll(),
-  //   //   onConfirm: () => console.log("Confirmed"),
-  //   // });
-  //   const manageBanks = [
-  //     ...(bankData.manageBanks || []),
-  //     {
-  //       //insert new data
-  //       manageBankId: 1,
-  //       createdAt: "",
-  //       modifiedAt: "",
-  //       user: {
-  //         id: 1,
-  //         email: value,
-  //         displayName: "",
-  //         createdAt: "",
-  //         modifiedAt: "",
-  //         role: UserRole.USER,
-  //         username: "",
-  //       },
-  //       editable: true,
-  //     },
-  //   ];
-  //   setBankData({ manageBanks, ...bankData });
-  //   console.log(bankData);
-  //   openModal();
-  // };
-  const handleSubmit = () => {
-    // const manageBanks = [
-    //   ...(bankData.manageBanks || []),
-    //   {
-    //     manageBankId: 1,
-    //     createdAt: "",
-    //     modifiedAt: "",
-    //     user: {
-    //       id: 1,
-    //       email: value,
-    //       displayName: "",
-    //       createdAt: "",
-    //       modifiedAt: "",
-    //       role: UserRole.USER,
-    //       username: "",
-    //     },
-    //     editable: true,
-    //   },
-    // ];
-    // // Update bankData with the new manageBanks array
-    // setBankData({ ...bankData, manageBanks });
-    // console.log(bankData); // Logging immediately after setBankData might not reflect the updated state
-    // // openModal();
-    <AddSharing bank={bankData} setBank={setBankData}></AddSharing>;
+  const handleChange = (event: string | null, index: number) => {
+    const updatedManageBanks = bankData.manageBanks
+      ? [...bankData.manageBanks]
+      : [];
+    if (updatedManageBanks[index]) {
+      updatedManageBanks[index].editable = event === "Edit";
+    }
+    setBankData({
+      ...bankData,
+      manageBanks: updatedManageBanks,
+    });
   };
-  // useEffect(() => {
-  //   openModal();
-  // }, [bankData]);
-  const openModal = () => {
-    modals.openConfirmModal({
-      title: "Share this bank to ",
-      children: (
+
+  const handleDelete = async (index: number) => {
+    try {
+      await instance.delete(`/manageBank/${index}`);
+      const { data } = await instance.get(`/bank/${bank.quizBankId}`);
+      setBankData(data);
+      notifications.show({
+        title: "Success",
+        message: "Sharing account deleted successfully",
+        color: "green",
+      });
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Failed to delete sharing account",
+        color: "red",
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const bankRequest: BankUpdateRequest = {
+        name: bankData.name,
+        description: bankData.description,
+        featuresImage: bankData.featuresImage,
+        quizPublicity: bankData.quizPublicity,
+        publicEditable: bankData.publicEditable,
+        draft: bankData.draft,
+        manageBanks: bankData.manageBanks?.map((item) => {
+          return {
+            email: item.user.email,
+            editable: item.editable,
+          };
+        }),
+      };
+      const { data, status } = await instance.put(
+        `/bank/${bankData.quizBankId}`,
+        bankRequest
+      );
+      setBankData(data);
+      notifications.show({
+        title: "Success",
+        message: "Bank saved successfully",
+        color: "green",
+      });
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Failed to save bank",
+        color: "red",
+      });
+    }
+  };
+
+  return (
+    <>
+      <Modal opened={opened} onClose={close} title="Add new subcategory">
         <>
-          <AddSharing bank={bankData} setBank={setBankData}></AddSharing>
-          {/* <TextInput
-            variant="default"
-            placeholder="Add email or username"
-            // value={value}
-            onChange={(event) => setValue(event.target.value)}
-            onKeyDown={getHotkeyHandler([
-              [
-                "Enter",
-                () => {
-                  handleSubmit();
-                  modals.close;
-                },
-              ],
-            ])}
-          ></TextInput> */}
-          {/* <Button
-            onClick={() => {
-              handleSubmit();
-              modals.close;
-            }}
-          >
-            Add
-          </Button> */}
+          <AddSharing
+            closee={close}
+            bank={bankData}
+            setBank={setBankData}
+          ></AddSharing>
+
           <Text fw={500} my="md">
             People who have rights to access this bank:
           </Text>
@@ -145,20 +114,12 @@ const ShareButton = ({ bank, setBank }: Prop) => {
                   <Text size="xs">{bankData.createdBy.displayName}</Text>
                 </Stack>
               </Group>
-              {/* <Select
-                w={150}
-                variant="filled"
-                placeholder="Pick value"
-                data={["Edit", "View", "Delete access right"]}
-                defaultValue={user.editable ? "Edit" : "View"}
-                allowDeselect={false}
-              /> */}
               <Text p="sm" c={"dimmed"}>
                 Owner
               </Text>
             </Group>
-            {bankData.manageBanks?.map((user) => (
-              <Group justify="space-between">
+            {bankData.manageBanks?.map((user, index) => (
+              <Group justify="space-between" key={user.manageBankId}>
                 <Group justify="left">
                   <Avatar alt="it's me" m={0} />
                   <Stack gap={0}>
@@ -173,6 +134,11 @@ const ShareButton = ({ bank, setBank }: Prop) => {
                   data={["Edit", "View", "Delete access right"]}
                   defaultValue={user.editable ? "Edit" : "View"}
                   allowDeselect={false}
+                  onChange={(value) => {
+                    if (value === "Delete access right") {
+                      handleDelete(user.manageBankId);
+                    } else handleChange(value, index);
+                  }}
                 />
               </Group>
             ))}
@@ -184,63 +150,31 @@ const ShareButton = ({ bank, setBank }: Prop) => {
           <Group>
             <Sharing bankData={bankData} setBankData={setBankData}></Sharing>
           </Group>
-          <CopyButton value="https://mantine.dev">
-            {({ copied, copy }) => (
-              <Button
-                color={copied ? "teal" : "blue"}
-                onClick={copy}
-                variant="outline"
-                radius="xl"
-                pos={"relative"}
-                top={"50px"}
-              >
-                {copied ? "Copied link" : "Copy link"}
-              </Button>
-            )}
-          </CopyButton>
+          <Group pt={"md"} justify="space-between">
+            <CopyButton value="https://mantine.dev">
+              {({ copied, copy }) => (
+                <Button
+                  color={copied ? "teal" : "blue"}
+                  onClick={copy}
+                  variant="outline"
+                  radius="xl"
+                >
+                  {copied ? "Copied link" : "Copy link"}
+                </Button>
+              )}
+            </CopyButton>
+            <Group>
+              <Button onClick={close}>Cancel</Button>
+              <Button onClick={() => handleSubmit()}>Save</Button>
+            </Group>
+          </Group>
         </>
-      ),
-      labels: { confirm: "Confirm", cancel: "Cancel" },
-      onConfirm: () => console.log("Confirmed"),
-      onCancel: () => {
-        setBankData(bank);
-        console.log(bank);
-        modals.closeAll();
-      },
-    });
-  };
-  return (
-    <Button mb={"md"} onClick={openModal} variant="light">
-      Share
-    </Button>
+      </Modal>
+      <Button mb={"md"} onClick={open} variant="light">
+        Share
+      </Button>
+    </>
   );
 };
-
-// export const getServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   try {
-//     const { req, query } = context;
-//     // const { page = PAGE, keyword } = query;
-//     const res = await instance.get(`/manageBank/all/bankId/{${query.bankId}}`, {
-//       withCredentials: true,
-//       headers: {
-//         Cookie: req.headers.cookie || "",
-//       },
-//     });
-//     const manageBankData = res.data;
-//     return {
-//       props: {
-//         bankData,
-//         questionData,
-//       },
-//     };
-//   } catch (error) {
-//     console.log(error);
-//     return {
-//       notFound: true,
-//     };
-//   }
-// };
 
 export default ShareButton;

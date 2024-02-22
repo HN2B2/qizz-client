@@ -1,14 +1,6 @@
 import { BankResponse } from "@/types/bank";
-import {
-  Button,
-  Combobox,
-  Loader,
-  TagsInput,
-  TextInput,
-  useCombobox,
-} from "@mantine/core";
-import { getHotkeyHandler } from "@mantine/hooks";
-import { modals } from "@mantine/modals";
+import { Combobox, Loader, TextInput, useCombobox } from "@mantine/core";
+import { getHotkeyHandler, useDisclosure, useListState } from "@mantine/hooks";
 import React, { useRef, useState } from "react";
 import AddSharingModal from "./AddSharingModal";
 import { instance } from "@/utils";
@@ -16,6 +8,7 @@ import { UserResponse } from "@/types/user";
 interface Prop {
   bank: BankResponse;
   setBank: React.Dispatch<React.SetStateAction<BankResponse>>;
+  closee: () => void;
 }
 
 function getAsyncData(searchQuery: string, signal: AbortSignal) {
@@ -23,80 +16,20 @@ function getAsyncData(searchQuery: string, signal: AbortSignal) {
     signal.addEventListener("abort", () => {
       reject(new Error("Request aborted"));
     });
-    // const data;
 
     setTimeout(async () => {
       try {
         const { data, status } = await instance.get(
           `/users/email?keyword=${searchQuery}`
         );
-        console.log(data, status);
-        resolve(
-          data.data.map((item: UserResponse) => item.email)
-          // MOCKDATA.filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase())).slice(
-          //   0,
-          //   5
-          // )
-          // ["hello", "hi"]
-        );
-      } catch (error) {
-        console.log(error);
-      }
-      // const { data, status } = await instance.get(`/users/email?keyword=xyz`);
-      // console.log(data, status);
-
-      // resolve(
-      //   data.data.map((item: UserResponse) => item.email)
-      //   // MOCKDATA.filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase())).slice(
-      //   //   0,
-      //   //   5
-      //   // )
-      //   // ["hello", "hi"]
-      // );
+        resolve(data.data.map((item: UserResponse) => item.email));
+      } catch (error) {}
     }, Math.random() * 1000);
   });
 }
 
-const AddSharing = ({ bank, setBank }: Prop) => {
-  // const [value, setValue] = useState("");
-  const openModal = () =>
-    modals.openConfirmModal({
-      title: "Please confirm your action",
-      children: (
-        <>
-          {/* <TagsInput defaultValue={[value]} clearable></TagsInput> */}
-          <AddSharingModal email={value}></AddSharingModal>
-        </>
-      ),
-      labels: { confirm: "Confirm", cancel: "Cancel" },
-      onCancel: () => console.log("Cancel"),
-      onConfirm: () => console.log("Confirmed"),
-    });
-  const handleSubmit = () => {
-    // const manageBanks = [
-    //   ...(bankData.manageBanks || []),
-    //   {
-    //     manageBankId: 1,
-    //     createdAt: "",
-    //     modifiedAt: "",
-    //     user: {
-    //       id: 1,
-    //       email: value,
-    //       displayName: "",
-    //       createdAt: "",
-    //       modifiedAt: "",
-    //       role: UserRole.USER,
-    //       username: "",
-    //     },
-    //     editable: true,
-    //   },
-    // ];
-    // // Update bankData with the new manageBanks array
-    // setBankData({ ...bankData, manageBanks });
-    // console.log(bankData); // Logging immediately after setBankData might not reflect the updated state
-    // // openModal();
-    // <AddSharing></AddSharing>;
-  };
+const AddSharing = ({ bank, setBank, closee }: Prop) => {
+  const [shareData, shareDataHandler] = useListState<string>([]);
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -107,6 +40,7 @@ const AddSharing = ({ bank, setBank }: Prop) => {
   const [value, setValue] = useState("");
   const [empty, setEmpty] = useState(false);
   const abortController = useRef<AbortController>();
+  const [opened, { open, close }] = useDisclosure(false);
 
   const fetchOptions = (query: string) => {
     abortController.current?.abort();
@@ -131,23 +65,6 @@ const AddSharing = ({ bank, setBank }: Prop) => {
 
   return (
     <>
-      {/* <TextInput
-        variant="default"
-        placeholder="Add email or username"
-        // value={value}
-        onChange={(event) => setValue(event.target.value)}
-        onKeyDown={getHotkeyHandler([
-          [
-            "Enter",
-            () => {
-              // handleSubmit();
-              openModal();
-              console.log("Enter pressed");
-              //   modals.close;
-            },
-          ],
-        ])}
-      ></TextInput> */}
       <Combobox
         onOptionSubmit={(optionValue) => {
           setValue(optionValue);
@@ -180,9 +97,7 @@ const AddSharing = ({ bank, setBank }: Prop) => {
               [
                 "Enter",
                 () => {
-                  openModal();
-                  console.log("Enter pressed");
-                  //   modals.close;
+                  open();
                 },
               ],
             ])}
@@ -196,6 +111,15 @@ const AddSharing = ({ bank, setBank }: Prop) => {
           </Combobox.Options>
         </Combobox.Dropdown>
       </Combobox>
+
+      {opened && (
+        <AddSharingModal
+          opened={opened}
+          email={value}
+          bank={bank}
+          setBank={setBank}
+        ></AddSharingModal>
+      )}
     </>
   );
 };

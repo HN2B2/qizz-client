@@ -1,18 +1,9 @@
 import {
-  Box,
   Button,
-  CheckIcon,
-  Combobox,
-  Divider,
   Group,
-  InputBase,
   Paper,
   Pill,
-  Text,
-  useCombobox,
-  Input,
   Select,
-  HoverCard,
   Tooltip,
   Flex,
 } from "@mantine/core";
@@ -20,16 +11,18 @@ import {
   IconAlarm,
   IconCopyPlus,
   IconGripVertical,
-  IconPencil,
   IconTrash,
   IconTrophy,
 } from "@tabler/icons-react";
-import React, { useState } from "react";
+import React from "react";
 import MultipleChoice from "./questionsType/MultipleChoice";
 import FillInTheBlank from "./questionsType/FillInTheBlank";
 import { QuestionType } from "@/types/question/QuestionType";
-import { Question } from "@/types/question";
+import { QuestionResponse } from "@/types/question";
 import EditQuestionButton from "./editQuestions/EditQuestionButton";
+import { instance } from "@/utils";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/router";
 
 const times = [
   {
@@ -75,36 +68,62 @@ const points = [
 
 interface Props {
   type: string;
-  data: Question;
+  data: QuestionResponse;
+  bankId: number;
+  setQuestion: React.Dispatch<React.SetStateAction<QuestionResponse[]>>;
 }
-const QuestionPaper = ({ type, data }: Props) => {
+const QuestionPaper = ({ type, data, bankId, setQuestion }: Props) => {
   const QuestionTypes: Record<QuestionType, React.ReactNode> = {
     [QuestionType.MULTIPLE_CHOICE]: <MultipleChoice data={data} />,
     [QuestionType.FILL_IN_THE_BLANK]: <FillInTheBlank data={data} />,
   };
   const questionType: QuestionType =
     QuestionType[type as keyof typeof QuestionType];
+  const query = useRouter().query;
+  const handleDelete = async () => {
+    data.disabled = true;
+    try {
+      const { data: question } = await instance.put(
+        `/question/${data.questionId}`,
+        data
+      );
 
+      notifications.show({
+        title: "Success",
+        message: "Question deleted successfully",
+        color: "green",
+      });
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+
+    try {
+      const { data: questionData, status } = await instance.get(
+        `/question/all/bankId/${bankId}`
+      );
+
+      setQuestion(questionData);
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+  };
   return (
     <Paper shadow="md" withBorder my={"sm"}>
       <Group justify="space-between">
-        {/* <Pill.Group p={8}>
-          <Pill p={0} radius={0}>
-            
-          </Pill>
-          
-          {/* <Button variant="default">Third</Button> */}
-        {/* </Pill.Group>
-         */}
         <Flex align={"center"} pl={20}>
           <IconGripVertical></IconGripVertical>
           <Pill variant="transparent">Question {data.questionIndex}</Pill>
         </Flex>
         <Button.Group p={8}>
           <Tooltip label="Edit this question" position="top">
-            {/* <Button variant="default" p={6} mx={4}>
-              <IconPencil size={16}></IconPencil>Edit
-            </Button> */}
             <EditQuestionButton questionId={data.questionId} type={type} />
           </Tooltip>
           <Tooltip label="Duplicate this question" position="top">
@@ -113,33 +132,21 @@ const QuestionPaper = ({ type, data }: Props) => {
             </Button>
           </Tooltip>
           <Tooltip label="Delete this question" position="top">
-            <Button variant="default" p={6} mx={4}>
+            <Button
+              variant="default"
+              p={6}
+              mx={4}
+              onClick={() => {
+                handleDelete();
+              }}
+            >
               <IconTrash size={16}></IconTrash>
             </Button>
           </Tooltip>
         </Button.Group>
       </Group>
-      {/* <FillInTheBlank></FillInTheBlank> */}
-      {/* <MultipleChoice></MultipleChoice> */}
       {QuestionTypes[questionType]}
-      {/* <Paper px="xl" py="xs">
-        <Text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          expedita error. Enim ut suscipit saepe amet hic quis quos
-          exercitationem fuga, vero, commodi praesentium, perferendis rerum?
-          Ducimus nemo dolores assumenda?
-        </Text>
-        <Divider
-          my="sm"
-          variant="dashed"
-          labelPosition="left"
-          label={
-            <>
-              <Box ml={5}>Answer</Box>
-            </>
-          }
-        />
-      </Paper> */}
+
       <Group p={8}>
         <Tooltip
           label="Set time alloted to answer this question"
