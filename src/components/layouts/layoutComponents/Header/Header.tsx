@@ -71,6 +71,8 @@ const MenuHeader = (user: UserResponse | null) => {
           leftSection={
             <IconLogout style={{ width: rem(20), height: rem(20) }} />
           }
+          component="a"
+          href="/auth/logout"
         >
           Log out
         </Menu.Item>
