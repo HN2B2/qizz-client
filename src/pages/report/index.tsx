@@ -1,13 +1,10 @@
 import { UserLayout } from "@/components/layouts";
+import { QuizResponse } from "@/types/quiz";
 
 import {
-  Button,
   Checkbox,
-  Divider,
   Flex,
-  Grid,
   Group,
-  Input,
   Pagination,
   Paper,
   Select,
@@ -15,17 +12,57 @@ import {
   Table,
   Text,
   UnstyledButton,
+  Tooltip,
+  ActionIcon,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import { IconChevronDown, IconDotsVertical } from "@tabler/icons-react";
-import { log } from "console";
-import { link } from "fs";
-import { redirect } from "next/dist/server/api-utils";
-import { useRouter } from "next/router";
+import {
+  IconChevronDown,
+  IconEdit,
+  IconLiveView,
+  IconTrash,
+} from "@tabler/icons-react";
+
 import React, { Component, useState } from "react";
+interface QuizProps {
+  quiz: QuizResponse;
+}
+const ReportAction = () => {
+  return (
+    <Flex
+      mih={50}
+      gap="sm"
+      justify="flex-start"
+      align="center"
+      direction="row"
+      wrap="wrap"
+    >
+      <Tooltip label="View report detail">
+        <ActionIcon
+          variant="filled"
+          aria-label="Settings"
+          component="a"
+          href="/report/report-detail/abc"
+        >
+          <IconLiveView style={{ width: "70%", height: "70%" }} stroke={1.5} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label="Edit report">
+        <ActionIcon variant="filled" aria-label="Settings">
+          <IconEdit style={{ width: "70%", height: "70%" }} stroke={1.5} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label="Delete this report">
+        <ActionIcon variant="filled" aria-label="Settings">
+          <IconTrash style={{ width: "70%", height: "70%" }} stroke={1.5} />
+        </ActionIcon>
+      </Tooltip>
+    </Flex>
+  );
+};
 const elements = [
   {
-    Type: 1,
+    quizId: 1,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -34,7 +71,7 @@ const elements = [
     Actions: "C",
   },
   {
-    Type: 2,
+    quizId: 2,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -43,7 +80,7 @@ const elements = [
     Actions: "C",
   },
   {
-    Type: 3,
+    quizId: 3,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -52,7 +89,7 @@ const elements = [
     Actions: "C",
   },
   {
-    Type: 4,
+    quizId: 4,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -61,7 +98,7 @@ const elements = [
     Actions: "C",
   },
   {
-    Type: 5,
+    quizId: 5,
     QuizName: "12.011",
     TotalParticipants: "C",
     Accuracy: "Carbon",
@@ -81,32 +118,34 @@ const Report = () => {
     <Table.Tr
       key={element.QuizName}
       bg={
-        selectedRows.includes(element.Type)
+        selectedRows.includes(element.quizId)
           ? "var(--mantine-color-blue-light)"
           : undefined
       }
-      onClick={handleRowClick}
+      // onClick={handleRowClick}
     >
       <Table.Td>
         <Checkbox
           aria-label="Select row"
-          checked={selectedRows.includes(element.Type)}
+          checked={selectedRows.includes(element.quizId)}
           onChange={(event) =>
             setSelectedRows(
               event.currentTarget.checked
-                ? [...selectedRows, element.Type]
-                : selectedRows.filter((Type) => Type !== element.Type)
+                ? [...selectedRows, element.quizId]
+                : selectedRows.filter((quizId) => quizId !== element.quizId)
             )
           }
         />
       </Table.Td>
-      <Table.Td>{element.Type}</Table.Td>
+      {/* <Table.Td>{element.Type}</Table.Td> */}
       <Table.Td>{element.QuizName}</Table.Td>
       <Table.Td>{element.TotalParticipants}</Table.Td>
       <Table.Td>{element.Accuracy}</Table.Td>
       <Table.Td>{element.Code}</Table.Td>
       <Table.Td>{element.Class}</Table.Td>
-      <Table.Td>{element.Actions}</Table.Td>
+      <Table.Td>
+        <ReportAction />
+      </Table.Td>
       {/* <Table.Td>{IconDotsVertical}</Table.Td> */}
     </Table.Tr>
   ));
@@ -156,11 +195,11 @@ const Report = () => {
           <UnstyledButton>Clear all</UnstyledButton>
         </Flex>
         <Paper p="lg" radius="md" shadow="sm">
-          <Table>
+          <Table striped>
             <Table.Thead>
               <Table.Tr>
                 <Table.Th />
-                <Table.Th>Type</Table.Th>
+                {/* <Table.Th>Type</Table.Th> */}
                 <Table.Th>Quiz Name</Table.Th>
                 <Table.Th>Total Participants</Table.Th>
                 <Table.Th>Accuracy</Table.Th>
