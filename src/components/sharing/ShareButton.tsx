@@ -151,7 +151,7 @@ const ShareButton = ({ bank, setBank }: Prop) => {
             <Sharing bankData={bankData} setBankData={setBankData}></Sharing>
           </Group>
           <Group pt={"md"} justify="space-between">
-            <CopyButton value="https://mantine.dev">
+            <CopyButton value={"/bank/" + bankData.quizBankId + "/edit"}>
               {({ copied, copy }) => (
                 <Button
                   color={copied ? "teal" : "blue"}

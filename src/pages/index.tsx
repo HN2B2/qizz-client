@@ -16,14 +16,14 @@ import { Carousel } from "@mantine/carousel";
 import { useForm } from "@mantine/form";
 import QuizCard from "@/components/cards/QuizCard";
 import Category from "@/types/category/Category";
-import Bank from "@/types/bank/BankResponse";
+import { BankResponse } from "@/types/bank";
 import Link from "next/link";
 import { HeaderLayout } from "@/components/layouts";
 import UserResponse, { UserRole } from "@/types/user/UserResponse";
 import useUser from "@/hooks/useUser";
 
 interface CategoryQuizBanks extends Category {
-  quizBanks: Bank[];
+  quizBanks: BankResponse[];
 }
 const PopularQuiz = () => {
   const icon = <IconInfoCircle />;
@@ -66,6 +66,7 @@ const PopularQuiz = () => {
 };
 const Home = () => {
   const [data, setData] = useState([]);
+  const icon = <IconInfoCircle />;
   const form = useForm({
     initialValues: { code: "" },
 
