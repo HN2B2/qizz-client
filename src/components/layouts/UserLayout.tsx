@@ -3,6 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import Head from "next/head";
 import Link from "next/link";
 import {
+  IconBook,
   IconHome,
   IconInfoCircle,
   IconReport,
@@ -34,6 +35,11 @@ const navbarItems = [
     title: "Profile",
     link: "/profile/1",
     icon: <IconUserCircle size="1rem" stroke={1.5} />,
+  },
+  {
+    title: "My library",
+    link: "/my-library",
+    icon: <IconBook size="1rem" stroke={1.5} />,
   },
   {
     title: "Reports",
