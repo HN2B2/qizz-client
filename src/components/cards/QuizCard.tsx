@@ -3,7 +3,7 @@ import { Card, Image, Text, Badge, Group } from "@mantine/core";
 interface CardProps {
   title?: string;
   description?: string | null;
-  totalJoins?: number;
+  totalUpvotes?: number;
   totalQuestions?: number;
   image?: string | null;
   w?: string | number;
@@ -13,7 +13,7 @@ interface CardProps {
 const QuizCard = ({
   title,
   description,
-  totalJoins,
+  totalUpvotes,
   totalQuestions,
   image,
   lineClamp,
@@ -33,7 +33,7 @@ const QuizCard = ({
           {title}
         </Text>
         <Group justify="space-between" mt="md" mb="xs">
-          <Badge color="pink">{totalJoins} plays</Badge>
+          <Badge color="pink">{totalUpvotes} upvotes</Badge>
           <Badge color="pink">{totalQuestions} qs</Badge>
         </Group>
 
