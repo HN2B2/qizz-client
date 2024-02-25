@@ -11,6 +11,7 @@ import Countdown from "./Countdown"
 import Answering from "./answering/Answering"
 import { QuizContext } from "@/pages/play/[quizCode]"
 import { QuizRoomInfoResponse } from "@/types/takeQuiz"
+import Ranking from "./ranking/Ranking"
 
 const PlayingRoom = () => {
     const {
@@ -51,11 +52,7 @@ const PlayingRoom = () => {
             return <Answering />
 
         case PlayingState.RANKING:
-            return (
-                <GameBackground>
-                    <div>Ranking</div>
-                </GameBackground>
-            )
+            return <Ranking />
 
         default:
             return <GameBackground>PlayingRoom</GameBackground>

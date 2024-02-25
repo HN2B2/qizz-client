@@ -48,19 +48,23 @@ const MultipleChoice = ({ timeLeft }: MultipleChoiceProps) => {
         if (timeLeft === 0 || playingData?.state !== PlayingState.ANSWERING)
             return
         setSelectedAnswer(index)
-        instance.post(
-            `/take-quiz/${quiz.code}/${playingData.data.questionId}`,
-            {
-                answerMetadata: JSON.stringify(answers[index]),
-                QuestionType: QuestionType.MULTIPLE_CHOICE,
-                answerTime: timeLeft,
-            }
-        )
+        try {
+            instance.post(
+                `/take-quiz/${quiz.code}/${playingData.data.questionId}`,
+                {
+                    answerMetadata: JSON.stringify([answers[index]] || [""]),
+                    QuestionType: QuestionType.MULTIPLE_CHOICE,
+                    answerTime: timeLeft / 10,
+                }
+            )
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     const [correctAnswers, setCorrectAnswers] = useState<string[]>([])
     useEffect(() => {
-        if (timeLeft === 0 && selectedAnswer === null) {
+        if (timeLeft === 1 && selectedAnswer === null) {
             setSelectedAnswer(100)
         }
         setCorrectAnswers(

@@ -1,7 +1,12 @@
 import { QuizResponse } from "@/types/quiz"
 import { instance } from "@/utils"
 import { GetServerSidePropsContext } from "next"
-import { GameBackground, PlayingRoom, WaitingRoom } from "@/components/play"
+import {
+    EndGame,
+    GameBackground,
+    PlayingRoom,
+    WaitingRoom,
+} from "@/components/play"
 import { QuizState } from "@/types/quiz/QuizState"
 import useWebSocket from "@/hooks/useWebSocket"
 import useSubscription from "@/hooks/useSubscription"
@@ -84,7 +89,16 @@ const TakeQuiz = ({ quiz }: TakeQuizProps) => {
                 </QuizProvider>
             )
         case QuizState.ENDED:
-            return <GameBackground>Game ended</GameBackground>
+            return (
+                <QuizProvider
+                    message={message}
+                    quiz={quiz}
+                    client={client}
+                    connected={connected}
+                >
+                    <EndGame />
+                </QuizProvider>
+            )
         default:
             return <div>Invalid state</div>
     }

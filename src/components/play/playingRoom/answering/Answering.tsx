@@ -14,31 +14,9 @@ import { motion } from "framer-motion"
 import { IconClock } from "@tabler/icons-react"
 import MultipleChoice from "./MultipleChoice"
 
-const mockPlayingData: PlayingResponse<PlayingQuestionResponse> = {
-    state: PlayingState.ANSWERING,
-    data: {
-        questionId: 1,
-        content: "What is the capital of Indonesia?",
-        answersMetadata: `[
-            "Jakarta",
-            "Bandung",
-            "Surabaya",
-            "Bali"
-        ]`,
-        correctAnswersMetadata: `[
-            "Jakarta"
-        ]`,
-        duration: 10,
-        point: 100,
-        type: QuestionType.MULTIPLE_CHOICE,
-    },
-}
-
 const Answering = () => {
     const {
         message: roomInfo,
-        connected,
-        quiz,
     }: {
         message: QuizRoomInfoResponse<PlayingResponse<any>> | null
         client: CompatClient
