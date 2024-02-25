@@ -20,7 +20,7 @@ function BankCard({ bank }: { bank: BankResponse }) {
         // shadow="sm"
         m={"sm"}
         component="a"
-        href={`bank/${bank.quizBankId}/edit`}
+        href={`bank/${bank.quizBankId}`}
         withBorder
         // p={"sm"}
         // target="_blank"

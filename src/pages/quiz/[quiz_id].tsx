@@ -4,7 +4,7 @@ import { QuizInfo } from "@/components/quiz";
 import QuizQuestions from "@/components/quiz/QuizQuestions";
 import Quiz from "@/types/quiz/QuizResponse";
 import Question from "@/types/question/QuestionResponse";
-import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
+// import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
 import { UserStats } from "@/types/user";
 
 import {
@@ -26,24 +26,34 @@ import {
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { QuestionType } from "@/types/question/QuestionType";
-const mockQuiz: Quiz = {
-  quizId: 1,
-  mode: "Quiz",
-  name: "Test 1",
-  description: "ring",
-  featuredImage: "",
-  createdAt: "2022-10-10",
-  // modifiedAt: string;
-  // publicable: boolean;
-  // publicEditable: boolean;
-  category: "test",
-  subcategory: "Math",
-  // quizBank: QuizBank,
-  bankId: 1,
-  totalQuestions: 10,
-  totalJoins: 10,
-  createBy: "Quynh",
-};
+import { BankResponse } from "@/types/bank";
+import QuestionResponse from "@/types/question/QuestionResponse";
+import { GetServerSidePropsContext } from "next";
+import { instance } from "@/utils";
+
+interface Props {
+  bankData: BankResponse;
+  questionData: QuestionResponse[];
+}
+
+// const mockQuiz: Quiz = {
+//   quizId: 1,
+//   mode: "Quiz",
+//   name: "Test 1",
+//   description: "ring",
+//   featuredImage: "",
+//   createdAt: "2022-10-10",
+//   // modifiedAt: string;
+//   // publicable: boolean;
+//   // publicEditable: boolean;
+//   category: "test",
+//   subcategory: "Math",
+//   // quizBank: QuizBank,
+//   bankId: 1,
+//   totalQuestions: 10,
+//   totalJoins: 10,
+//   createBy: "Quynh",
+// };
 
 const mockQuestion: Question = {
   questionId: 1,
@@ -62,15 +72,15 @@ const mockQuestion: Question = {
   quizBankId: 1,
 };
 
-const mockQuizQuestion: QuizQuestion = {
-  quiz_question_id: 1,
-  point: 10,
-  explain_answer: "ring",
-  createdAt: "2022-10-10",
-  modifiedAt: "2022-10-10",
-  quiz_id: 1,
-  question_id: 1,
-};
+// const mockQuizQuestion: QuizQuestion = {
+//   quiz_question_id: 1,
+//   point: 10,
+//   explain_answer: "ring",
+//   createdAt: "2022-10-10",
+//   modifiedAt: "2022-10-10",
+//   quiz_id: 1,
+//   question_id: 1,
+// };
 
 const mockStats: UserStats = {
   totalQuizzes: 0,
@@ -81,9 +91,9 @@ const mockStats: UserStats = {
 // const handleLiveQuiz = () => {
 //   router.push("/profile");
 // };
-const StartQuizPage = () => {
-  const [quizzes, setQuizzes] = useState(mockQuiz);
-  const [quizQuestion, setQuizQuestion] = useState(mockQuizQuestion);
+const StartQuizPage = ({ bankData, questionData }: Props) => {
+  // const [quizzes, setQuizzes] = useState(mockQuiz);
+  // const [quizQuestion, setQuizQuestion] = useState(mockQuizQuestion);
   const [question, setQuestion] = useState(mockQuestion);
 
   return (
@@ -91,7 +101,7 @@ const StartQuizPage = () => {
       <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: "xl" }}>
         <Grid.Col span={{ base: 12, md: 8, lg: 8, xs: 7 }}>
           <Container size="xl">
-            <QuizInfo quiz={quizzes} />
+            <QuizInfo quiz={bankData} />
             <Paper p="lg" radius="md" shadow="sm">
               <Stack justify="space-between">
                 <Group gap="md" justify="center">
@@ -161,9 +171,10 @@ const StartQuizPage = () => {
               </Stack>
             </Paper>
             <QuizQuestions
-              quizQuestion={quizQuestion}
-              question={question}
-              quiz={quizzes}
+              // quizQuestion={quizQuestion}
+              questions={questionData}
+
+              // quiz={quizzes}
             />
           </Container>
         </Grid.Col>
@@ -171,6 +182,39 @@ const StartQuizPage = () => {
       </Grid>
     </UserLayout>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    const { req, query } = context;
+
+    const res = await instance.get(`/bank/${query.quiz_id}`, {
+      withCredentials: true,
+      headers: {
+        Cookie: req.headers.cookie || "",
+      },
+    });
+    const res1 = await instance.get(`/question/all/bankId/${query.quiz_id}`, {
+      withCredentials: true,
+      headers: {
+        Cookie: req.headers.cookie || "",
+      },
+    });
+    const bankData = res.data;
+    const questionData = res1.data;
+    return {
+      props: {
+        bankData,
+        questionData,
+      },
+    };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default StartQuizPage;
