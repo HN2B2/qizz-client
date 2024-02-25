@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Image, Text, Badge, Group } from "@mantine/core";
 interface CardProps {
+  id: number;
   title?: string;
   description?: string | null;
   totalUpvotes?: number;
@@ -11,6 +12,7 @@ interface CardProps {
 }
 
 const QuizCard = ({
+  id,
   title,
   description,
   totalUpvotes,
@@ -20,7 +22,14 @@ const QuizCard = ({
 }: CardProps) => {
   return (
     <>
-      <Card shadow="sm" padding="md" radius="md" withBorder>
+      <Card
+        shadow="sm"
+        padding="md"
+        radius="md"
+        withBorder
+        component="a"
+        href={`bank/${id}`}
+      >
         <Card.Section>
           <Image
             src={image || "https://placehold.co/600x400?text=Placeholder"}

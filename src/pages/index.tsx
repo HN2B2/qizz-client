@@ -207,6 +207,7 @@ const Home = ({ categoryQuizBanksData }: Props) => {
                     key={quizBank.quizBankId}
                   >
                     <QuizCard
+                      id={quizBank.quizBankId}
                       title={quizBank.name}
                       description={quizBank.description}
                       image={quizBank.featuresImage}

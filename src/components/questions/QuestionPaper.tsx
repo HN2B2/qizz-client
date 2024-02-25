@@ -74,8 +74,10 @@ interface Props {
 }
 const QuestionPaper = ({ type, data, bankId, setQuestion }: Props) => {
   const QuestionTypes: Record<QuestionType, React.ReactNode> = {
-    [QuestionType.MULTIPLE_CHOICE]: <MultipleChoice data={data} />,
-    [QuestionType.FILL_IN_THE_BLANK]: <FillInTheBlank data={data} />,
+    [QuestionType.MULTIPLE_CHOICE]: <MultipleChoice data={data} show={true} />,
+    [QuestionType.FILL_IN_THE_BLANK]: (
+      <FillInTheBlank data={data} show={true} />
+    ),
   };
   const questionType: QuestionType =
     QuestionType[type as keyof typeof QuestionType];
