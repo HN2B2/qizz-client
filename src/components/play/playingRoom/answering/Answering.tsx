@@ -10,7 +10,7 @@ import { QuizContext } from "@/pages/play/[quizCode]"
 import PlayingQuestionResponse from "@/types/takeQuiz/playing/PlayingQuestionResponse"
 import { Container, Group, Paper, Stack } from "@mantine/core"
 import { QuestionType } from "@/types/question/QuestionType"
-import { AnimatePresence, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import { IconClock } from "@tabler/icons-react"
 import MultipleChoice from "./MultipleChoice"
 
@@ -53,7 +53,7 @@ const Answering = () => {
     }
 
     const duration = playingData?.data.duration || 10
-    const [timeLeft, setTimeLeft] = useState(duration)
+    const [timeLeft, setTimeLeft] = useState(duration * 10)
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -64,7 +64,7 @@ const Answering = () => {
                 }
                 return prevTimeLeft - 1
             })
-        }, 1000)
+        }, 100)
 
         return () => clearInterval(interval)
     }, [])
@@ -75,7 +75,9 @@ const Answering = () => {
                 <Paper p={16}>
                     <Group gap={8}>
                         <IconClock />
-                        <p className="font-semibold text-lg">{timeLeft}</p>
+                        <p className="font-semibold text-lg">
+                            {Math.round(timeLeft / 10)}
+                        </p>
                     </Group>
                 </Paper>
             </Group>

@@ -1,8 +1,12 @@
 import { QuizContext } from "@/pages/play/[quizCode]"
+import { QuestionType } from "@/types/question/QuestionType"
 import { QuizResponse } from "@/types/quiz"
 import { QuizRoomInfoResponse } from "@/types/takeQuiz"
 import PlayingQuestionResponse from "@/types/takeQuiz/playing/PlayingQuestionResponse"
-import PlayingResponse from "@/types/takeQuiz/playing/PlayingResponse"
+import PlayingResponse, {
+    PlayingState,
+} from "@/types/takeQuiz/playing/PlayingResponse"
+import { instance } from "@/utils"
 import { Group, Paper } from "@mantine/core"
 import { CompatClient } from "@stomp/stompjs"
 import { motion } from "framer-motion"
@@ -23,6 +27,7 @@ interface MultipleChoiceProps {
 const MultipleChoice = ({ timeLeft }: MultipleChoiceProps) => {
     const {
         message: roomInfo,
+        quiz,
     }: {
         message: QuizRoomInfoResponse<PlayingResponse<any>> | null
         client: CompatClient
@@ -40,8 +45,17 @@ const MultipleChoice = ({ timeLeft }: MultipleChoiceProps) => {
 
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
     const handleSelectAnswer = (index: number) => {
-        if (timeLeft === 0) return
+        if (timeLeft === 0 || playingData?.state !== PlayingState.ANSWERING)
+            return
         setSelectedAnswer(index)
+        instance.post(
+            `/take-quiz/${quiz.code}/${playingData.data.questionId}`,
+            {
+                answerMetadata: JSON.stringify(answers[index]),
+                QuestionType: QuestionType.MULTIPLE_CHOICE,
+                answerTime: timeLeft,
+            }
+        )
     }
 
     const [correctAnswers, setCorrectAnswers] = useState<string[]>([])
@@ -53,7 +67,6 @@ const MultipleChoice = ({ timeLeft }: MultipleChoiceProps) => {
             JSON.parse(playingData?.data.correctAnswersMetadata || "[]")
         )
     }, [playingData, timeLeft, selectedAnswer])
-    console.log(correctAnswers)
 
     return (
         <Group grow>
