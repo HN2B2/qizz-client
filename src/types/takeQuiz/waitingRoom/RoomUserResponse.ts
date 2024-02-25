@@ -1,4 +1,4 @@
-import { UserMetadataResponse } from "../user"
+import { UserMetadataResponse } from "../../user"
 
 export default interface RoomUserResponse {
     email: string
