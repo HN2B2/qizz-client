@@ -170,7 +170,7 @@ const ShareButton = ({ bank, setBank }: Prop) => {
           </Group>
         </>
       </Modal>
-      <Button mb={"md"} onClick={open} variant="light">
+      <Button onClick={open} variant="outline">
         Share
       </Button>
     </>

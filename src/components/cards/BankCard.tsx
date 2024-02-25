@@ -1,6 +1,7 @@
 import {
   Avatar,
   Card,
+  Center,
   Collapse,
   Grid,
   Group,
@@ -16,30 +17,34 @@ function BankCard({ bank }: { bank: BankResponse }) {
   return (
     <>
       <Card
-        shadow="sm"
+        // shadow="sm"
+        m={"sm"}
         component="a"
         href={`bank/${bank.quizBankId}/edit`}
         withBorder
+        // p={"sm"}
         // target="_blank"
       >
-        <Grid>
-          <Grid.Col span={3}>
-            <Card.Section p={"sm"}>
-              <Image
-                src={
-                  bank.featuresImage ||
-                  "https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                }
-                w={90}
-                h={90}
-                alt="No way!"
-                radius={"sm"}
-              />
-            </Card.Section>
-          </Grid.Col>
+        <Card.Section>
+          <Grid>
+            <Grid.Col span={3} p={"md"}>
+              <Center>
+                <Image
+                  src={
+                    bank.featuresImage ||
+                    "https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+                  }
+                  // width={"100%"}
+                  w="auto"
+                  // w="100%"
+                  fit="contain"
+                  alt="No way!"
+                  radius={"sm"}
+                />
+              </Center>
+            </Grid.Col>
 
-          <Grid.Col span={9}>
-            <Card.Section pr={"sm"}>
+            <Grid.Col span={9} p={"md"}>
               <Title order={4} lineClamp={1}>
                 {bank.name}
               </Title>
@@ -67,9 +72,9 @@ function BankCard({ bank }: { bank: BankResponse }) {
                 <Text>{bank.createdBy.displayName}</Text>
               </Group>
               {/* <IconTrash /> */}
-            </Card.Section>
-          </Grid.Col>
-        </Grid>
+            </Grid.Col>
+          </Grid>
+        </Card.Section>
       </Card>
     </>
   );
