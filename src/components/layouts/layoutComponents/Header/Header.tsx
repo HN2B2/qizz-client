@@ -52,12 +52,17 @@ const MenuHeader = ({ user }: { user: UserResponse | null }) => {
             </Menu.Target>
 
             <Menu.Dropdown>
-                <Menu.Item>
-                    <Text fw={700}>{user?.username}</Text>
-                    <Text fw={200} c="dimmed">
-                        {user?.email}
-                    </Text>
-                </Menu.Item>
+                {user && (
+                    <Menu.Item
+                        component="a"
+                        href={`/profile/${user?.username}`}
+                    >
+                        <Text fw={700}>{user?.username}</Text>
+                        <Text fw={200} c="dimmed">
+                            {user?.email}
+                        </Text>
+                    </Menu.Item>
+                )}
 
                 <Menu.Divider />
 
@@ -123,7 +128,10 @@ const Header = ({
         setColorScheme(computedColorScheme === "dark" ? "light" : "dark")
     }
     const router = useRouter()
+    const [loading, { open: openLoading, close: closeLoading }] =
+        useDisclosure(false)
     const handleCreate = async () => {
+        openLoading()
         try {
             const body = {
                 name: "Untitled Quiz",
@@ -137,6 +145,8 @@ const Header = ({
             router.push(`/bank/${data.quizBankId}/edit`)
         } catch (error) {
             router.push("/auth/login")
+        } finally {
+            closeLoading()
         }
     }
     const { user } = useUser()
@@ -189,7 +199,11 @@ const Header = ({
                         />
                     </ActionIcon>
                     {user !== null ? (
-                        <Button color="green" onClick={() => handleCreate()}>
+                        <Button
+                            color="green"
+                            onClick={() => handleCreate()}
+                            loading={loading}
+                        >
                             Create Quiz
                         </Button>
                     ) : (

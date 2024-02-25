@@ -22,6 +22,7 @@ import { useDisclosure, useHotkeys, useLocalStorage } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
 import { IconBrandGoogleFilled, IconCheck, IconX } from "@tabler/icons-react"
 import Head from "next/head"
+import Link from "next/link"
 import { useRouter } from "next/router"
 
 const requirements = [
@@ -175,7 +176,7 @@ const RegisterPage = () => {
                         w={"400px"}
                     >
                         <Title mb={16} order={2}>
-                            Register
+                            <Link href="/">Qizz - Register</Link>
                         </Title>
                         <TextInput
                             label="Email"
@@ -261,7 +262,9 @@ const RegisterPage = () => {
                             <Anchor
                                 size="sm"
                                 component="a"
-                                href={` /auth/login?r=${r} `}
+                                href={
+                                    r ? ` /auth/login?r=${r} ` : "/auth/login"
+                                }
                             >
                                 Login now
                             </Anchor>
