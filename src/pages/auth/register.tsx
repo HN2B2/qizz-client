@@ -69,8 +69,9 @@ function getStrength(password: string) {
 
 const RegisterPage = () => {
     const router = useRouter()
+    const { r } = router.query
 
-    const [user, setUser] = useLocalStorage<UserResponse>({
+    const [_, setUser] = useLocalStorage<UserResponse>({
         key: "user",
     })
 
@@ -141,7 +142,11 @@ const RegisterPage = () => {
                 registerForm.values as RegisterRequest
             )
             setUser(data.user)
-            router.push("/")
+            if (r) {
+                router.push(r as string)
+            } else {
+                router.push("/")
+            }
         } catch (error) {
             notifications.show({
                 title: "Error",
@@ -253,7 +258,11 @@ const RegisterPage = () => {
                         </Button>
                         <Text c="dimmed" size="sm" ta="center" mt={5}>
                             Have account?{" "}
-                            <Anchor size="sm" component="a" href="/auth/login">
+                            <Anchor
+                                size="sm"
+                                component="a"
+                                href={` /auth/login?r=${r} `}
+                            >
                                 Login now
                             </Anchor>
                         </Text>

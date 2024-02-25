@@ -61,6 +61,7 @@ const LoginPage = () => {
     ] = useDisclosure()
 
     const router = useRouter()
+    const { r } = router.query
     const handleLogin = async () => {
         openLoading()
 
@@ -76,7 +77,11 @@ const LoginPage = () => {
                 loginForm.values as LoginRequest
             )
             setUser(data.user)
-            router.push("/")
+            if (r) {
+                router.push(r as string)
+            } else {
+                router.push("/")
+            }
         } catch (error) {
             notifications.show({
                 title: "Error",
@@ -159,7 +164,7 @@ const LoginPage = () => {
                             <Anchor
                                 size="sm"
                                 component="a"
-                                href="/auth/register"
+                                href={`/auth/register?r=${r}`}
                             >
                                 Create account
                             </Anchor>
