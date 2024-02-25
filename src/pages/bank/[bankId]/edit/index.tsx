@@ -12,6 +12,7 @@ import {
   SimpleGrid,
   Text,
   TextInput,
+  Title,
   useCombobox,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -188,20 +189,43 @@ const EditBank = ({ bankData, questionData }: Props) => {
               >
                 {previews}
               </SimpleGrid>
+
+              <Title order={4} mt={"xl"}>
+                Quiz Name
+              </Title>
               <TextInput
-                label="Quiz Name"
                 placeholder="Quiz Name"
                 leftSection={<IconPencil size={"1rem"}></IconPencil>}
-                variant="filled"
+                variant="default"
                 {...form.getInputProps("name")}
-                my={"md"}
+                w={"100%"}
+                mt={"xs"}
               />
 
-              <ShareButton bank={form.values} setBank={setBank}></ShareButton>
-              <Text fw={500}>Choose sub category</Text>
+              <Title order={4} mt={"xl"}>
+                Description
+              </Title>
+              <TextInput
+                placeholder="Description"
+                leftSection={<IconPencil size={"1rem"}></IconPencil>}
+                variant="default"
+                {...form.getInputProps("description")}
+                w={"100%"}
+                mt={"xs"}
+              />
+
+              <Group mt={"xl"} align="center">
+                <Title order={4}>Publicity</Title>
+                <ShareButton bank={form.values} setBank={setBank}></ShareButton>
+              </Group>
+              <Group mt={"xl"}>
+                <Title order={4}>Choose Subcategories</Title>
+                <CategoryDrawer bank={bank} setBank={setBank}></CategoryDrawer>
+              </Group>
+
               <Flex>
                 {bank.subCategories && bank.subCategories.length > 0 && (
-                  <InputBase component="div" multiline mr={"sm"}>
+                  <InputBase component="div" multiline w={"100%"} mt={"xs"}>
                     <Pill.Group>
                       {bank.subCategories?.map((item) => (
                         <Pill key={item.id}>{item.name}</Pill>
@@ -209,11 +233,9 @@ const EditBank = ({ bankData, questionData }: Props) => {
                     </Pill.Group>
                   </InputBase>
                 )}
-
-                <CategoryDrawer bank={bank} setBank={setBank}></CategoryDrawer>
               </Flex>
 
-              <Group justify="flex-end" mt="md">
+              <Group justify="flex-end" mt="xl">
                 <Button type="submit">Submit</Button>
               </Group>
             </form>
