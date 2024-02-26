@@ -37,7 +37,7 @@ const navbarItems = [
   },
   {
     title: "Reports",
-    link: "/quiz/report",
+    link: "/report",
     icon: <IconReport size="1rem" stroke={1.5} />,
   },
 ];

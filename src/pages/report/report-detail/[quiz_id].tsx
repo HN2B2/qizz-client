@@ -1,6 +1,7 @@
 import { UserLayout } from "@/components/layouts";
 import { Participants } from "@/components/quiz";
 import Quiz from "@/types/quiz/QuizResponse";
+import { ReportResponse } from "@/types/report";
 import {
   Modal,
   Button,
@@ -27,9 +28,9 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
-const mockQuiz: Quiz = {
+const mockQuiz: ReportResponse = {
   quizId: 1,
-  mode: "Quiz",
+  // mode: "Quiz",
   name: "Test 1",
   description: "ring",
   featuredImage: "",
@@ -105,7 +106,7 @@ const ReportDetail = () => {
           </Group>
         </Flex>
         <Paper p="lg" radius="md" shadow="sm">
-          <Text>{quiz.mode}</Text>
+          {/* <Text>{quiz.mode}</Text> */}
           <Divider />
           <Stack>
             <Flex justify={"space-between"} mt={10}>
