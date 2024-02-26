@@ -1,6 +1,6 @@
 import { QuizState } from "./QuizState"
 
-export default interface Quiz {
+export default interface QuizResponse {
     quizId: number
     name: string
     description: string

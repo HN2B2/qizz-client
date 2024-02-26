@@ -128,7 +128,7 @@ const RegisterPage = () => {
         { toggle: toggleLoading, close: closeLoading, open: openLoading },
     ] = useDisclosure()
 
-    const handleRegister = async () => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         openLoading()
 
         registerForm.validate()
@@ -159,7 +159,6 @@ const RegisterPage = () => {
         }
     }
 
-    useHotkeys([["enter", handleRegister]])
     return (
         <>
             <Head>
@@ -178,66 +177,69 @@ const RegisterPage = () => {
                         <Title mb={16} order={2}>
                             <Link href="/">Qizz - Register</Link>
                         </Title>
-                        <TextInput
-                            label="Email"
-                            placeholder="email@qizz.tech"
-                            required
-                            {...registerForm.getInputProps("email")}
-                        />
-                        <TextInput
-                            label="Username"
-                            placeholder="Your username"
-                            required
-                            mt="md"
-                            {...registerForm.getInputProps("username")}
-                        />
-                        <Popover
-                            opened={popoverOpened}
-                            position="bottom"
-                            width="target"
-                            transitionProps={{ transition: "pop" }}
-                        >
-                            <Popover.Target>
-                                <div
-                                    onFocusCapture={openPopover}
-                                    onBlurCapture={closePopover}
-                                >
-                                    <PasswordInput
-                                        label="Password"
-                                        placeholder="Your password"
-                                        required
-                                        mt="md"
-                                        {...registerForm.getInputProps(
-                                            "password"
-                                        )}
+                        <form onSubmit={handleRegister}>
+                            <TextInput
+                                label="Email"
+                                placeholder="email@qizz.tech"
+                                required
+                                {...registerForm.getInputProps("email")}
+                            />
+                            <TextInput
+                                label="Username"
+                                placeholder="Your username"
+                                required
+                                mt="md"
+                                {...registerForm.getInputProps("username")}
+                            />
+                            <Popover
+                                opened={popoverOpened}
+                                position="bottom"
+                                width="target"
+                                transitionProps={{ transition: "pop" }}
+                            >
+                                <Popover.Target>
+                                    <div
+                                        onFocusCapture={openPopover}
+                                        onBlurCapture={closePopover}
+                                    >
+                                        <PasswordInput
+                                            label="Password"
+                                            placeholder="Your password"
+                                            required
+                                            mt="md"
+                                            {...registerForm.getInputProps(
+                                                "password"
+                                            )}
+                                        />
+                                    </div>
+                                </Popover.Target>
+                                <Popover.Dropdown>
+                                    <Progress
+                                        color={color}
+                                        value={strength}
+                                        size={5}
+                                        mb="xs"
                                     />
-                                </div>
-                            </Popover.Target>
-                            <Popover.Dropdown>
-                                <Progress
-                                    color={color}
-                                    value={strength}
-                                    size={5}
-                                    mb="xs"
-                                />
-                                <PasswordRequirement
-                                    label="Includes at least 6 characters"
-                                    meets={
-                                        registerForm.values.password.length > 5
-                                    }
-                                />
-                                {checks}
-                            </Popover.Dropdown>
-                        </Popover>
-                        <Button
-                            fullWidth
-                            mt="xl"
-                            mb={12}
-                            loading={loading}
-                            onClick={handleRegister}
-                        >
-                            Register
-                        </Button>
+                                    <PasswordRequirement
+                                        label="Includes at least 6 characters"
+                                        meets={
+                                            registerForm.values.password
+                                                .length > 5
+                                        }
+                                    />
+                                    {checks}
+                                </Popover.Dropdown>
+                            </Popover>
+                            <Button
+                                fullWidth
+                                mt="xl"
+                                mb={12}
+                                loading={loading}
+                                type="submit"
+                            >
+                                Register
+                            </Button>
+                        </form>
                         <Divider label="Or continue with" />
                         <Button
                             fullWidth
