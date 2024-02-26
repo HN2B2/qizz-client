@@ -10,24 +10,33 @@ import {
   Blockquote,
   Title,
   Group,
+  Stack,
 } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { Carousel } from "@mantine/carousel";
 import { useForm } from "@mantine/form";
 import QuizCard from "@/components/cards/QuizCard";
 import Category from "@/types/category/Category";
-import Bank from "@/types/bank/BankResponse";
+import { BankResponse } from "@/types/bank";
 import Link from "next/link";
 import { HeaderLayout } from "@/components/layouts";
 import UserResponse, { UserRole } from "@/types/user/UserResponse";
 import useUser from "@/hooks/useUser";
+import { GetServerSidePropsContext } from "next";
+import { instance } from "@/utils";
+import BankCard from "@/components/cards/BankCard";
+import { useRouter } from "next/router";
 
-interface CategoryQuizBanks extends Category {
-  quizBanks: Bank[];
+interface CategoryQuizBanks {
+  category: Category;
+  banks: BankResponse[];
+}
+
+interface Props {
+  categoryQuizBanksData: CategoryQuizBanks[];
 }
 const PopularQuiz = () => {
   const icon = <IconInfoCircle />;
-
   return (
     <Carousel
       withIndicators
@@ -64,23 +73,32 @@ const PopularQuiz = () => {
     </Carousel>
   );
 };
-const Home = () => {
+const Home = ({ categoryQuizBanksData }: Props) => {
   const [data, setData] = useState([]);
+  const icon = <IconInfoCircle />;
   const form = useForm({
     initialValues: { code: "" },
 
-    // functions will be used to validate values at corresponding key
     validate: {
       code: (value: string) => {
-        if (!/^\d{6}$/.test(value)) {
-          return "Name must be 6 numbers";
-        } else if (value !== "000000") {
-          return "Invalid code";
+        if (isNaN(Number(value))) {
+          return "Quiz code must be a number";
+        }
+        if (value.length !== 8) {
+          return "Quiz code must be 8 digits";
         }
         return null;
       },
     },
   });
+  const router = useRouter();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!form.values.code) {
+      return;
+    }
+    router.push(`/play/${form.values.code}`);
+  };
 
   const { user } = useUser();
 
@@ -105,13 +123,14 @@ const Home = () => {
                 alignItems: "center",
               }}
             >
-              <form onSubmit={form.onSubmit(console.log)}>
+              <form onSubmit={handleSubmit}>
                 <TextInput
                   placeholder="Enter code: "
                   w={{ base: 300, sm: 400, lg: 500 }}
                   size="lg"
                   mx="auto"
                   radius="md"
+                  maxLength={8}
                   {...form.getInputProps("code")}
                 />
                 <Button
@@ -145,17 +164,19 @@ const Home = () => {
                 {user?.displayName || "Login to view your profile"}
               </Text>
               <Text ta="center" c="dimmed" fz="sm">
-                @{user?.username || ""}
+                {user?.username ? `@${user.username}` : ""}
               </Text>
 
               <Button
                 component="a"
-                href="/profile/abc"
+                href={
+                  user !== null ? `/profile/${user.username}` : "/auth/login"
+                }
                 variant="default"
                 fullWidth
                 mt="md"
               >
-                View profile
+                {user !== null ? "View profile" : "Login"}
               </Button>
             </Paper>
           </Grid.Col>
@@ -164,40 +185,71 @@ const Home = () => {
           Popular Quizzes
         </Title>
         <PopularQuiz />
-        {/* {data &&
-                    data.map((item) => (
-                        <React.Fragment key={item.id}>
-                            <Group justify="space-between">
-                                <Title order={1} my="xl" c="grey">
-                                    {item.name}
-                                </Title>
-                                <Link href="#">
-                                    <Button variant="outline">See more</Button>
-                                </Link>
-                            </Group>
-                            <Grid>
-                                {item.quizBanks.map((quizBank) => (
-                                    <Grid.Col
-                                        span={{ base: 6, md: 3, lg: 3 }}
-                                        key={quizBank.id}
-                                    >
-                                        <QuizCard
-                                            title={quizBank.name}
-                                            description={quizBank.description}
-                                            image={quizBank.featuresImage}
-                                            totalJoins={0}
-                                            totalQuestions={
-                                                quizBank.totalQuestions
-                                            }
-                                        ></QuizCard>
-                                    </Grid.Col>
-                                ))}
-                            </Grid>
-                        </React.Fragment>
-                    ))} */}
+        {categoryQuizBanksData &&
+          categoryQuizBanksData.map((item, index) => (
+            <React.Fragment key={index}>
+              <Group justify="space-between">
+                <Stack my="xl">
+                  <Title order={1} c="grey">
+                    {item.category.name}
+                  </Title>
+                  <Text>{item.category.description}</Text>
+                </Stack>
+
+                <Link href="#">
+                  <Button variant="outline">See more</Button>
+                </Link>
+              </Group>
+              <Grid>
+                {item.banks.map((quizBank) => (
+                  <Grid.Col
+                    span={{ base: 6, md: 3, lg: 3 }}
+                    key={quizBank.quizBankId}
+                  >
+                    <QuizCard
+                      id={quizBank.quizBankId}
+                      title={quizBank.name}
+                      description={quizBank.description}
+                      image={quizBank.featuresImage}
+                      totalUpvotes={quizBank.totalUpVotes}
+                      totalQuestions={quizBank.totalQuestions}
+                    ></QuizCard>
+                    {/* <BankCard bank={quizBank} /> */}
+                  </Grid.Col>
+                ))}
+              </Grid>
+            </React.Fragment>
+          ))}
       </Container>
     </HeaderLayout>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    const { req, query } = context;
+    const { page = "1", keyword, order, sort } = query;
+
+    const res = await instance.get(`/bank/all/categories/10`, {
+      withCredentials: true,
+      headers: {
+        Cookie: req.headers.cookie || "",
+      },
+    });
+    const categoryQuizBanksData = res.data;
+    return {
+      props: {
+        categoryQuizBanksData,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default Home;

@@ -22,6 +22,7 @@ import { useDisclosure, useHotkeys, useLocalStorage } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
 import { IconBrandGoogleFilled, IconCheck, IconX } from "@tabler/icons-react"
 import Head from "next/head"
+import Link from "next/link"
 import { useRouter } from "next/router"
 
 const requirements = [
@@ -69,8 +70,9 @@ function getStrength(password: string) {
 
 const RegisterPage = () => {
     const router = useRouter()
+    const { r } = router.query
 
-    const [user, setUser] = useLocalStorage<UserResponse>({
+    const [_, setUser] = useLocalStorage<UserResponse>({
         key: "user",
     })
 
@@ -141,7 +143,11 @@ const RegisterPage = () => {
                 registerForm.values as RegisterRequest
             )
             setUser(data.user)
-            router.push("/")
+            if (r) {
+                router.push(r as string)
+            } else {
+                router.push("/")
+            }
         } catch (error) {
             notifications.show({
                 title: "Error",
@@ -170,7 +176,7 @@ const RegisterPage = () => {
                         w={"400px"}
                     >
                         <Title mb={16} order={2}>
-                            Register
+                            <Link href="/">Qizz - Register</Link>
                         </Title>
                         <TextInput
                             label="Email"
@@ -253,7 +259,13 @@ const RegisterPage = () => {
                         </Button>
                         <Text c="dimmed" size="sm" ta="center" mt={5}>
                             Have account?{" "}
-                            <Anchor size="sm" component="a" href="/auth/login">
+                            <Anchor
+                                size="sm"
+                                component="a"
+                                href={
+                                    r ? ` /auth/login?r=${r} ` : "/auth/login"
+                                }
+                            >
                                 Login now
                             </Anchor>
                         </Text>

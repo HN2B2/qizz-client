@@ -16,8 +16,8 @@ const CategoryDrawer = ({
   const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
-      <ActionIcon variant="filled" aria-label="Settings" onClick={open}>
-        <IconAdjustments style={{ width: "70%", height: "70%" }} stroke={1.5} />
+      <ActionIcon variant="outline" aria-label="Settings" onClick={open}>
+        <IconAdjustments style={{ width: "70%", height: "70%" }} />
       </ActionIcon>
 
       <Drawer

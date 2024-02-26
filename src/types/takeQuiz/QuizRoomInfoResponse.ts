@@ -1,9 +1,8 @@
-import RoomUserResponse from "./RoomUserResponse"
+import { QuizState } from "../quiz/QuizState"
 
-export default interface QuizRoomInfoResponse {
+export default interface QuizRoomInfoResponse<T> {
     quizCode: string
     quizName: string
-    total: number
-    current: number
-    users: RoomUserResponse[]
+    state: QuizState
+    data: T
 }

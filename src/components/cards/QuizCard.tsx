@@ -1,9 +1,10 @@
 import React from "react";
 import { Card, Image, Text, Badge, Group } from "@mantine/core";
 interface CardProps {
+  id: number;
   title?: string;
   description?: string | null;
-  totalJoins?: number;
+  totalUpvotes?: number;
   totalQuestions?: number;
   image?: string | null;
   w?: string | number;
@@ -11,16 +12,24 @@ interface CardProps {
 }
 
 const QuizCard = ({
+  id,
   title,
   description,
-  totalJoins,
+  totalUpvotes,
   totalQuestions,
   image,
   lineClamp,
 }: CardProps) => {
   return (
     <>
-      <Card shadow="sm" padding="md" radius="md" withBorder>
+      <Card
+        shadow="sm"
+        padding="md"
+        radius="md"
+        withBorder
+        component="a"
+        href={`bank/${id}`}
+      >
         <Card.Section>
           <Image
             src={image || "https://placehold.co/600x400?text=Placeholder"}
@@ -33,7 +42,7 @@ const QuizCard = ({
           {title}
         </Text>
         <Group justify="space-between" mt="md" mb="xs">
-          <Badge color="pink">{totalJoins} plays</Badge>
+          <Badge color="pink">{totalUpvotes} upvotes</Badge>
           <Badge color="pink">{totalQuestions} qs</Badge>
         </Group>
 

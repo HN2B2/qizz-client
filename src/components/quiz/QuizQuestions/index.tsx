@@ -1,6 +1,5 @@
 import Quiz from "@/types/quiz/QuizResponse";
-import Question from "@/types/question/Question";
-import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
+// import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
 import {
   Button,
   Flex,
@@ -24,14 +23,14 @@ import {
   IconShare3,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
+import ViewQuestionPaper from "@/components/questions/ViewQuestionPaper";
+import { QuestionResponse } from "@/types/question";
 
 interface QuizQuestionProps {
-  quizQuestion: QuizQuestion;
-  question: Question;
-  quiz: Quiz;
+  questions: QuestionResponse[];
 }
 
-const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
+const QuizQuestions = ({ questions }: QuizQuestionProps) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const toggleAnswer = () => {
     setShowAnswer(!showAnswer);
@@ -41,7 +40,7 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
       <Flex justify="space-between" mt={10}>
         <Group gap={"xs"}>
           {<IconListCheck size={20} />}
-          <Text>{quiz.totalQuestions} questions</Text>
+          {/* <Text>{quiz.totalQuestions} questions</Text> */}
         </Group>
         <Stack justify="space-between">
           <Group gap="sm" justify="flex-end">
@@ -66,7 +65,7 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
           </Group>
         </Stack>
       </Flex>
-      <Paper p="lg" radius="md" shadow="sm" mb="md">
+      {/* <Paper p="lg" radius="md" shadow="sm" mb="md">
         <Stack gap={20}>
           <Flex justify="space-between">
             <Text>
@@ -103,7 +102,14 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
           <div>{question.answersMetadata}</div>
           <div>{question.answersMetadata}</div>
         </SimpleGrid>
-      </Paper>
+      </Paper> */}
+      {questions.map((question) => (
+        <ViewQuestionPaper
+          question={question}
+          index={1}
+          show={showAnswer}
+        ></ViewQuestionPaper>
+      ))}
     </Stack>
   );
 };

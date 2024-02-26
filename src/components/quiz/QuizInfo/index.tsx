@@ -1,5 +1,4 @@
-import Quiz from "@/types/quiz/QuizResponse";
-import { UserResponse, UserStats } from "@/types/user";
+import { BankResponse } from "@/types/bank";
 import {
   Avatar,
   Button,
@@ -14,7 +13,8 @@ import {
 import { IconBook, IconEdit, IconShare3 } from "@tabler/icons-react";
 
 interface QuizInfoProps {
-  quiz: Quiz;
+  // quiz: Quiz;
+  quiz: BankResponse;
 }
 
 const QuizInfo = ({ quiz }: QuizInfoProps) => {
@@ -25,18 +25,19 @@ const QuizInfo = ({ quiz }: QuizInfoProps) => {
           <Group gap="xl" align="start">
             <Avatar src="" size={142} radius="sm" />
             <Stack gap={5}>
-              <Text>{quiz.mode}</Text>
               <Title order={3}>{quiz.name}</Title>
+              <Text>{quiz.description}</Text>
 
               <SimpleGrid cols={2} verticalSpacing="xs" spacing={"xs"}>
                 <Text size="xs">
-                  {<IconBook size={10} />} {quiz.category}
+                  {<IconBook size={10} />}{" "}
+                  {quiz.subCategories?.map((item) => item.name).join(", ")}
                 </Text>
-                <Text size="xs">
+                {/* <Text size="xs">
                   {<IconBook size={10} />} {quiz.subcategory}
-                </Text>
+                </Text> */}
                 <Text size="xs">
-                  {<IconBook size={10} />} {quiz.totalJoins}
+                  {<IconBook size={10} />} {quiz.totalUpVotes} upvotes
                 </Text>
               </SimpleGrid>
             </Stack>
@@ -46,7 +47,7 @@ const QuizInfo = ({ quiz }: QuizInfoProps) => {
           <Group gap="xs" align="start">
             <Avatar src="" size={50} />
             <Stack gap={5}>
-              <Text size="xs"> {quiz.createBy}</Text>
+              <Text size="xs"> {quiz.createdBy.displayName}</Text>
               <Text size="xs"> {quiz.createdAt}</Text>
             </Stack>
           </Group>
