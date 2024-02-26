@@ -17,7 +17,7 @@ const MultipleChoice = ({ data, show }: Props) => {
   return (
     <Paper px="xl" py="xs" shadow="xs">
       <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
-      {show && (
+      
         <Divider
           my="sm"
           variant="dashed"
@@ -28,8 +28,7 @@ const MultipleChoice = ({ data, show }: Props) => {
             </>
           }
         />
-      )}
-      {show ? (
+      ){show ? (
         <SimpleGrid cols={2} verticalSpacing="sm">
           {answersMetadata.map((answer, index) => (
             <Box my={0} display={"flex"} key={index}>
