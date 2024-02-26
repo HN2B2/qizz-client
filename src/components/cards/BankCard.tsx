@@ -55,7 +55,7 @@ function BankCard({ bank }: { bank: BankResponse }) {
                 <Group>
                   <IconMenu2 size="1rem" stroke={1.5} />
                   <Text>
-                    {bank.totalQuestions ? 0 : bank.totalQuestions} Questions
+                    {bank.totalQuestions ? bank.totalQuestions : 0} Questions
                   </Text>
                 </Group>
                 <Group>
