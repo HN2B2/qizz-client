@@ -93,7 +93,6 @@ export const middleware = async (req: NextRequest) => {
         return NextResponse.next()
     }
 
-    console.log("protectedRoute", protectedRoute)
     if (isAuthRoute && !verifiedToken) {
         return NextResponse.next()
     } else if (isAuthRoute && verifiedToken) {

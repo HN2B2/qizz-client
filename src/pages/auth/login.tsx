@@ -133,7 +133,13 @@ const LoginPage = () => {
                                     Forgot password?
                                 </Anchor>
                             </Group>
-                            <Button fullWidth mt="xl" mb={12} loading={loading}>
+                            <Button
+                                fullWidth
+                                mt="xl"
+                                mb={12}
+                                loading={loading}
+                                type="submit"
+                            >
                                 Sign in
                             </Button>
                         </form>
