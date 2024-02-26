@@ -1,4 +1,5 @@
 import { UserLayout } from "@/components/layouts";
+import { instance } from "@/utils";
 import {
   Button,
   Container,
@@ -13,9 +14,12 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { IconChevronDown } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 const hour: number = new Date().getHours();
 const LiveQuiz = () => {
+  const router = useRouter();
+
   const [value, setValue] = useState<Date | null>(null);
   const clickOnSwitch = () => {
     return (
@@ -27,6 +31,68 @@ const LiveQuiz = () => {
     );
   };
   const [checked, setChecked] = useState(false);
+
+  // const router = useRouter();
+  const handleCreateQuiz = async () => {
+    try {
+      const { data } = await instance.post(`/quiz/bankId/${router.query.id}`, {
+        quizName: "Untitled quiz",
+        description: "hehe",
+        featuredImage: "hoho",
+      });
+
+      const { data: quizData } = await instance.put(
+        `quiz/live_quiz/${data.quizId}`,
+        {
+          metadata: [
+            {
+              key: "setTime",
+              value: "2012-04-23",
+            },
+            {
+              key: "attempt",
+              value: "10",
+            },
+            {
+              key: "showAnswersDuringAct",
+              value: "true",
+            },
+            {
+              key: "showAnswersAfterAct",
+              value: "false",
+            },
+            {
+              key: "shuffleQuestions",
+              value: "true",
+            },
+            {
+              key: "shuffleAnswers",
+              value: "true",
+            },
+            {
+              key: "skipQuestion",
+              value: "true",
+            },
+            {
+              key: "powerUp",
+              value: "true",
+            },
+            {
+              key: "reactions",
+              value: "true",
+            },
+            {
+              key: "showLeaderboard",
+              value: "true",
+            },
+          ],
+        }
+      );
+      router.push(`/play/${data.code}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <UserLayout>
       <Container size="xs">
@@ -174,6 +240,9 @@ const LiveQuiz = () => {
           mt={20}
           fullWidth
           size="xl"
+          onClick={() => {
+            handleCreateQuiz();
+          }}
         >
           Continue
         </Button>

@@ -28,6 +28,7 @@ import { BankResponse } from "@/types/bank";
 import QuestionResponse from "@/types/question/QuestionResponse";
 import { GetServerSidePropsContext } from "next";
 import { instance } from "@/utils";
+import { useRouter } from "next/router";
 
 interface Props {
   bankData: BankResponse;
@@ -40,6 +41,7 @@ const mockStats: UserStats = {
 };
 
 const StartQuizPage = ({ bankData, questionData }: Props) => {
+  
   return (
     <UserLayout>
       <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: "xl" }}>
@@ -76,6 +78,8 @@ const StartQuizPage = ({ bankData, questionData }: Props) => {
 
                     <Menu.Dropdown>
                       <Menu.Item
+                        component="a"
+                        href={`/quiz/${bankData.quizBankId}/live_quiz`}
                         leftSection={
                           <IconSettings
                             style={{ width: rem(14), height: rem(14) }}
