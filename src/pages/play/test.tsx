@@ -5,10 +5,10 @@ import React from "react"
 const test = () => {
     const { client } = useSubscription()
 
-    const { message, connected } = useWebSocket<any>(`/play/11111111`, client)
+    const { message, connected } = useWebSocket<any>(`/play/22222222`, client)
     const handleStart = () => {
         client.publish({
-            destination: `/start/11111111`,
+            destination: `/start/22222222`,
             body: "",
         })
     }
