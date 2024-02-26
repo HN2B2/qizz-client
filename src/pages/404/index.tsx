@@ -1,5 +1,5 @@
 import { Container, Title, Text, Button, Group, rem } from "@mantine/core"
-import { Illustration } from "./Illustration"
+import Illustration from "./Illustration"
 import Head from "next/head"
 
 export default function NothingFoundBackground() {

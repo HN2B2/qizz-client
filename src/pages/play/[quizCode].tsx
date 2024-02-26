@@ -111,8 +111,10 @@ export const getServerSideProps = async (
     const token = context.req.cookies.user
     try {
         const { data: quiz }: { data: QuizResponse } = await instance.get(
-            `/quiz/${quizCode}`
+            `/quiz/code/${quizCode}`
         )
+        console.log("quiz" + quiz)
+
         if (!token) {
             return {
                 redirect: {

@@ -93,7 +93,7 @@ export const getServerSideProps = async (
     const token = context.req.cookies.user
     try {
         const { data: quiz }: { data: QuizResponse } = await instance.get(
-            `/quiz/${code}`
+            `/quiz/code/${code}`
         )
 
         if (token) {
