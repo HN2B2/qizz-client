@@ -59,7 +59,7 @@ const LibraryFilterSubcategories = () => {
         sort,
         page: "1",
         draft,
-        subCategoryIds: subCats.join(","),
+        subCategoryIds: subs.map((item) => item.id).join(","),
         tab,
       },
     });
@@ -98,7 +98,7 @@ const LibraryFilterSubcategories = () => {
               withRemoveButton
               onRemove={() => {
                 handlerSubs.remove(index);
-                handlerSubCats.remove(index);
+                // handlerSubCats.remove(index);
               }}
             >
               {item.name}
