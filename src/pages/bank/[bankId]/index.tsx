@@ -81,8 +81,8 @@ const StartQuizPage = ({
             />
             <Paper p="lg" radius="md" shadow="sm">
               <Stack justify="space-between">
-                <Group gap="md" justify="center">
-                  <Menu shadow="md" width="22%">
+                <Group gap="lg" justify="center">
+                  <Menu shadow="md" width="20%">
                     <Menu.Target>
                       <Button
                         variant="gradient"
@@ -91,19 +91,15 @@ const StartQuizPage = ({
                           to: "cyan",
                           deg: 90,
                         }}
-                        size="xl"
-                        style={{ width: "45%" }}
+                        size="md"
+                        style={{ width: "40%" }}
                         p={0}
+                        leftSection={<IconDeviceDesktopStar size={25} />}
+                        rightSection={
+                          <IconTriangleInvertedFilled size={"0.7rem"} />
+                        }
                       >
-                        <Grid>
-                          <Grid.Col span={2}>
-                            <IconDeviceDesktopStar />
-                          </Grid.Col>
-                          <Grid.Col span={8}>Start Quiz</Grid.Col>
-                          <Grid.Col span={2} style={{ alignItems: "right" }}>
-                            <IconTriangleInvertedFilled size={10} />
-                          </Grid.Col>
-                        </Grid>
+                        Start Quiz
                       </Button>
                     </Menu.Target>
 
@@ -116,7 +112,6 @@ const StartQuizPage = ({
                             style={{ width: rem(14), height: rem(14) }}
                           />
                         }
-                        // onClick={handleLiveQuiz}
                       >
                         Live quiz
                       </Menu.Item>
@@ -141,8 +136,8 @@ const StartQuizPage = ({
                         to: "cyan",
                         deg: 90,
                       }}
-                      size="xl"
-                      style={{ width: "45%" }}
+                      size="md"
+                      style={{ width: "40%" }}
                       leftSection={<IconEdit size={25} />}
                       component="a"
                       href={`/bank/${bankData.quizBankId}/edit`}

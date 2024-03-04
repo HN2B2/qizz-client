@@ -44,11 +44,7 @@ const QuizQuestions = ({ questions }: QuizQuestionProps) => {
         </Group>
         <Stack justify="space-between">
           <Group gap="sm" justify="flex-end">
-            <Button
-              variant="default"
-              //   leftSection={<IconEye size={14} />}
-              onClick={toggleAnswer}
-            >
+            <Button size="xs" variant="default" onClick={toggleAnswer}>
               {showAnswer ? (
                 <IconEye size={20} style={{ paddingRight: "5px" }} />
               ) : (
@@ -57,6 +53,7 @@ const QuizQuestions = ({ questions }: QuizQuestionProps) => {
               {showAnswer ? "Show Answer" : " Hide Answer"}
             </Button>
             <Button
+              size="xs"
               variant="default"
               leftSection={<IconPlayerPlayFilled size={14} />}
             >
