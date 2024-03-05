@@ -11,7 +11,11 @@ interface Prop {
   closee: () => void;
 }
 
-function getAsyncData(searchQuery: string, signal: AbortSignal) {
+function getAsyncData(
+  searchQuery: string,
+  signal: AbortSignal,
+  manageBanks: string
+) {
   return new Promise<string[]>((resolve, reject) => {
     signal.addEventListener("abort", () => {
       reject(new Error("Request aborted"));
@@ -20,7 +24,13 @@ function getAsyncData(searchQuery: string, signal: AbortSignal) {
     setTimeout(async () => {
       try {
         const { data, status } = await instance.get(
-          `/users/email?keyword=${searchQuery}`
+          `/users/email?keyword=${searchQuery}${
+            manageBanks === "" ||
+            manageBanks === null ||
+            manageBanks === undefined
+              ? `&manageBanks=${manageBanks}`
+              : ""
+          }`
         );
         resolve(data.data.map((item: UserResponse) => item.email));
       } catch (error) {}
@@ -41,13 +51,19 @@ const AddSharing = ({ bank, setBank, closee }: Prop) => {
   const [empty, setEmpty] = useState(false);
   const abortController = useRef<AbortController>();
   const [opened, { open, close }] = useDisclosure(false);
+  const [manageBanks, setManageBanks] = useState(
+    bank.manageBanks?.map((item) => item.user.email).join(",") || ""
+  );
 
   const fetchOptions = (query: string) => {
     abortController.current?.abort();
     abortController.current = new AbortController();
     setLoading(true);
+    setManageBanks(
+      (prev) => bank.manageBanks?.map((item) => item.user.email).join(",") || ""
+    );
 
-    getAsyncData(query, abortController.current.signal)
+    getAsyncData(query, abortController.current.signal, manageBanks)
       .then((result) => {
         setData(result);
         setLoading(false);
@@ -58,7 +74,7 @@ const AddSharing = ({ bank, setBank, closee }: Prop) => {
   };
 
   const options = (data || []).map((item) => (
-    <Combobox.Option value={item} key={item}>
+    <Combobox.Option value={item} key={item} onClick={() => open()}>
       {item}
     </Combobox.Option>
   ));
