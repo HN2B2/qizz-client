@@ -50,6 +50,8 @@ import { BankResponse } from "@/types/bank";
 import { useRouter } from "next/router";
 import { notifications } from "@mantine/notifications";
 import CategoryDrawer from "@/components/category/CategoryDrawer";
+import { checkEditable } from "..";
+import useUser from "@/hooks/useUser";
 
 interface Props {
   bankData: BankResponse;
@@ -250,6 +252,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   try {
+    const { user } = useUser();
     const { req, query } = context;
 
     const res = await instance.get(`/bank/${query.bankId}`, {
@@ -266,6 +269,11 @@ export const getServerSideProps = async (
     });
     const bankData = res.data;
     const questionData = res1.data;
+    if (!checkEditable(user, bankData)) {
+      return {
+        notFound: true,
+      };
+    }
     return {
       props: {
         bankData,

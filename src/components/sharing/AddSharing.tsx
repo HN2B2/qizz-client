@@ -25,11 +25,9 @@ function getAsyncData(
       try {
         const { data, status } = await instance.get(
           `/users/email?keyword=${searchQuery}${
-            manageBanks === "" ||
-            manageBanks === null ||
-            manageBanks === undefined
-              ? `&manageBanks=${manageBanks}`
-              : ""
+            manageBanks === "" || manageBanks === undefined
+              ? ""
+              : `&manageBanks=${manageBanks}`
           }`
         );
         resolve(data.data.map((item: UserResponse) => item.email));
@@ -52,15 +50,24 @@ const AddSharing = ({ bank, setBank, closee }: Prop) => {
   const abortController = useRef<AbortController>();
   const [opened, { open, close }] = useDisclosure(false);
   const [manageBanks, setManageBanks] = useState(
-    bank.manageBanks?.map((item) => item.user.email).join(",") || ""
+    (bank.manageBanks !== undefined &&
+      bank.manageBanks.length > 0 &&
+      bank.manageBanks.map((item) => item.user.email).join(",")) ||
+      ""
   );
+
+  console.log(manageBanks);
 
   const fetchOptions = (query: string) => {
     abortController.current?.abort();
     abortController.current = new AbortController();
     setLoading(true);
     setManageBanks(
-      (prev) => bank.manageBanks?.map((item) => item.user.email).join(",") || ""
+      (prev) =>
+        (bank.manageBanks !== undefined &&
+          bank.manageBanks.length > 0 &&
+          bank.manageBanks.map((item) => item.user.email).join(",")) ||
+        ""
     );
 
     getAsyncData(query, abortController.current.signal, manageBanks)

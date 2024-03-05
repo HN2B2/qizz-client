@@ -34,7 +34,9 @@ function getAsyncData(
       try {
         const { data, status } = await instance.get(
           `/users/email?keyword=${searchQuery}${
-            manageBanks === "" ? `&manageBanks=${manageBanks}` : ""
+            manageBanks === "" || manageBanks === undefined
+              ? ""
+              : `&manageBanks=${manageBanks}`
           }`
         );
         resolve(data.data.map((item: UserResponse) => item.email));
@@ -68,7 +70,10 @@ const AddSharingModal = ({
   const [editable, setEditable] = useState(true);
   const [openedd, { open, close }] = useDisclosure(opened);
   const [manageBanks, setManageBanks] = useState(
-    bank.manageBanks?.map((item) => item.user.email).join(",") || ""
+    (bank.manageBanks !== undefined &&
+      bank.manageBanks.length > 0 &&
+      bank.manageBanks.map((item) => item.user.email).join(",")) ||
+      ""
   );
   useEffect(() => {
     opened ? open() : close();
@@ -79,7 +84,11 @@ const AddSharingModal = ({
     abortController.current = new AbortController();
     setLoading(true);
     setManageBanks(
-      (prev) => bank.manageBanks?.map((item) => item.user.email).join(",") || ""
+      (prev) =>
+        (bank.manageBanks !== undefined &&
+          bank.manageBanks.length > 0 &&
+          bank.manageBanks.map((item) => item.user.email).join(",")) ||
+        ""
     );
 
     getAsyncData(query, abortController.current.signal, manageBanks)
