@@ -7,7 +7,7 @@ interface Props {
 }
 const FillInTheBlank = ({ data, show }: Props) => {
   const correctAnswersMetadata: string[] = JSON.parse(
-    data.correctAnswersMetadata.replaceAll("'", '"')
+    data.correctAnswersMetadata
   );
   // console.log(data.correctAnswersMetadata);
   return (
