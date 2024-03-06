@@ -157,6 +157,7 @@ const index = () => {
         page: "1",
         draft: value === "published" ? false : true,
         subCategoryIds,
+        tab,
       },
     });
   };
