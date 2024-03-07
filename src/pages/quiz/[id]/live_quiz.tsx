@@ -122,7 +122,6 @@ const LiveQuiz = () => {
     }
   };
 
-  console.log("Check boolean changed: ", form.values);
   return (
     <UserLayout>
       <Container size="xs">
