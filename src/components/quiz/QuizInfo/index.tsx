@@ -6,6 +6,7 @@ import { instance } from "@/utils";
 import {
   ActionIcon,
   Avatar,
+  Badge,
   Button,
   Flex,
   Group,
@@ -19,12 +20,12 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   IconBook,
   IconEdit,
-  IconHeart,
+  IconShare3,
   IconHeartFilled,
   IconThumbUpFilled,
 } from "@tabler/icons-react";
 import { useState } from "react";
-
+import { FaRegHeart } from "react-icons/fa";
 interface QuizInfoProps {
   // quiz: Quiz;
   bank: BankResponse;
@@ -65,29 +66,38 @@ const QuizInfo = ({ bank, setBank, upvote, like }: QuizInfoProps) => {
       <Stack gap={20}>
         <Flex justify="space-between">
           <Group gap="xl" align="start">
-            <Avatar src="" size={142} radius="sm" />
-            <Stack gap={5}>
-              <Title order={3}>{bank.name}</Title>
+            <Avatar src="" size={124} radius="sm" />
+            <Stack gap={8}>
+              <Text c="dimmed" size="sm">
+                Quiz Bank
+              </Text>
+              <Text size="xl" fw={500}>
+                {bank.name}
+              </Text>
               <Text>{bank.description}</Text>
 
               <SimpleGrid cols={2} verticalSpacing="xs" spacing={"xs"}>
-                <Text size="xs">
-                  {<IconBook size={10} />}{" "}
-                  {bank.subCategories?.map((item) => item.name).join(", ")}
-                </Text>
-                {/* <Text size="xs">
-                  {<IconBook size={10} />} {quiz.subcategory}
-                </Text> */}
-                <Text size="xs">
-                  {<IconBook size={10} />} {bank.totalUpVotes} upvotes
-                </Text>
+                {bank.subCategories?.map((item) => (
+                  <Badge variant="light" color="blue" size="sm" radius="md">
+                    {item.name}
+                  </Badge>
+                ))}
               </SimpleGrid>
+              <Badge
+                leftSection={<FaRegHeart />}
+                variant="light"
+                color="red"
+                size="sm"
+                radius="md"
+              >
+                {bank.totalUpVotes} upvotes
+              </Badge>
             </Stack>
           </Group>
         </Flex>
         <Flex justify={"space-between"}>
           <Group gap="xs" align="start">
-            <Avatar src="" size={50} />
+            <Avatar src="" size={40} />
             <Stack gap={5}>
               <Text size="xs"> {bank.createdBy.displayName}</Text>
               <Text size="xs"> {bank.createdAt}</Text>
@@ -96,9 +106,14 @@ const QuizInfo = ({ bank, setBank, upvote, like }: QuizInfoProps) => {
           <Stack justify="space-between">
             <Group gap="sm" justify="flex-end">
               <ShareButton bank={bank} setBank={setBank} />
-              <Button variant="default" leftSection={<IconEdit size={14} />}>
+              <Button
+                variant="default"
+                size="xs"
+                leftSection={<IconEdit size={14} />}
+              >
                 Edit profile
               </Button>
+
               <ActionIcon
                 variant="default"
                 c={liked ? "red" : ""}

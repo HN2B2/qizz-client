@@ -16,7 +16,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import AddSharing from "./AddSharing";
 // import cloneDeep from 'lodash.clonedeep';
-
+import { IconShare3 } from "@tabler/icons-react";
 interface Prop {
   bank: BankResponse;
   setBank: React.Dispatch<React.SetStateAction<BankResponse>>;
@@ -170,8 +170,13 @@ const ShareButton = ({ bank, setBank }: Prop) => {
           </Group>
         </>
       </Modal>
-      <Button onClick={open} variant="outline">
-        Share
+      <Button
+        variant="default"
+        size="xs"
+        leftSection={<IconShare3 size={14} />}
+        onClick={open}
+      >
+        Share Bank
       </Button>
     </>
   );
