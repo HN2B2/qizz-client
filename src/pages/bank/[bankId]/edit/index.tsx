@@ -60,7 +60,7 @@ interface Props {
 
 const EditBank = ({ bankData, questionData }: Props) => {
   // const { user } = useUser();
- 
+
   const [bank, setBank] = useState<BankResponse>(bankData);
   const [question, setQuestion] = useState<QuestionData[]>(questionData);
 
@@ -154,7 +154,7 @@ const EditBank = ({ bankData, questionData }: Props) => {
       router.push("/");
     } catch (error) {}
   };
-  
+
   return (
     <UserLayout>
       <Container size="lg" bg={"transparent"}>
@@ -256,7 +256,6 @@ export const getServerSideProps = async (
   try {
     // const { user } = useUser();
     const { req, query } = context;
-
     const res = await instance.get(`/bank/${query.bankId}`, {
       withCredentials: true,
       headers: {

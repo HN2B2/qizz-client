@@ -1,5 +1,6 @@
 import ShareButton from "@/components/sharing/ShareButton";
 import useUser from "@/hooks/useUser";
+import { checkEditable } from "@/pages/bank/[bankId]";
 import { BankResponse } from "@/types/bank";
 import { FavoriteResponse, UpvoteResponse } from "@/types/upvote";
 import { instance } from "@/utils";
@@ -15,6 +16,7 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -23,7 +25,9 @@ import {
   IconShare3,
   IconHeartFilled,
   IconThumbUpFilled,
+  IconCopy,
 } from "@tabler/icons-react";
+import { Router, useRouter } from "next/router";
 import { useState } from "react";
 import { FaRegHeart } from "react-icons/fa";
 interface QuizInfoProps {
@@ -38,6 +42,7 @@ const QuizInfo = ({ bank, setBank, upvote, like }: QuizInfoProps) => {
   const { user, loading } = useUser();
   const [upvoted, handleUpvoted] = useDisclosure(upvote.isUpvoted);
   const [liked, handleLiked] = useDisclosure(like.isLiked);
+  const router = useRouter();
 
   const handleUpvote = async () => {
     try {
@@ -59,6 +64,15 @@ const QuizInfo = ({ bank, setBank, upvote, like }: QuizInfoProps) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleDuplicate = async () => {
+    try {
+      const { data, status } = await instance.post(
+        `/bank/duplicate/${bank.quizBankId}`
+      );
+      router.push(`/bank/${data.quizBankId}/edit`);
+    } catch (error) {}
   };
 
   return (
@@ -105,29 +119,41 @@ const QuizInfo = ({ bank, setBank, upvote, like }: QuizInfoProps) => {
           </Group>
           <Stack justify="space-between">
             <Group gap="sm" justify="flex-end">
-              <ShareButton bank={bank} setBank={setBank} />
-              <Button
-                variant="default"
-                size="xs"
-                leftSection={<IconEdit size={14} />}
-              >
-                Edit profile
-              </Button>
-
-              <ActionIcon
-                variant="default"
-                c={liked ? "red" : ""}
-                onClick={handleLike}
-              >
-                <IconHeartFilled size={14} />
-              </ActionIcon>
-              <ActionIcon
-                variant="default"
-                c={upvoted ? "blue" : ""}
-                onClick={handleUpvote}
-              >
-                <IconThumbUpFilled size={14} />
-              </ActionIcon>
+              {checkEditable(user, bank) && (
+                <>
+                  <Tooltip label="Edit">
+                    <ShareButton bank={bank} setBank={setBank} />
+                  </Tooltip>
+                  <Tooltip label="Duplicate this bank and edit">
+                    <Button
+                      variant="default"
+                      size="xs"
+                      leftSection={<IconCopy size={14} />}
+                      onClick={handleDuplicate}
+                    >
+                      Copy & Edit
+                    </Button>
+                  </Tooltip>
+                </>
+              )}
+              <Tooltip label="Save to favourite list">
+                <ActionIcon
+                  variant="default"
+                  c={liked ? "red" : ""}
+                  onClick={handleLike}
+                >
+                  <IconHeartFilled size={14} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip label="Upvote this quiz">
+                <ActionIcon
+                  variant="default"
+                  c={upvoted ? "blue" : ""}
+                  onClick={handleUpvote}
+                >
+                  <IconThumbUpFilled size={14} />
+                </ActionIcon>
+              </Tooltip>
             </Group>
           </Stack>
         </Flex>

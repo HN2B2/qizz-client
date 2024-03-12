@@ -12,8 +12,7 @@ export default interface UserResponse {
     username: string
     email: string
     role: UserRole
+    enabled: boolean
     displayName: string
-    createdAt: string
-    modifiedAt: string
     metadata: UserMetadataResponse[]
 }
