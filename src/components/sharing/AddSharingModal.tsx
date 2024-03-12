@@ -20,7 +20,11 @@ import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { BankResponse } from "@/types/bank";
 
-function getAsyncData(searchQuery: string, signal: AbortSignal) {
+function getAsyncData(
+  searchQuery: string,
+  signal: AbortSignal,
+  manageBanks: string
+) {
   return new Promise<string[]>((resolve, reject) => {
     signal.addEventListener("abort", () => {
       reject(new Error("Request aborted"));
@@ -29,7 +33,11 @@ function getAsyncData(searchQuery: string, signal: AbortSignal) {
     setTimeout(async () => {
       try {
         const { data, status } = await instance.get(
-          `/users/email?keyword=${searchQuery}`
+          `/users/email?keyword=${searchQuery}${
+            manageBanks === "" || manageBanks === undefined
+              ? ""
+              : `&manageBanks=${manageBanks}`
+          }`
         );
         resolve(data.data.map((item: UserResponse) => item.email));
       } catch (error) {}
@@ -61,6 +69,12 @@ const AddSharingModal = ({
   const abortController = useRef<AbortController>();
   const [editable, setEditable] = useState(true);
   const [openedd, { open, close }] = useDisclosure(opened);
+  const [manageBanks, setManageBanks] = useState(
+    (bank.manageBanks !== undefined &&
+      bank.manageBanks.length > 0 &&
+      bank.manageBanks.map((item) => item.user.email).join(",")) ||
+      ""
+  );
   useEffect(() => {
     opened ? open() : close();
   }, [opened]);
@@ -69,8 +83,15 @@ const AddSharingModal = ({
     abortController.current?.abort();
     abortController.current = new AbortController();
     setLoading(true);
+    setManageBanks(
+      (prev) =>
+        (bank.manageBanks !== undefined &&
+          bank.manageBanks.length > 0 &&
+          bank.manageBanks.map((item) => item.user.email).join(",")) ||
+        ""
+    );
 
-    getAsyncData(query, abortController.current.signal)
+    getAsyncData(query, abortController.current.signal, manageBanks)
       .then((result) => {
         setData(result);
         setLoading(false);
@@ -79,7 +100,6 @@ const AddSharingModal = ({
       })
       .catch(() => {});
   };
-
   const handleValueSelect = (val: string) => {
     setValue((current) =>
       current.includes(val)

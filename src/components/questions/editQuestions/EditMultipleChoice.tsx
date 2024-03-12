@@ -45,11 +45,9 @@ const EditMultipleChoice = () => {
 
   const { dataQuestion, updateDataQuestion } = useEditContext();
 
-  const answersMetadata: string[] = JSON.parse(
-    dataQuestion.answersMetadata.replaceAll("'", '"')
-  );
+  const answersMetadata: string[] = JSON.parse(dataQuestion.answersMetadata);
   const correctAnswersMetadata: string[] = JSON.parse(
-    dataQuestion.correctAnswersMetadata.replaceAll("'", '"')
+    dataQuestion.correctAnswersMetadata
   );
   const [data, setData] = useState<Answer[]>(
     answersMetadata.map((answer, index) => ({
@@ -121,18 +119,18 @@ const EditMultipleChoice = () => {
       //   .filter((answer) => answer.answer !== "")
       //   .map((answer, index) => `"${answer.answer}"`)
       //   .join(", ")}]`,
-      answersMetadata: `[${data
-        .filter((answer) => answer.answer !== "")
-        .map((answer, index) => `'${answer.answer}'`)
-        .join(", ")}]`,
+      answersMetadata: JSON.stringify(
+        data
+          .filter((answer) => answer.answer !== "")
+          .map((answer) => answer.answer)
+      ),
       // correctAnswersMetadata: `[${data
       //   .filter((answer) => answer.isCorrect)
       //   .map((answer) => `"${answer.answer}"`)
       //   .join(", ")}]`,
-      correctAnswersMetadata: `[${data
-        .filter((answer) => answer.isCorrect)
-        .map((answer) => `'${answer.answer}'`)
-        .join(", ")}]`,
+      correctAnswersMetadata: JSON.stringify(
+        data.filter((answer) => answer.isCorrect).map((answer) => answer.answer)
+      ),
     };
     updateDataQuestion(newData);
   }, [data]);

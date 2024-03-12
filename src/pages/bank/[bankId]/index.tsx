@@ -3,7 +3,7 @@ import { UserLayout } from "@/components/layouts";
 import { QuizInfo } from "@/components/quiz";
 import QuizQuestions from "@/components/quiz/QuizQuestions";
 import Question from "@/types/question/QuestionResponse";
-import { UserStats } from "@/types/user";
+import { UserResponse, UserStats } from "@/types/user";
 
 import {
   Button,
@@ -29,10 +29,14 @@ import QuestionResponse from "@/types/question/QuestionResponse";
 import { GetServerSidePropsContext } from "next";
 import { instance } from "@/utils";
 import { useRouter } from "next/router";
+import useUser from "@/hooks/useUser";
+import { FavoriteResponse, UpvoteResponse } from "@/types/upvote";
 
 interface Props {
   bankData: BankResponse;
   questionData: QuestionResponse[];
+  upvoteData: UpvoteResponse;
+  favoriteData: FavoriteResponse;
 }
 
 const mockStats: UserStats = {
@@ -40,18 +44,45 @@ const mockStats: UserStats = {
   totalFavorites: 0,
 };
 
-const StartQuizPage = ({ bankData, questionData }: Props) => {
-  
+export const checkEditable = (
+  user: UserResponse | null,
+  bank: BankResponse
+) => {
+  if (bank.createdBy?.id === user?.id) {
+    return true;
+  }
+  if (
+    bank.manageBanks?.find((item) => item.user.id === user?.id && item.editable)
+  ) {
+    return true;
+  }
+  return false;
+};
+
+const StartQuizPage = ({
+  bankData,
+  questionData,
+  upvoteData,
+  favoriteData,
+}: Props) => {
+  const { user, loading } = useUser();
+  const [bank, setBank] = useState<BankResponse>(bankData);
+
   return (
     <UserLayout>
       <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: "xl" }}>
         <Grid.Col span={{ base: 12, md: 8, lg: 8, xs: 7 }}>
           <Container size="xl">
-            <QuizInfo quiz={bankData} />
+            <QuizInfo
+              bank={bank}
+              setBank={setBank}
+              upvote={upvoteData}
+              like={favoriteData}
+            />
             <Paper p="lg" radius="md" shadow="sm">
               <Stack justify="space-between">
-                <Group gap="md" justify="center">
-                  <Menu shadow="md" width="22%">
+                <Group gap="lg" justify="center">
+                  <Menu shadow="md" width="20%">
                     <Menu.Target>
                       <Button
                         variant="gradient"
@@ -60,32 +91,27 @@ const StartQuizPage = ({ bankData, questionData }: Props) => {
                           to: "cyan",
                           deg: 90,
                         }}
-                        size="xl"
-                        style={{ width: "45%" }}
+                        size="md"
+                        style={{ width: "40%" }}
                         p={0}
+                        leftSection={<IconDeviceDesktopStar size={25} />}
+                        rightSection={
+                          <IconTriangleInvertedFilled size={"0.7rem"} />
+                        }
                       >
-                        <Grid>
-                          <Grid.Col span={2}>
-                            <IconDeviceDesktopStar />
-                          </Grid.Col>
-                          <Grid.Col span={8}>Start Quiz</Grid.Col>
-                          <Grid.Col span={2} style={{ alignItems: "right" }}>
-                            <IconTriangleInvertedFilled size={10} />
-                          </Grid.Col>
-                        </Grid>
+                        Start Quiz
                       </Button>
                     </Menu.Target>
 
                     <Menu.Dropdown>
                       <Menu.Item
                         component="a"
-                        href={`/quiz/${bankData.quizBankId}/live_quiz`}
+                        href={`/quiz/${bank.quizBankId}/live_quiz`}
                         leftSection={
                           <IconSettings
                             style={{ width: rem(14), height: rem(14) }}
                           />
                         }
-                        // onClick={handleLiveQuiz}
                       >
                         Live quiz
                       </Menu.Item>
@@ -102,21 +128,23 @@ const StartQuizPage = ({ bankData, questionData }: Props) => {
                       </Menu.Item>
                     </Menu.Dropdown>
                   </Menu>
-                  <Button
-                    variant="gradient"
-                    gradient={{
-                      from: "blue",
-                      to: "cyan",
-                      deg: 90,
-                    }}
-                    size="xl"
-                    style={{ width: "45%" }}
-                    leftSection={<IconEdit size={25} />}
-                    component="a"
-                    href={`/bank/${bankData.quizBankId}/edit`}
-                  >
-                    Continue Edit
-                  </Button>
+                  {checkEditable(user, bank) && (
+                    <Button
+                      variant="gradient"
+                      gradient={{
+                        from: "blue",
+                        to: "cyan",
+                        deg: 90,
+                      }}
+                      size="md"
+                      style={{ width: "40%" }}
+                      leftSection={<IconEdit size={25} />}
+                      component="a"
+                      href={`/bank/${bankData.quizBankId}/edit`}
+                    >
+                      Continue Edit
+                    </Button>
+                  )}
                 </Group>
               </Stack>
             </Paper>
@@ -147,12 +175,28 @@ export const getServerSideProps = async (
         Cookie: req.headers.cookie || "",
       },
     });
+    const res2 = await instance.get(`/bank/upvote/${query.bankId}`, {
+      withCredentials: true,
+      headers: {
+        Cookie: req.headers.cookie || "",
+      },
+    });
+    const res3 = await instance.get(`/bank/favorite/${query.bankId}`, {
+      withCredentials: true,
+      headers: {
+        Cookie: req.headers.cookie || "",
+      },
+    });
     const bankData = res.data;
     const questionData = res1.data;
+    const upvoteData = res2.data;
+    const favoriteData = res3.data;
     return {
       props: {
         bankData,
         questionData,
+        upvoteData,
+        favoriteData,
       },
     };
   } catch (error) {

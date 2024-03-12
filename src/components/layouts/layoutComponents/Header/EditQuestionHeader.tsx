@@ -138,9 +138,9 @@ const EditQuestionHeader = () => {
       answersMetadata: (value) => {
         switch (dataQuestion.type) {
           case QuestionType.MULTIPLE_CHOICE:
-            // return /^\[\s*("[^"]*"\s*,\s*){1,4}"[^"]*"\s*\]$/.test(value)
-            return /^\['[^'\s].*?'(?:,\s*'[^'\s].*?'){1,4}]$/.test(value)
-              ? null
+            return /^\[\s*("[^"]*"\s*,\s*){1,4}"[^"]*"\s*\]$/.test(value)
+              ? // return /^\['[^'\s].*?'(?:,\s*'[^'\s].*?'){1,4}]$/.test(value)
+                null
               : "Invalid answers, minimum answer is 2 and maximum answer is 5";
           // return null;
           case QuestionType.FILL_IN_THE_BLANK:
@@ -151,7 +151,8 @@ const EditQuestionHeader = () => {
       correctAnswersMetadata: (value) => {
         switch (dataQuestion.type) {
           case QuestionType.MULTIPLE_CHOICE:
-            return /^\['[^'\s].*?'(?:,\s*'[^'\s].*?'){0,4}]$/.test(value)
+            // return /^\['[^'\s].*?'(?:,\s*'[^'\s].*?'){0,4}]$/.test(value)
+            return /^\[\s*("[^"]*"\s*,\s*){0,4}"[^"]*"\s*\]$/.test(value)
               ? null
               : "Invalid correct answers, minimum correct answer is 1 and maximum is 5";
           // return null;
