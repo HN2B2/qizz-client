@@ -42,6 +42,7 @@ export const middleware = async (req: NextRequest) => {
         (await verifyAuth(token).catch((error) => {
             console.error(error)
         }))
+
     if (req.nextUrl.pathname === "/auth/profile") {
         if (!userData) {
             return null
@@ -109,6 +110,9 @@ export const middleware = async (req: NextRequest) => {
         if (protectedRoute.roles.includes(decodedUserData.role)) {
             return NextResponse.next()
         } else {
+            if (decodedUserData) {
+                return NextResponse.rewrite(new URL("/404", req.url))
+            }
             return NextResponse.redirect(
                 new URL(`/auth/logout?r=${req.nextUrl.pathname}`, req.url)
             )

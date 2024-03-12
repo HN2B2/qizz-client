@@ -85,6 +85,10 @@ const LoginPage = () => {
                 router.push("/")
             }
         } catch (error) {
+            if (getServerErrorNoti(error) === "User is disabled") {
+                router.push("/auth/verify")
+                return
+            }
             notifications.show({
                 title: "Error",
                 message: getServerErrorNoti(error),
