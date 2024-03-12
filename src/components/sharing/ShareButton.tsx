@@ -171,7 +171,7 @@ const ShareButton = ({ bank, setBank }: Prop) => {
         </>
       </Modal>
       <Button
-        variant="default"
+        variant="outline"
         size="xs"
         leftSection={<IconShare3 size={14} />}
         onClick={open}

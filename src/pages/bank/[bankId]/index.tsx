@@ -70,89 +70,90 @@ const StartQuizPage = ({
 
   return (
     <UserLayout>
-      <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: "xl" }}>
+      {/* <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: "xl" }}>
         <Grid.Col span={{ base: 12, md: 8, lg: 8, xs: 7 }}>
-          <Container size="xl">
-            <QuizInfo
-              bank={bank}
-              setBank={setBank}
-              upvote={upvoteData}
-              like={favoriteData}
-            />
-            <Paper p="lg" radius="md" shadow="sm">
-              <Stack justify="space-between">
-                <Group gap="lg" justify="center">
-                  <Menu shadow="md" width="20%">
-                    <Menu.Target>
-                      <Button
-                        variant="gradient"
-                        gradient={{
-                          from: "blue",
-                          to: "cyan",
-                          deg: 90,
-                        }}
-                        size="md"
-                        style={{ width: "40%" }}
-                        p={0}
-                        leftSection={<IconDeviceDesktopStar size={25} />}
-                        rightSection={
-                          <IconTriangleInvertedFilled size={"0.7rem"} />
-                        }
-                      >
-                        Start Quiz
-                      </Button>
-                    </Menu.Target>
-
-                    <Menu.Dropdown>
-                      <Menu.Item
-                        component="a"
-                        href={`/quiz/${bank.quizBankId}/live_quiz`}
-                        leftSection={
-                          <IconSettings
-                            style={{ width: rem(14), height: rem(14) }}
-                          />
-                        }
-                      >
-                        Live quiz
-                      </Menu.Item>
-
-                      <Menu.Divider />
-                      <Menu.Item
-                        leftSection={
-                          <IconMessageCircle
-                            style={{ width: rem(14), height: rem(14) }}
-                          />
-                        }
-                      >
-                        Test
-                      </Menu.Item>
-                    </Menu.Dropdown>
-                  </Menu>
-                  {checkEditable(user, bank) && (
-                    <Button
-                      variant="gradient"
-                      gradient={{
-                        from: "blue",
-                        to: "cyan",
-                        deg: 90,
-                      }}
-                      size="md"
-                      style={{ width: "40%" }}
-                      leftSection={<IconEdit size={25} />}
-                      component="a"
-                      href={`/bank/${bankData.quizBankId}/edit`}
-                    >
-                      Continue Edit
-                    </Button>
-                  )}
-                </Group>
-              </Stack>
-            </Paper>
-            <QuizQuestions questions={questionData} />
-          </Container>
+          
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 4, lg: 4, xs: 5 }}></Grid.Col>
-      </Grid>
+      </Grid> */}
+      <Container size="md">
+        <QuizInfo
+          bank={bank}
+          setBank={setBank}
+          upvote={upvoteData}
+          like={favoriteData}
+        />
+        <Paper p="lg" radius="md" shadow="sm">
+          <Stack justify="space-between">
+            <Group gap="lg" justify="center">
+              <Menu shadow="md" width="20%">
+                <Menu.Target>
+                  <Button
+                    variant="gradient"
+                    gradient={{
+                      from: "blue",
+                      to: "cyan",
+                      deg: 90,
+                    }}
+                    size="md"
+                    style={{ width: "40%" }}
+                    p={0}
+                    leftSection={<IconDeviceDesktopStar size={25} />}
+                    rightSection={
+                      <IconTriangleInvertedFilled size={"0.7rem"} />
+                    }
+                  >
+                    Start Quiz
+                  </Button>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Item
+                    component="a"
+                    href={`/quiz/${bank.quizBankId}/live_quiz`}
+                    leftSection={
+                      <IconSettings
+                        style={{ width: rem(14), height: rem(14) }}
+                      />
+                    }
+                  >
+                    Live quiz
+                  </Menu.Item>
+
+                  <Menu.Divider />
+                  <Menu.Item
+                    leftSection={
+                      <IconMessageCircle
+                        style={{ width: rem(14), height: rem(14) }}
+                      />
+                    }
+                  >
+                    Test
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+              {checkEditable(user, bank) && (
+                <Button
+                  variant="gradient"
+                  gradient={{
+                    from: "blue",
+                    to: "cyan",
+                    deg: 90,
+                  }}
+                  size="md"
+                  style={{ width: "40%" }}
+                  leftSection={<IconEdit size={25} />}
+                  component="a"
+                  href={`/bank/${bankData.quizBankId}/edit`}
+                >
+                  Continue Edit
+                </Button>
+              )}
+            </Group>
+          </Stack>
+        </Paper>
+        <QuizQuestions questions={questionData} />
+      </Container>
     </UserLayout>
   );
 };
