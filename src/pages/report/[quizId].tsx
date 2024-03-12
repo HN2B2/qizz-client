@@ -1,6 +1,6 @@
 import { UserLayout } from "@/components/layouts";
 import { Participants } from "@/components/quiz";
-import { QuestionDetails } from "@/components/report";
+import { Questions } from "@/components/report";
 import { QuizState } from "@/types/quiz/QuizState";
 import ReportDedailResponse from "@/types/report/ReportDedailResponse";
 import { formatDate, getServerErrorNoti, instance } from "@/utils";
@@ -159,7 +159,7 @@ const ReportDetail = ({ quizReport }: ReportDetailProps) => {
             </Tabs.Panel>
 
             <Tabs.Panel value="questions">
-              <QuestionDetails questions={quizReport.questionReports} />
+              <Questions questions={quizReport.questionReports} />
             </Tabs.Panel>
 
             <Tabs.Panel value="overview">Settings tab content</Tabs.Panel>
