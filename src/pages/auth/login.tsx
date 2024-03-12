@@ -56,10 +56,8 @@ const LoginPage = () => {
         },
     })
 
-    const [
-        loading,
-        { toggle: toggleLoading, close: closeLoading, open: openLoading },
-    ] = useDisclosure()
+    const [loading, { close: closeLoading, open: openLoading }] =
+        useDisclosure()
 
     const router = useRouter()
     const { r } = router.query
@@ -133,7 +131,7 @@ const LoginPage = () => {
                             />
                             <Group justify="end" mt="lg">
                                 {/* <Checkbox label="Remember me" /> */}
-                                <Anchor component="button" size="sm">
+                                <Anchor href="/auth/forgot-password" size="sm">
                                     Forgot password?
                                 </Anchor>
                             </Group>
