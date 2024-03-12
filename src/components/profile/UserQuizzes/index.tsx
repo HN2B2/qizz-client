@@ -1,20 +1,155 @@
 import { BankResponse } from "@/types/bank";
+import { instance } from "@/utils";
 import {
   Avatar,
   Card,
   Flex,
   Grid,
   Group,
+  NavLink,
   Paper,
   Stack,
   Text,
 } from "@mantine/core";
-import React from "react";
+import { useListState } from "@mantine/hooks";
+import {
+  IconHeart,
+  IconShare,
+  IconThumbUp,
+  IconUser,
+  IconWallpaper,
+} from "@tabler/icons-react";
 interface QuizzesProps {
   quizzes: BankResponse[];
 }
-
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+export const PAGE_SIZE = 2;
+const data = [
+  {
+    icon: IconUser,
+    label: "Created by me",
+    // description: "Item with description",
+    value: "created",
+  },
+  {
+    icon: IconHeart,
+    label: "Liked by me",
+    value: "liked",
+    //   rightSection: <IconChevronRight size="1rem" stroke={1.5} />,
+  },
+  { icon: IconShare, label: "Shared with me", value: "shared" },
+  { icon: IconThumbUp, label: "Upvoted by me", value: "upvoted" },
+  { icon: IconWallpaper, label: "All my contents", value: "all" },
+];
 const UserQuizzes = ({ quizzes }: QuizzesProps) => {
+  const [active, setActive] = useState(0);
+  const [value, setValue] = useState("");
+
+  const [bankList, handlers] = useListState<BankResponse>([]);
+  const [total, setTotal] = useState(0);
+  const [activeTab, setActiveTab] = useState<string | null>("published");
+
+  const router = useRouter();
+  const {
+    page = "1",
+    keyword,
+    order,
+    sort,
+    draft,
+    subCategoryIds,
+    tab = "created",
+  } = router.query;
+
+  const handleFetchCategoryData = async () => {
+    try {
+      const res = await instance.get(`/bank/all`, {
+        params: {
+          limit: PAGE_SIZE,
+          page,
+          keyword,
+          order,
+          sort,
+          draft,
+          subCategoryIds,
+          tab,
+        },
+      });
+      const bankData = res.data;
+      handlers.setState(bankData.data);
+      setTotal(bankData.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchCategoryData();
+  }, []);
+
+  useEffect(() => {
+    handleFetchCategoryData();
+  }, [page, keyword, order, sort, draft, subCategoryIds, tab]);
+
+  const handleActive = (index: number) => {
+    setActive(index);
+    router.push({
+      pathname: "/my-library",
+      query: {
+        keyword,
+        order,
+        sort,
+        page: "1",
+        draft,
+        subCategoryIds,
+        tab: data[index].value,
+      },
+    });
+  };
+
+  const handleSearch = (value: string) => {
+    setValue(value);
+    router.push({
+      pathname: "/my-library",
+      query: {
+        keyword: value,
+        order,
+        sort,
+        page: "1",
+        draft,
+        subCategoryIds,
+        tab,
+      },
+    });
+  };
+
+  const handleActiveTab = (value: string | null) => {
+    setActiveTab(value);
+    router.push({
+      pathname: "/my-library",
+      query: {
+        keyword,
+        order,
+        sort,
+        page: "1",
+        draft: value === "published" ? false : true,
+        subCategoryIds,
+      },
+    });
+  };
+
+  const items = data.map((item, index) => (
+    <NavLink
+      key={item.label}
+      active={index === active}
+      label={item.label}
+      //   description={item.description}
+      //   rightSection={item.rightSection}
+      leftSection={<item.icon size="1rem" stroke={1.5} />}
+      onClick={() => handleActive(index)}
+    />
+  ));
+  const totalPage = Math.ceil(total / PAGE_SIZE);
   return (
     <Grid>
       <Grid.Col span={4}>
