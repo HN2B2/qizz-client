@@ -123,12 +123,11 @@ const RegisterPage = () => {
 
     const strength = getStrength(registerForm.values.password)
     const color = strength === 100 ? "teal" : strength > 50 ? "yellow" : "red"
-    const [
-        loading,
-        { toggle: toggleLoading, close: closeLoading, open: openLoading },
-    ] = useDisclosure()
+    const [loading, { close: closeLoading, open: openLoading }] =
+        useDisclosure()
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         openLoading()
 
         registerForm.validate()
@@ -143,11 +142,7 @@ const RegisterPage = () => {
                 registerForm.values as RegisterRequest
             )
             setUser(data.user)
-            if (r) {
-                router.push(r as string)
-            } else {
-                router.push("/")
-            }
+            router.push("/auth/verify")
         } catch (error) {
             notifications.show({
                 title: "Error",
