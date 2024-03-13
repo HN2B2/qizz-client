@@ -4,7 +4,15 @@ interface QuestionDetailsProps {
   questions: QuestionReportResponse[];
 }
 
-import { Flex, Group, Select, Stack, Text, ActionIcon } from "@mantine/core";
+import {
+  Flex,
+  Group,
+  Select,
+  Stack,
+  Text,
+  ActionIcon,
+  rem,
+} from "@mantine/core";
 import {} from "@mantine/charts";
 import {
   IconChevronDown,
@@ -75,6 +83,7 @@ const Questions = ({ questions }: QuestionDetailsProps) => {
   const [ascending, setAscending] = useState(true);
   const [sortedElements, setSortedElements] = useState(elements);
   const [selectedSortOption, setSelectedSortOption] = useState("Accuracy");
+  const iconStyle = { width: rem(12), height: rem(12) };
 
   // const [selectedElement, setSelectedElement] = useState< | null>(null);
 
@@ -140,7 +149,7 @@ const Questions = ({ questions }: QuestionDetailsProps) => {
           <Text>Sort by: </Text>
           <Select
             value={selectedSortOption}
-            rightSection={<IconChevronDown size={14} stroke={1.5} />}
+            rightSection={<IconChevronDown style={iconStyle} />}
             size="sm"
             data={["Accuracy", "Points", "Score", "Name", "Submission time"]}
           />
@@ -154,7 +163,7 @@ const Questions = ({ questions }: QuestionDetailsProps) => {
         </ActionIcon>
       </Flex>
       {questions.map((question) => (
-        <QuestionReportModal question={question} />
+        <QuestionReportModal key={question.content} question={question} />
       ))}
     </Stack>
   );
