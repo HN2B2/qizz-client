@@ -1,6 +1,14 @@
 import { QuestionReportResponse } from "@/types/report";
 import { BarChart } from "@mantine/charts";
-import { Divider, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
+import {
+  Divider,
+  Flex,
+  Group,
+  RingProgress,
+  Stack,
+  Text,
+  rem,
+} from "@mantine/core";
 import {
   IconCheck,
   IconCheckbox,
@@ -46,6 +54,7 @@ const AnswerBarChart = ({
     <BarChart
       p={0}
       h={30}
+      w={"100%"}
       data={[
         {
           choosed: numberChoosed,
@@ -61,7 +70,7 @@ const AnswerBarChart = ({
       withYAxis={false}
       series={[
         { name: "choosed", color: "red.6" },
-        { name: "notchoosed", color: "grey" },
+        { name: "notchoosed", color: "gray" },
       ]}
     />
   );
@@ -79,10 +88,15 @@ const AnswerDetail = ({
   correct: boolean;
 }) => {
   return (
-    <Flex>
+    <Flex justify={"space-between"}>
       {correct ? <IconCheck size={20} /> : <IconX size={20} />}
-      <Text p={0}> {content}</Text>
-      <AnswerBarChart numberChoosed={numberChoosed} totalJoiner={totalJoiner} />
+      <Group>
+        <Text p={0}> {content}</Text>
+        <AnswerBarChart
+          numberChoosed={numberChoosed}
+          totalJoiner={totalJoiner}
+        />
+      </Group>
     </Flex>
   );
 };
@@ -100,18 +114,20 @@ const QuestionReportPaper = ({
     (participant) => participant.correct
   ).length;
   const totalJoiner = question.participants.length;
+  const iconStyle = { width: rem(12), height: rem(12) };
+
   return (
     <>
       <Stack>
         <Flex justify={"space-between"}>
           <Group>
-            <Group>
-              <IconCheckbox></IconCheckbox>
-              <Text> {question.type}</Text>
+            <Group gap={5}>
+              <IconCheckbox style={iconStyle}></IconCheckbox>
+              <Text size="sm"> {question.type}</Text>
             </Group>
-            <Group>
-              <IconTrophy></IconTrophy>
-              <Text>{question.point}</Text>
+            <Group gap={5}>
+              <IconTrophy style={iconStyle}></IconTrophy>
+              <Text size="sm">{question.point}</Text>
             </Group>
           </Group>
           <Group>
@@ -126,13 +142,18 @@ const QuestionReportPaper = ({
         </Flex>
 
         <Divider />
-        <Text>Question</Text>
-        <Text>{question.content}</Text>
-        <Group>
+        <Text size="sm" fw={700} c={"gray"}>
+          Question
+        </Text>
+        <div dangerouslySetInnerHTML={{ __html: question?.content }} />
+        <Group mt={10}>
           <Stack w={"70%"}>
-            <Text>Options</Text>
+            <Text size="sm" fw={700} c={"gray"}>
+              Options
+            </Text>
             {answersMetadata.map((answer) => (
               <AnswerDetail
+                key={answer}
                 content={answer}
                 numberChoosed={
                   question.participants.filter((participant) =>
