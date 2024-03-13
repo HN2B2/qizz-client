@@ -80,9 +80,14 @@ const Monitor = ({ quizCode }: { quizCode: string }) => {
             <JoinGamePaper />
             <ParticipantPaper />
           </Flex>
-          <Group>
-            <Button onClick={handleStart}>Start</Button>
-            <Button>End</Button>
+          <Group
+            justify="
+          space-between"
+          >
+            <Button onClick={handleStart} size="lg">
+              Start
+            </Button>
+            <Button size="lg">End</Button>
           </Group>
         </Stack>
       </Paper>
