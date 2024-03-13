@@ -80,19 +80,21 @@ const ForgotPasswordPage = () => {
                         </Title>
                         {sended ? (
                             <>
-                                <Text size="sm" c="gray" mb={16}>
-                                    We have sent you a link to reset your
-                                    password, please check your email
-                                </Text>
-                                <Button
-                                    component="a"
-                                    href="/auth/login"
-                                    fullWidth
-                                    my="md"
-                                    variant="default"
-                                >
-                                    Login
-                                </Button>
+                                <form onSubmit={handleForgotPassword}>
+                                    <Text size="sm" c="gray" mb={16}>
+                                        We have sent you a link to reset your
+                                        password, please check your email
+                                    </Text>
+                                    <Button
+                                        fullWidth
+                                        my="md"
+                                        variant="default"
+                                        type="submit"
+                                        loading={loading}
+                                    >
+                                        Resend link
+                                    </Button>
+                                </form>
                             </>
                         ) : (
                             <>

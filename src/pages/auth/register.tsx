@@ -129,6 +129,7 @@ const RegisterPage = () => {
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         openLoading()
+        closePopover()
 
         registerForm.validate()
         if (!registerForm.isValid()) {
