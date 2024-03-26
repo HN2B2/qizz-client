@@ -100,10 +100,10 @@ const QuizQuestions = ({ questions }: QuizQuestionProps) => {
           <div>{question.answersMetadata}</div>
         </SimpleGrid>
       </Paper> */}
-      {questions.map((question) => (
+      {questions.map((question, index) => (
         <ViewQuestionPaper
           question={question}
-          index={1}
+          index={index}
           show={showAnswer}
         ></ViewQuestionPaper>
       ))}

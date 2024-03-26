@@ -152,7 +152,13 @@ const EditBank = ({ bankData, questionData }: Props) => {
         color: "green",
       });
       router.push("/");
-    } catch (error) {}
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
   };
 
   return (
@@ -167,13 +173,14 @@ const EditBank = ({ bankData, questionData }: Props) => {
               </Flex>
               <CreateQuestionButton></CreateQuestionButton>
             </Group>
-            {question.map((questionn) => (
+            {question.map((questionn, index) => (
               <QuestionPaper
                 key={questionn.questionId}
                 type={questionn.type}
                 data={questionn}
                 bankId={bank.quizBankId}
                 setQuestion={setQuestion}
+                index={index}
               />
             ))}
           </Grid.Col>

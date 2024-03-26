@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Avatar,
   Card,
   Center,
@@ -10,10 +11,11 @@ import {
 } from "@mantine/core";
 import React from "react";
 import { Image, Text } from "@mantine/core";
-import { IconMenu2, IconTrash } from "@tabler/icons-react";
+import { IconMenu2, IconTrash, IconX } from "@tabler/icons-react";
 import { BankResponse } from "@/types/bank";
 
 function BankCard({ bank }: { bank: BankResponse }) {
+  const handleDeleteBank = (id: number) => {};
   return (
     <>
       <Card
@@ -45,9 +47,20 @@ function BankCard({ bank }: { bank: BankResponse }) {
             </Grid.Col>
 
             <Grid.Col span={9} p={"md"}>
-              <Title order={4} lineClamp={1}>
-                {bank.name}
-              </Title>
+              <Group justify="space-between">
+                <Title order={4} lineClamp={1}>
+                  {bank.name}
+                </Title>
+                <ActionIcon
+                  bg={"red"}
+                  color={"white"}
+                  size={"sm"}
+                  onClick={() => handleDeleteBank(bank.quizBankId)}
+                >
+                  <IconX></IconX>
+                </ActionIcon>
+              </Group>
+
               <Text mt="xs" c="dimmed" size="sm" lineClamp={2}>
                 {bank.description}
               </Text>
