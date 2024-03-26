@@ -31,7 +31,7 @@ const ViewQuestionPaper = ({
       <Stack gap={20}>
         <Flex justify="space-between">
           <Text>
-            {index}. {question.type}
+            {index + 1}. {question.type}
           </Text>
           <Flex justify={"space-between"}>
             <Stack justify="space-between">

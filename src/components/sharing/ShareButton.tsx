@@ -94,7 +94,7 @@ const ShareButton = ({ bank, setBank }: Prop) => {
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Add new subcategory">
+      <Modal opened={opened} onClose={close} title="Sharing">
         <>
           <AddSharing
             closee={close}

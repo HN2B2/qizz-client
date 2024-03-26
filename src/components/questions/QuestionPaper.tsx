@@ -71,8 +71,9 @@ interface Props {
   data: QuestionResponse;
   bankId: number;
   setQuestion: React.Dispatch<React.SetStateAction<QuestionResponse[]>>;
+  index: number;
 }
-const QuestionPaper = ({ type, data, bankId, setQuestion }: Props) => {
+const QuestionPaper = ({ type, data, bankId, setQuestion, index }: Props) => {
   const QuestionTypes: Record<QuestionType, React.ReactNode> = {
     [QuestionType.MULTIPLE_CHOICE]: <MultipleChoice data={data} show={true} />,
     [QuestionType.FILL_IN_THE_BLANK]: (
@@ -122,7 +123,7 @@ const QuestionPaper = ({ type, data, bankId, setQuestion }: Props) => {
       <Group justify="space-between">
         <Flex align={"center"} pl={20}>
           <IconGripVertical></IconGripVertical>
-          <Pill variant="transparent">Question {data.questionIndex}</Pill>
+          <Pill variant="transparent">Question {index + 1}</Pill>
         </Flex>
         <Button.Group p={8}>
           <Tooltip label="Edit this question" position="top">
