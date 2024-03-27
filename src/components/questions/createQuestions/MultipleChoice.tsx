@@ -103,7 +103,7 @@ const MultipleChoice = () => {
       let newData = dataQuestion;
       newData = {
         ...newData,
-        content: editor.getHTML(),
+        content: JSON.stringify(editor.getJSON()),
       };
       updateDataQuestion(newData);
     },

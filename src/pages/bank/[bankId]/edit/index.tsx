@@ -171,7 +171,7 @@ const EditBank = ({ bankData, questionData }: Props) => {
                 <IconListCheck></IconListCheck>
                 <Text>{question.length} Questions</Text>
               </Flex>
-              <CreateQuestionButton></CreateQuestionButton>
+              <CreateQuestionButton />
             </Group>
             {question.map((questionn, index) => (
               <QuestionPaper
