@@ -15,7 +15,13 @@ export const config = {
 }
 
 export const publicRoutes: string[] = ["/", "/play"]
-export const authRoutes = ["/auth/login", "/auth/register", "/auth/verify"]
+export const authRoutes = [
+    "/auth/login",
+    "/auth/register",
+    "/auth/verify",
+    "/auth/forgot-password",
+    "/auth/reset-password",
+]
 export const protectedRoutes = [
     {
         path: "/profile",
