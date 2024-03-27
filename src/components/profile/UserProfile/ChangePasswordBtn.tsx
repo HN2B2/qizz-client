@@ -64,9 +64,11 @@ const ChangePasswordForm = () => {
             return
         }
         try {
-            const { data } = await instance.put("/user/change-password", {
-                oldPassword: changePassWordForm.values.oldPassword,
-                newPassword: changePassWordForm.values.newPassword,
+            await instance.put("/user/change-password", {
+                json: {
+                    oldPassword: changePassWordForm.values.oldPassword,
+                    newPassword: changePassWordForm.values.newPassword,
+                },
             })
             notifications.show({
                 color: "green",

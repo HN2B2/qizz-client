@@ -138,13 +138,16 @@ const RegisterPage = () => {
         }
 
         try {
-            const { data }: { data: AuthResponse } = await instance.post(
-                "/auth/register",
-                registerForm.values as RegisterRequest
-            )
+            const data: AuthResponse = await instance
+                .post("auth/register", {
+                    json: registerForm.values as RegisterRequest,
+                })
+                .json()
             setUser(data.user)
             router.push("/auth/verify")
         } catch (error) {
+            console.log(error)
+
             notifications.show({
                 title: "Error",
                 message: getServerErrorNoti(error),

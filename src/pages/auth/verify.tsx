@@ -1,3 +1,5 @@
+export const runtime = "experimental-edge"
+
 import { instance } from "@/utils"
 import { Button, Container, Stack, Text, Title } from "@mantine/core"
 import { GetServerSidePropsContext } from "next"
@@ -31,8 +33,10 @@ export const getServerSideProps = async (
     const { token } = context.query
     if (token) {
         try {
-            const res = await instance.post("/auth/verify", { token })
-            const setCookieHeader = res.headers["set-cookie"]
+            const response = await instance.post("/auth/verify", {
+                json: { token },
+            })
+            const setCookieHeader = response.headers.get("set-cookie")
             if (setCookieHeader) {
                 context.res.setHeader("Set-Cookie", setCookieHeader)
             }
