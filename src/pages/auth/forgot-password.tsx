@@ -45,7 +45,7 @@ const ForgotPasswordPage = () => {
         }
 
         try {
-            await instance.post("/auth/forgot-password", {
+            await instance.post("auth/forgot-password", {
                 json: {
                     email: forgotPasswordForm.values.email,
                 },

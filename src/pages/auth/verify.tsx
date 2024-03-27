@@ -33,7 +33,7 @@ export const getServerSideProps = async (
     const { token } = context.query
     if (token) {
         try {
-            const response = await instance.post("/auth/verify", {
+            const response = await instance.post("auth/verify", {
                 json: { token },
             })
             const setCookieHeader = response.headers.get("set-cookie")

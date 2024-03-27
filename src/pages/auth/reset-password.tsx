@@ -83,7 +83,7 @@ const ResetPasswordPage = () => {
 
         try {
             const data: AuthResponse = await instance
-                .post("/auth/reset-password", {
+                .post("auth/reset-password", {
                     json: {
                         password: resetPasswordForm.values.password,
                         token: token as string,
@@ -166,7 +166,7 @@ export const getServerSideProps = async (
         }
     } else {
         try {
-            await instance.post("/auth/check-reset-token", {
+            await instance.post("auth/check-reset-token", {
                 json: {
                     token: token as string,
                 },
