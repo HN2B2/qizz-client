@@ -1,3 +1,5 @@
+export const runtime = "experimental-edge";
+
 import EditQuestionLayout from "@/components/layouts/layoutComponents/EditQuestionLayout";
 import EditFillInTheBlank from "@/components/questions/editQuestions/EditFillInTheBlank";
 import EditMultipleChoice from "@/components/questions/editQuestions/EditMultipleChoice";
@@ -51,13 +53,14 @@ export const getServerSideProps = async (
   try {
     const { req, query } = context;
     // const { page = PAGE, keyword } = query;
-    const res = await instance.get(`/question/${query.id}`, {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
-    });
-    const questionData = res.data;
+    const res = await instance
+      .get(`question/${query.id}`, {
+        headers: {
+          Cookie: req.headers.cookie || "",
+        },
+      })
+      .json();
+    const questionData = res;
     return {
       props: {
         questionData,
