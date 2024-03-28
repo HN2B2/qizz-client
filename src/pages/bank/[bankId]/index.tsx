@@ -1,10 +1,10 @@
+export const runtime = "experimental-edge";
 import { UserLayout } from "@/components/layouts";
 
 import { QuizInfo } from "@/components/quiz";
 import QuizQuestions from "@/components/quiz/QuizQuestions";
 import Question from "@/types/question/QuestionResponse";
 import { UserResponse, UserStats } from "@/types/user";
-
 import {
   Button,
   Container,
@@ -110,7 +110,7 @@ const StartQuizPage = ({
                 <Menu.Dropdown>
                   <Menu.Item
                     component="a"
-                    href={`/quiz/${bank.quizBankId}/live_quiz`}
+                    // href={`/quiz/${bank.quizBankId}/live_quiz`}
                     leftSection={
                       <IconSettings
                         style={{ width: rem(14), height: rem(14) }}
@@ -164,34 +164,38 @@ export const getServerSideProps = async (
   try {
     const { req, query } = context;
 
-    const res = await instance.get(`/bank/${query.bankId}`, {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
-    });
-    const res1 = await instance.get(`/question/all/bankId/${query.bankId}`, {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
-    });
-    const res2 = await instance.get(`/bank/upvote/${query.bankId}`, {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
-    });
-    const res3 = await instance.get(`/bank/favorite/${query.bankId}`, {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
-    });
-    const bankData = res.data;
-    const questionData = res1.data;
-    const upvoteData = res2.data;
-    const favoriteData = res3.data;
+    const res = await instance
+      .get(`bank/${query.bankId}`, {
+        headers: {
+          Cookie: req.headers.cookie || "",
+        },
+      })
+      .json();
+    const res1 = await instance
+      .get(`question/all/bankId/${query.bankId}`, {
+        headers: {
+          Cookie: req.headers.cookie || "",
+        },
+      })
+      .json();
+    const res2 = await instance
+      .get(`bank/upvote/${query.bankId}`, {
+        headers: {
+          Cookie: req.headers.cookie || "",
+        },
+      })
+      .json();
+    const res3 = await instance
+      .get(`bank/favorite/${query.bankId}`, {
+        headers: {
+          Cookie: req.headers.cookie || "",
+        },
+      })
+      .json();
+    const bankData = res;
+    const questionData = res1;
+    const upvoteData = res2;
+    const favoriteData = res3;
     return {
       props: {
         bankData,

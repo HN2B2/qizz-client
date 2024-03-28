@@ -7,6 +7,10 @@ import { Category, SubCategory } from "@/types/category";
 import { useDisclosure, useForceUpdate, useListState } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
+interface Data {
+  data: Category[];
+  total: number;
+}
 const AddCategoryButton = ({
   bank,
   setBank,
@@ -18,7 +22,7 @@ const AddCategoryButton = ({
 
   const getData = async (ids: number[] | undefined) => {
     try {
-      const { data: rawCategories } = await instance.get(`/categories`);
+      const rawCategories: Data = await instance.get(`categories`).json();
 
       categoriesHandler.setState(rawCategories.data);
     } catch (error) {}
@@ -52,12 +56,13 @@ const AddCategoryButton = ({
 
   const handleSubmit = async () => {
     try {
-      const { data } = await instance.post(
-        `/bank/${bank.quizBankId}/subCategory`,
-        {
-          subCategories: subIds,
-        }
-      );
+      const data: BankResponse = await instance
+        .post(`bank/${bank.quizBankId}/subCategory`, {
+          json: {
+            subCategories: subIds,
+          },
+        })
+        .json();
       close();
       setBank(data);
       notifications.show({
@@ -73,8 +78,9 @@ const AddCategoryButton = ({
       });
     }
   };
+  console.log(categories);
 
-  const categoryData = categories.filter(
+  const categoryData: Category[] = categories?.filter(
     (item) =>
       item.subCategories.filter(
         (sub) => !bank.subCategories?.map((item) => item.id).includes(sub.id)
@@ -88,7 +94,7 @@ const AddCategoryButton = ({
           <Select
             m="md"
             label="Choose category"
-            data={categoryData.map((item) => ({
+            data={categoryData?.map((item) => ({
               value: item.id + "",
               label: item.name,
             }))}

@@ -1,3 +1,5 @@
+export const runtime = "experimental-edge";
+
 import { UserLayout } from "@/components/layouts";
 import QuestionPaper from "@/components/questions/QuestionPaper";
 import {
@@ -145,7 +147,9 @@ const EditBank = ({ bankData, questionData }: Props) => {
         }),
       };
 
-      const { data } = await instance.put(`/bank/${bankData.quizBankId}`, body);
+      const data = await instance.put(`bank/${bankData.quizBankId}`, {
+        json: body,
+      });
       notifications.show({
         title: "Success",
         message: "Bank updated successfully",
@@ -263,20 +267,22 @@ export const getServerSideProps = async (
   try {
     // const { user } = useUser();
     const { req, query } = context;
-    const res = await instance.get(`/bank/${query.bankId}`, {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
-    });
-    const res1 = await instance.get(`/question/all/bankId/${query.bankId}`, {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
-    });
-    const bankData = res.data;
-    const questionData = res1.data;
+    const res = await instance
+      .get(`bank/${query.bankId}`, {
+        headers: {
+          Cookie: req.headers.cookie || "",
+        },
+      })
+      .json();
+    const res1 = await instance
+      .get(`question/all/bankId/${query.bankId}`, {
+        headers: {
+          Cookie: req.headers.cookie || "",
+        },
+      })
+      .json();
+    const bankData = res;
+    const questionData = res1;
     // if (!checkEditable(user, bankData)) {
     //   return {
     //     notFound: true,

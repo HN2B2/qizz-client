@@ -7,7 +7,7 @@ import LibraryPagination from "@/components/my-library/LibraryPagination";
 import LibrarySort from "@/components/my-library/LibrarySort";
 import { BankResponse } from "@/types/bank";
 import { Category, SubCategory } from "@/types/category";
-import { instance } from "@/utils";
+import { instance, removeEmpty } from "@/utils";
 import {
   ActionIcon,
   AppShell,
@@ -86,19 +86,21 @@ const index = () => {
 
   const handleFetchCategoryData = async () => {
     try {
-      const res = await instance.get(`/bank/all`, {
-        params: {
-          limit: PAGE_SIZE,
-          page,
-          keyword,
-          order,
-          sort,
-          draft,
-          subCategoryIds,
-          tab,
-        },
-      });
-      const bankData = res.data;
+      const res: { data: BankResponse[]; total: number } = await instance
+        .get(`bank/all`, {
+          searchParams: removeEmpty({
+            limit: PAGE_SIZE.toString(),
+            page: page.toString(),
+            keyword: keyword as string,
+            order: order as string,
+            sort: sort as string,
+            draft: draft as string,
+            subCategoryIds: subCategoryIds as string,
+            tab: tab as string,
+          }),
+        })
+        .json();
+      const bankData = res;
       handlers.setState(bankData.data);
       setTotal(bankData.total);
     } catch (error) {

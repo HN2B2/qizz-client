@@ -213,10 +213,13 @@ const CreateQuestionHeader = () => {
 
   const handleSubmit = async () => {
     try {
-      const { data } = await instance.post(
-        "/question",
-        createQuestionForm.values
-      );
+      const data = await instance
+        .post("question", {
+          json: {
+            ...createQuestionForm.values,
+          },
+        })
+        .json();
       if (data) {
         // console.log(data);
       }

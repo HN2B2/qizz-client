@@ -50,12 +50,13 @@ const CategoryList = ({
       .map((item) => item.id);
 
     try {
-      const { data } = await instance.put(
-        `/bank/${bank.quizBankId}/subCategory`,
-        {
-          subCategories: ids,
-        }
-      );
+      const data: BankResponse = await instance
+        .put(`bank/${bank.quizBankId}/subCategory`, {
+          json: {
+            subCategories: ids,
+          },
+        })
+        .json();
       setBank(data);
       notifications.show({
         color: "green",
