@@ -1,4 +1,5 @@
 import { QuestionResponse } from "@/types/question";
+import { renderHTML } from "@/utils";
 import { Box, Divider, Paper, SimpleGrid, Text } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import React from "react";
@@ -14,7 +15,7 @@ const MultipleChoice = ({ data, show }: Props) => {
   );
   return (
     <Paper px="xl" py="xs" shadow="xs">
-      <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
+      <div dangerouslySetInnerHTML={{ __html: renderHTML(data.content) }}></div>
 
       <Divider
         my="sm"
