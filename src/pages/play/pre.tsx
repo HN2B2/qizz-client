@@ -43,12 +43,13 @@ const PreparePage = ({ quiz }: PreparePageProps) => {
             return
         }
         try {
-            const { data }: { data: AuthResponse } = await instance.post(
-                `/auth/create-guest`,
-                {
-                    displayName: nameForm.values.name,
-                }
-            )
+            await instance
+                .post(`auth/create-guest`, {
+                    json: {
+                        displayName: nameForm.values.name,
+                    },
+                })
+                .json()
             router.push(`/play/${quiz.code}`)
         } catch (error) {
             notifications.show({
@@ -92,9 +93,9 @@ export const getServerSideProps = async (
     const { code } = context.query
     const token = context.req.cookies.user
     try {
-        const { data: quiz }: { data: QuizResponse } = await instance.get(
-            `/quiz/code/${code}`
-        )
+        const quiz: QuizResponse = await instance
+            .get(`quiz/code/${code}`)
+            .json()
 
         if (token) {
             return {

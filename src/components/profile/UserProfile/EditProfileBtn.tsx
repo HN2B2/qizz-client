@@ -101,7 +101,7 @@ const EditProfileForm = ({ user }: UserProfileProps) => {
         }
 
         try {
-            const { data } = await instance.put("/user", body)
+            const data = await instance.put("user", { json: body }).json()
             notifications.show({
                 color: "green",
                 title: "Success",

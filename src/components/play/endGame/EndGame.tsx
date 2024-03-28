@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import GameBackground from "../GameBackground"
+import GameBackground from "../../common/GameBackground"
 import { motion } from "framer-motion"
 import { QuizRoomInfoResponse } from "@/types/takeQuiz"
 import { QuizContext } from "@/pages/play/[quizCode]"
@@ -13,8 +13,9 @@ const EndGame = () => {
     const [players, setPlayers] = useState<RankingResponse["players"]>([])
     const getResult = async () => {
         try {
-            const { data }: { data: QuizRoomInfoResponse<RankingResponse> } =
-                await instance.get(`/take-quiz/result/${quiz.code}`)
+            const data: QuizRoomInfoResponse<RankingResponse> = await instance
+                .get(`take-quiz/result/${quiz.code}`)
+                .json()
             setPlayers(data.data.players)
         } catch (e) {
             console.log(e)

@@ -50,11 +50,15 @@ const MultipleChoice = ({ timeLeft }: MultipleChoiceProps) => {
         setSelectedAnswer(index)
         try {
             instance.post(
-                `/take-quiz/${quiz.code}/${playingData.data.questionId}`,
+                `take-quiz/${quiz.code}/${playingData.data.questionId}`,
                 {
-                    answerMetadata: JSON.stringify([answers[index]] || [""]),
-                    QuestionType: QuestionType.MULTIPLE_CHOICE,
-                    answerTime: timeLeft / 10,
+                    json: {
+                        answerMetadata: JSON.stringify(
+                            [answers[index]] || [""]
+                        ),
+                        QuestionType: QuestionType.MULTIPLE_CHOICE,
+                        answerTime: timeLeft / 10,
+                    },
                 }
             )
         } catch (e) {

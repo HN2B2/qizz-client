@@ -2,7 +2,7 @@ import { UserLayout } from "@/components/layouts"
 import { ReportFilter, ReportPagination } from "@/components/report"
 import ReportTableRow from "@/components/report/ReportTableRow"
 import { GetAllReportResponse, ReportResponse } from "@/types/report"
-import { getServerErrorNoti, instance } from "@/utils"
+import { getServerErrorNoti, instance, removeEmpty } from "@/utils"
 import { Flex, Paper, Stack, Table, Text } from "@mantine/core"
 import { GetServerSidePropsContext } from "next"
 
@@ -64,22 +64,20 @@ export const getServerSideProps = async (
     const { req, query } = context
     const { page, name, from, to } = query
     try {
-        const { data }: { data: GetAllReportResponse } = await instance.get(
-            "/reports",
-            {
-                params: {
-                    page: page || 1,
-                    limit: PAGE_SIZE,
-                    name,
-                    from,
-                    to,
-                },
-                withCredentials: true,
+        const data: GetAllReportResponse = await instance
+            .get("reports", {
+                searchParams: removeEmpty({
+                    page: page?.toString() || (1).toString(),
+                    limit: PAGE_SIZE.toString(),
+                    name: name as string,
+                    from: from as string,
+                    to: to as string,
+                }),
                 headers: {
                     Cookie: req.headers.cookie || "",
                 },
-            }
-        )
+            })
+            .json()
 
         return {
             props: {

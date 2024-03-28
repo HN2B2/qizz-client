@@ -64,7 +64,7 @@ const ChangePasswordForm = () => {
             return
         }
         try {
-            await instance.put("/user/change-password", {
+            await instance.put("user/change-password", {
                 json: {
                     oldPassword: changePassWordForm.values.oldPassword,
                     newPassword: changePassWordForm.values.newPassword,

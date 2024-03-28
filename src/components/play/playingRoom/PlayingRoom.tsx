@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import GameBackground from "../GameBackground"
+import GameBackground from "../../common/GameBackground"
 import { QuizResponse } from "@/types/quiz"
 import { CompatClient } from "@stomp/stompjs"
 import PlayingResponse, {

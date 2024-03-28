@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import GameBackground from "../GameBackground"
+import GameBackground from "../../common/GameBackground"
 import { useEffect, useState } from "react"
 const Countdown = () => {
     const [time, setTime] = useState(3)

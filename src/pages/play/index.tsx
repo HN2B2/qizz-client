@@ -44,9 +44,9 @@ const PlayPage = () => {
             return
         }
         try {
-            const { data }: { data: QuizResponse } = await instance.get(
-                `/quiz/${quizCode}`
-            )
+            const data: QuizResponse = await instance
+                .get(`quiz/${quizCode}`)
+                .json()
             router.push(`/play/${data.code}`)
         } catch (error) {
             setError(getServerErrorNoti(error))

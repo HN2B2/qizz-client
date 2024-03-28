@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import GameBackground from "../../GameBackground"
+import GameBackground from "../../../common/GameBackground"
 import { QuizRoomInfoResponse } from "@/types/takeQuiz"
 import PlayingResponse, {
     PlayingState,
