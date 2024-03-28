@@ -32,7 +32,6 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure, useListState } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
 import {
   IconActivity,
   IconArrowAutofitUp,
@@ -45,7 +44,6 @@ import {
   IconUser,
   IconWallpaper,
 } from "@tabler/icons-react";
-import { backIn } from "framer-motion";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 export const PAGE_SIZE = 2;
@@ -164,25 +162,6 @@ const index = () => {
     });
   };
 
-  const handleDeleteBank = async (bankId: number) => {
-    try {
-      await instance.delete(`/bank/${bankId}`);
-      showNotification({
-        color: "teal",
-        title: "Success",
-        message: "Bank deleted successfully",
-      });
-      handleFetchCategoryData();
-    } catch (error) {
-      console.error(error);
-      showNotification({
-        color: "red",
-        title: "Error",
-        message: "Failed to delete bank",
-      });
-    }
-  };
-
   const items = data.map((item, index) => (
     <NavLink
       key={item.label}
@@ -246,20 +225,12 @@ const index = () => {
             <Paper withBorder>
               <Tabs.Panel value="published">
                 {bankList.map((item) => (
-                  <BankCard
-                    key={item.quizBankId}
-                    bank={item}
-                    onDeleteBank={handleDeleteBank}
-                  ></BankCard>
+                  <BankCard key={item.quizBankId} bank={item}></BankCard>
                 ))}
               </Tabs.Panel>
               <Tabs.Panel value="draft">
                 {bankList.map((item) => (
-                  <BankCard
-                    key={item.quizBankId}
-                    bank={item}
-                    onDeleteBank={handleDeleteBank}
-                  ></BankCard>
+                  <BankCard key={item.quizBankId} bank={item}></BankCard>
                 ))}
               </Tabs.Panel>
             </Paper>

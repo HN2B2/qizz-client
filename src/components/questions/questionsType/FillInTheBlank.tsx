@@ -1,7 +1,5 @@
 import { QuestionResponse } from "@/types/question";
-import { renderHTML } from "@/utils";
 import { Box, Divider, Paper, SimpleGrid, Text } from "@mantine/core";
-import { JSONContent } from "@tiptap/react";
 import React from "react";
 interface Props {
   data: QuestionResponse;
@@ -15,7 +13,7 @@ const FillInTheBlank = ({ data, show }: Props) => {
   return (
     <Paper px="xl" py="xs" shadow="xs">
       {/* <Text>{data.content}</Text> */}
-      <div dangerouslySetInnerHTML={{ __html: renderHTML(data.content) }}></div>
+      <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
       {show && (
         <Divider
           my="sm"
