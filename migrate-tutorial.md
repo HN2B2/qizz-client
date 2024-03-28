@@ -29,13 +29,15 @@ const { data }: { data: TypeOfResponseData } = await instace.post(
 -   New:
 
 ```typescript
+import {removeEmpty} from "utils"
+
 const data: TypeOfResponseData = await instace.post("endpoint/1", {
     json: {
         /*body*/
     }
-    searchParams: {
+    searchParams: removeEmpty({
         page: 1 as string // parse value thành string hoặc string[]
-    }
+    })
 }).json()
 ```
 
