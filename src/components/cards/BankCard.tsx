@@ -13,44 +13,9 @@ import React from "react";
 import { Image, Text } from "@mantine/core";
 import { IconMenu2, IconTrash, IconX } from "@tabler/icons-react";
 import { BankResponse } from "@/types/bank";
-import { modals } from "@mantine/modals";
-import { instance } from "@/utils";
-import { showNotification } from "@mantine/notifications";
-import { UseListStateHandlers, useForceUpdate } from "@mantine/hooks";
 
-function BankCard({
-  bank,
-  onDeleteBank,
-}: {
-  bank: BankResponse;
-  onDeleteBank: (bankId: number) => Promise<void>;
-}) {
-  const showConfirmDeleteBank = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    bankId: number
-  ) => {
-    //how to prevent navigate link of a tag parent of this function
-    event.preventDefault();
-    modals.openConfirmModal({
-      title: "Delete bank",
-      children: "Are you sure you want to delete this bank?",
-      labels: {
-        confirm: "Delete",
-        cancel: "Cancel",
-      },
-      onCancel: () => {},
-      onConfirm: () => handleDeleteBank(bankId),
-    });
-  };
-
-  const handleDeleteBank = async (bankId: number) => {
-    try {
-      await onDeleteBank(bankId); // Call the onDeleteBank callback from props
-      // Update any other state or perform actions after deletion if necessary
-    } catch (error) {
-      console.error(error);
-    }
-  };
+function BankCard({ bank }: { bank: BankResponse }) {
+  const handleDeleteBank = (id: number) => {};
   return (
     <>
       <Card
@@ -90,9 +55,7 @@ function BankCard({
                   bg={"red"}
                   color={"white"}
                   size={"sm"}
-                  onClick={(event) =>
-                    showConfirmDeleteBank(event, bank.quizBankId)
-                  }
+                  onClick={() => handleDeleteBank(bank.quizBankId)}
                 >
                   <IconX></IconX>
                 </ActionIcon>
