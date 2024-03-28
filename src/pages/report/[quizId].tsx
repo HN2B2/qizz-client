@@ -1,3 +1,5 @@
+export const runtime = "experimental-edge"
+
 import { UserLayout } from "@/components/layouts"
 import { Participants } from "@/components/quiz"
 import { Questions } from "@/components/report"

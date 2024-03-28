@@ -1,4 +1,5 @@
-import { AuthResponse } from "@/types/auth"
+export const runtime = "experimental-edge"
+
 import { QuizResponse } from "@/types/quiz"
 import { getServerErrorNoti, instance } from "@/utils"
 import { Button, Paper, TextInput } from "@mantine/core"

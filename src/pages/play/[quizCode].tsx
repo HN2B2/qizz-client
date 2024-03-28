@@ -1,3 +1,5 @@
+export const runtime = "experimental-edge"
+
 import { QuizResponse } from "@/types/quiz"
 import { instance } from "@/utils"
 import { GetServerSidePropsContext } from "next"

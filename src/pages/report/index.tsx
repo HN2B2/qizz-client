@@ -1,3 +1,5 @@
+export const runtime = "experimental-edge"
+
 import { UserLayout } from "@/components/layouts"
 import { ReportFilter, ReportPagination } from "@/components/report"
 import ReportTableRow from "@/components/report/ReportTableRow"
