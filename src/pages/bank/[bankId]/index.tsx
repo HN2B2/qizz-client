@@ -110,7 +110,7 @@ const StartQuizPage = ({
                 <Menu.Dropdown>
                   <Menu.Item
                     component="a"
-                    href={`/quiz/${bank.quizBankId}/live_quiz`}
+                    // href={`/quiz/${bank.quizBankId}/live_quiz`}
                     leftSection={
                       <IconSettings
                         style={{ width: rem(14), height: rem(14) }}

@@ -40,8 +40,10 @@ const ShareButton = ({ bank, setBank }: Prop) => {
 
   const handleDelete = async (index: number) => {
     try {
-      await instance.delete(`/manageBank/${index}`);
-      const { data } = await instance.get(`/bank/${bank.quizBankId}`);
+      await instance.delete(`manageBank/${index}`).json();
+      const data: BankResponse = await instance
+        .get(`bank/${bank.quizBankId}`)
+        .json();
       setBankData(data);
       notifications.show({
         title: "Success",
@@ -73,10 +75,11 @@ const ShareButton = ({ bank, setBank }: Prop) => {
           };
         }),
       };
-      const { data, status } = await instance.put(
-        `/bank/${bankData.quizBankId}`,
-        bankRequest
-      );
+      const data: BankResponse = await instance
+        .put(`bank/${bankData.quizBankId}`, {
+          json: bankRequest,
+        })
+        .json();
       setBankData(data);
       notifications.show({
         title: "Success",

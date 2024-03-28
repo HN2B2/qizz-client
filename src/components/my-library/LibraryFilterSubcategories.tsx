@@ -25,7 +25,9 @@ const LibraryFilterSubcategories = () => {
 
   const getData = async () => {
     try {
-      const { data: rawCategories } = await instance.get(`/categories`);
+      const rawCategories: { data: Category[]; total: number } = await instance
+        .get(`categories`)
+        .json();
 
       handlerCategories.setState(rawCategories.data);
     } catch (error) {}

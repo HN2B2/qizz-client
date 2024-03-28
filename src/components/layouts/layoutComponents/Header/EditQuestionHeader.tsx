@@ -212,10 +212,11 @@ const EditQuestionHeader = () => {
     // console.log(dataQuestion);
 
     try {
-      const { data } = await instance.put(
-        `/question/${dataQuestion.questionId}`,
-        dataQuestion
-      );
+      const data = await instance
+        .put(`question/${dataQuestion.questionId}`, {
+          json: dataQuestion,
+        })
+        .json();
       if (data) {
         // console.log(data);
       }

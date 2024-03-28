@@ -147,10 +147,8 @@ const EditBank = ({ bankData, questionData }: Props) => {
         }),
       };
 
-      const data = await instance.put(`/bank/${bankData.quizBankId}`, {
-        json: {
-          ...body,
-        },
+      const data = await instance.put(`bank/${bankData.quizBankId}`, {
+        json: body,
       });
       notifications.show({
         title: "Success",

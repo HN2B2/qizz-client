@@ -86,10 +86,11 @@ const QuestionPaper = ({ type, data, bankId, setQuestion, index }: Props) => {
   const handleDelete = async () => {
     data.disabled = true;
     try {
-      const { data: question } = await instance.put(
-        `/question/${data.questionId}`,
-        data
-      );
+      const question = await instance
+        .put(`question/${data.questionId}`, {
+          json: data,
+        })
+        .json();
 
       notifications.show({
         title: "Success",
@@ -105,9 +106,9 @@ const QuestionPaper = ({ type, data, bankId, setQuestion, index }: Props) => {
     }
 
     try {
-      const { data: questionData, status } = await instance.get(
-        `/question/all/bankId/${bankId}`
-      );
+      const questionData: QuestionResponse[] = await instance
+        .get(`question/all/bankId/${bankId}`)
+        .json();
 
       setQuestion(questionData);
     } catch (error) {
