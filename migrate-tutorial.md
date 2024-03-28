@@ -1,3 +1,5 @@
+<!-- Ctrl + Shift + V -->
+
 # Migrate axios -> ky
 
 ## B1: pull develop, npm i
@@ -35,7 +37,7 @@ const data: TypeOfResponseData = await instace.post("endpoint/1", {
     json: {
         /*body*/
     }
-    searchParams: removeEmpty({
+    searchParams: removeEmpty({ // Hàm removeEmpty để loại bỏ các giá trị null, undefined, empty string
         page: 1 as string // parse value thành string hoặc string[]
     })
 }).json()

@@ -1,5 +1,4 @@
 import { UserMetadataResponse } from "@/types/user"
-import axios from "axios"
 import SockJS from "sockjs-client"
 import ky from "ky"
 import { Exception } from "@/types/exception"
