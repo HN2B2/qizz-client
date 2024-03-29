@@ -2,6 +2,15 @@ import { UserMetadataResponse } from "@/types/user"
 import SockJS from "sockjs-client"
 import ky from "ky"
 import { Exception } from "@/types/exception"
+import { generateHTML, JSONContent } from "@tiptap/react"
+import Highlight from "@tiptap/extension-highlight"
+import StarterKit from "@tiptap/starter-kit"
+import Underline from "@tiptap/extension-underline"
+import TextAlign from "@tiptap/extension-text-align"
+import Superscript from "@tiptap/extension-superscript"
+import SubScript from "@tiptap/extension-subscript"
+import Image from "@tiptap/extension-image"
+import Youtube from "@tiptap/extension-youtube"
 
 export const appUrl = process.env.APP_URl || "http://localhost:3000"
 
@@ -79,4 +88,22 @@ export const removeEmpty = (obj: any) => {
         else if (obj[key] !== undefined) newObj[key] = obj[key]
     })
     return newObj
+}
+
+export const renderHTML = (json: string) => {
+    try {
+        const parsedJson: JSONContent = JSON.parse(json)
+        return generateHTML(parsedJson, [
+            StarterKit,
+            Highlight,
+            Underline,
+            TextAlign,
+            Superscript,
+            SubScript,
+            Image,
+            Youtube,
+        ])
+    } catch (error) {
+        return "Error parsing question"
+    }
 }

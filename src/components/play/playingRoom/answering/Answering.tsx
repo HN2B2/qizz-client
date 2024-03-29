@@ -13,6 +13,7 @@ import { QuestionType } from "@/types/question/QuestionType"
 import { motion } from "framer-motion"
 import { IconClock } from "@tabler/icons-react"
 import MultipleChoice from "./MultipleChoice"
+import { renderHTML } from "@/utils"
 
 const Answering = () => {
     const {
@@ -81,7 +82,10 @@ const Answering = () => {
                             <div
                                 className="flex items-center justify-center h-60"
                                 dangerouslySetInnerHTML={{
-                                    __html: playingData?.data.content || "",
+                                    __html:
+                                        renderHTML(
+                                            playingData?.data.content!
+                                        ) || "",
                                 }}
                             />
                         </Paper>

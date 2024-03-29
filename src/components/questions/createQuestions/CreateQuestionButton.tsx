@@ -15,7 +15,7 @@ const questionTypes = [
         type: QuestionType.FILL_IN_THE_BLANK,
     },
 ]
-const CreateQuestionButton = () => {
+const CreateQuestionButton = ({ bankId }: { bankId: string }) => {
     return (
         <Menu shadow="md" width={200}>
             <Menu.Target>
@@ -26,7 +26,7 @@ const CreateQuestionButton = () => {
                 {questionTypes.map((item) => (
                     <Menu.Item
                         component={Link}
-                        href={`edit/create?type=${item.type}`}
+                        href={`/bank/${bankId}/edit/create?type=${item.type}`}
                         key={item.type}
                         leftSection={item.icon}
                     >

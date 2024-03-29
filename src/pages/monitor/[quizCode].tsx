@@ -1,6 +1,6 @@
 export const runtime = "experimental-edge"
 
-import { PlayingRoom, WaitingRoom } from "@/components/monitor"
+import { EndGame, PlayingRoom, WaitingRoom } from "@/components/monitor"
 import { GameBackground } from "@/components/play"
 import useSubscription from "@/hooks/useSubscription"
 import useWebSocket from "@/hooks/useWebSocket"
@@ -12,6 +12,7 @@ import { Button, Flex, Group, Paper, Stack, Text } from "@mantine/core"
 import { CompatClient } from "@stomp/stompjs"
 import { IconUsers } from "@tabler/icons-react"
 import { GetServerSidePropsContext } from "next"
+import Head from "next/head"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import React, { createContext, useEffect, useState } from "react"
@@ -41,6 +42,9 @@ export const MonitorProvider: React.FC<MonitorContextProps> = ({
                 connected,
             }}
         >
+            <Head>
+                <title>Monitor</title>
+            </Head>
             {children}
         </MonitorContext.Provider>
     )
@@ -98,7 +102,7 @@ const Monitor = ({
                     client={client}
                     connected={connected}
                 >
-                    end
+                    <EndGame />
                 </MonitorProvider>
             )
         default:

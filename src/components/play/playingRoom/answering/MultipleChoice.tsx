@@ -44,19 +44,19 @@ const MultipleChoice = ({ timeLeft }: MultipleChoiceProps) => {
     const answers = JSON.parse(playingData?.data.answersMetadata || "[]")
 
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-    const handleSelectAnswer = (index: number) => {
+    const handleSelectAnswer = async (index: number) => {
         if (timeLeft === 0 || playingData?.state !== PlayingState.ANSWERING)
             return
         setSelectedAnswer(index)
         try {
-            instance.post(
+            await instance.post(
                 `take-quiz/${quiz.code}/${playingData.data.questionId}`,
                 {
                     json: {
                         answerMetadata: JSON.stringify(
                             [answers[index]] || [""]
                         ),
-                        QuestionType: QuestionType.MULTIPLE_CHOICE,
+                        questionType: QuestionType.MULTIPLE_CHOICE,
                         answerTime: timeLeft / 10,
                     },
                 }

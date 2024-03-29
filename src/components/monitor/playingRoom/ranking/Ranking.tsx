@@ -1,7 +1,9 @@
 import React, { useContext, useEffect } from "react"
 import GameBackground from "../../../common/GameBackground"
 import { QuizRoomInfoResponse } from "@/types/takeQuiz"
-import PlayingResponse from "@/types/takeQuiz/playing/PlayingResponse"
+import PlayingResponse, {
+    PlayingState,
+} from "@/types/takeQuiz/playing/PlayingResponse"
 import { CompatClient } from "@stomp/stompjs"
 import { QuizResponse } from "@/types/quiz"
 import { QuizContext } from "@/pages/play/[quizCode]"
@@ -34,21 +36,23 @@ const Ranking = () => {
                     wrongCount: 0,
                 }
             })
-            .sort((a, b) => b.score - a.score) || []
+            .sort((a, b) => b.score - a.score)
     )
+    console.log(players)
+
     const {
         data: playingData,
     }: { data: PlayingResponse<RankingResponse> | null } = roomInfo || {
         data: null,
     }
     useEffect(() => {
-        if (roomInfo) {
+        if (playingData?.state === PlayingState.RANKING) {
             handlers.setState(
                 playingData?.data?.players?.sort((a, b) => b.score - a.score) ||
                     []
             )
         }
-    }, [roomInfo])
+    }, [playingData])
 
     return (
         <GameBackground className="flex justify-center p-16">
