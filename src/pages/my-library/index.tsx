@@ -32,6 +32,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure, useListState } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import {
   IconActivity,
   IconArrowAutofitUp,
@@ -164,6 +165,25 @@ const index = () => {
     });
   };
 
+  const handleDeleteBank = async (bankId: number) => {
+    try {
+      await instance.delete(`bank/${bankId}`).json();
+      showNotification({
+        color: "teal",
+        title: "Success",
+        message: "Bank deleted successfully",
+      });
+      handleFetchCategoryData();
+    } catch (error) {
+      console.error(error);
+      showNotification({
+        color: "red",
+        title: "Error",
+        message: "Failed to delete bank",
+      });
+    }
+  };
+
   const items = data.map((item, index) => (
     <NavLink
       key={item.label}
@@ -227,12 +247,20 @@ const index = () => {
             <Paper withBorder>
               <Tabs.Panel value="published">
                 {bankList.map((item) => (
-                  <BankCard key={item.quizBankId} bank={item}></BankCard>
+                  <BankCard
+                    key={item.quizBankId}
+                    bank={item}
+                    onDeleteBank={handleDeleteBank}
+                  ></BankCard>
                 ))}
               </Tabs.Panel>
               <Tabs.Panel value="draft">
                 {bankList.map((item) => (
-                  <BankCard key={item.quizBankId} bank={item}></BankCard>
+                  <BankCard
+                    key={item.quizBankId}
+                    bank={item}
+                    onDeleteBank={handleDeleteBank}
+                  ></BankCard>
                 ))}
               </Tabs.Panel>
             </Paper>
