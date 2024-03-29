@@ -4,6 +4,7 @@ import { instance } from "@/utils"
 import { Button, Container, Stack, Text, Title } from "@mantine/core"
 import { GetServerSidePropsContext } from "next"
 import Head from "next/head"
+import Link from "next/link"
 import React from "react"
 
 const VerifyPage = () => {
@@ -18,7 +19,7 @@ const VerifyPage = () => {
                     <Text size="lg" mb={32}>
                         Please check your email to verify your account.
                     </Text>
-                    <Button size="lg" component="a" href="/auth/login">
+                    <Button size="lg" component={Link} href="/auth/login">
                         Click here to login
                     </Button>
                 </Stack>

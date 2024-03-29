@@ -8,6 +8,7 @@ import { useDisclosure } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
 import { IconDeviceGamepad } from "@tabler/icons-react"
 import { GetServerSidePropsContext } from "next"
+import Head from "next/head"
 import { useRouter } from "next/router"
 
 interface PreparePageProps {
@@ -64,6 +65,9 @@ const PreparePage = ({ quiz }: PreparePageProps) => {
     }
     return (
         <main className="min-h-screen bg-[url('/bg/takequiz.jpg')] bg-no-repeat bg-center bg-cover flex items-center justify-center">
+            <Head>
+                <title>Guest</title>
+            </Head>
             <Paper p="md" radius="md" w={500}>
                 <form onSubmit={handleSubmit}>
                     <TextInput
@@ -94,25 +98,25 @@ export const getServerSideProps = async (
     const { code } = context.query
     const token = context.req.cookies.user
     try {
-        const quiz: QuizResponse = await instance
-            .get(`quiz/code/${code}`)
-            .json()
-
         if (token) {
             return {
                 redirect: {
-                    destination: `/play/${quiz.code}`,
+                    destination: `/play/${code}`,
                     permanent: false,
                 },
             }
         }
-
+        const quiz: QuizResponse = await instance
+            .get(`quiz?code=${code}`)
+            .json()
         return {
             props: {
                 quiz,
             },
         }
     } catch (error) {
+        console.log(error)
+
         return {
             notFound: true,
         }

@@ -262,7 +262,7 @@ const RegisterPage = () => {
                             Have account?{" "}
                             <Anchor
                                 size="sm"
-                                component="a"
+                                component={Link}
                                 href={
                                     r ? ` /auth/login?r=${r} ` : "/auth/login"
                                 }

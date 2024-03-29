@@ -24,6 +24,7 @@ import dayjs from "dayjs"
 import { useForm } from "@mantine/form"
 import { notifications } from "@mantine/notifications"
 import { IoInformationCircleOutline } from "react-icons/io5"
+import Link from "next/link"
 
 const hour: number = new Date().getHours()
 const LiveQuiz = () => {

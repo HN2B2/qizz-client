@@ -1,9 +1,11 @@
 import { appUrl } from "@/utils"
 import {
+    Button,
     Container,
     Group,
     LoadingOverlay,
     Paper,
+    Stack,
     Text,
     Title,
     Tooltip,
@@ -14,7 +16,7 @@ import { modals } from "@mantine/modals"
 import { IconUserFilled } from "@tabler/icons-react"
 import { QRCodeSVG } from "qrcode.react"
 import { AnimatePresence, motion } from "framer-motion"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import useUser from "@/hooks/useUser"
 import { WebSocketRequest } from "@/utils/WebSocketRequest"
 import Head from "next/head"
@@ -24,6 +26,7 @@ import { CompatClient } from "@stomp/stompjs"
 import { QuizRoomInfoResponse } from "@/types/takeQuiz"
 import { WaitingRoomResponse } from "@/types/takeQuiz/waitingRoom/WaitingRoomResponse"
 import { QuizResponse } from "@/types/quiz"
+import Link from "next/link"
 
 const WaitingRoom = () => {
     const {
@@ -39,11 +42,14 @@ const WaitingRoom = () => {
     } = useContext(QuizContext)!
 
     const { token } = useUser()
+    const [isJoined, setIsJoined] = useState(false)
+    const { user } = useUser()
     const handleJoin = () => {
         client?.publish({
             destination: `/join/${quiz.code}`,
             body: new WebSocketRequest<string>("", token).toString(),
         })
+        setIsJoined(true)
     }
 
     useEffect(() => {
@@ -52,6 +58,14 @@ const WaitingRoom = () => {
         }
     }, [connected])
 
+    useEffect(() => {
+        if (roomInfo) {
+            setIsJoined(
+                roomInfo?.data?.users?.some((u) => u.email === user?.email)
+            )
+        }
+    }, [roomInfo])
+
     const clipboard = useClipboard({ timeout: 1000 })
     const handleCopyCode = () => {
         clipboard.copy(`${appUrl}/play/${quiz.code}`)
@@ -59,7 +73,7 @@ const WaitingRoom = () => {
 
     if (!roomInfo) {
         return (
-            <div className="bg-[url('/bg/takequiz.jpg')] min-h-screen bg-center bg-cover h-max">
+            <GameBackground>
                 <Head>
                     <title>{`Game pin: ${quiz.code} | Qizz`}</title>
                 </Head>
@@ -68,7 +82,33 @@ const WaitingRoom = () => {
                     zIndex={1000}
                     overlayProps={{ radius: "sm", blur: 10 }}
                 />
-            </div>
+            </GameBackground>
+        )
+    }
+
+    if (!isJoined) {
+        return (
+            <>
+                <GameBackground className="flex items-center justify-center">
+                    <Head>
+                        <title>{`Game pin: ${quiz.code} | Qizz`}</title>
+                    </Head>
+                    <Container size="xl">
+                        <Group justify="center" align="center" pt={32}>
+                            <Paper p={16}>
+                                <Stack>
+                                    <Text size="xl" fw={500}>
+                                        You have been kicked by the quiz owner
+                                    </Text>
+                                    <Button component={Link} href="/">
+                                        Back to home
+                                    </Button>
+                                </Stack>
+                            </Paper>
+                        </Group>
+                    </Container>
+                </GameBackground>
+            </>
         )
     }
 

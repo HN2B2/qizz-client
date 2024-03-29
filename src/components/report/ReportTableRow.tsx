@@ -2,6 +2,7 @@ import { ReportResponse } from "@/types/report"
 import { formatDate } from "@/utils"
 import { ActionIcon, Table, Text, Tooltip } from "@mantine/core"
 import { IconEye } from "@tabler/icons-react"
+import Link from "next/link"
 
 const ReportTableRow = ({
     index,
@@ -25,7 +26,7 @@ const ReportTableRow = ({
                     <ActionIcon
                         variant="default"
                         aria-label="Settings"
-                        component="a"
+                        component={Link}
                         href={` /report/${report.quizId} `}
                     >
                         <IconEye

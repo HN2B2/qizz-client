@@ -171,7 +171,7 @@ const LoginPage = () => {
                             Do not have an account yet?{" "}
                             <Anchor
                                 size="sm"
-                                component="a"
+                                component={Link}
                                 href={
                                     r
                                         ? `/auth/register?r=${r}`

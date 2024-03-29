@@ -19,6 +19,7 @@ import {
     IconUser,
     IconWallpaper,
 } from "@tabler/icons-react"
+import Link from "next/link"
 interface QuizzesProps {
     quizzes: BankResponse[]
 }
@@ -164,7 +165,7 @@ const UserQuizzes = ({ quizzes }: QuizzesProps) => {
                             radius="md"
                             shadow="sm"
                             // mb="md"
-                            component="a"
+                            component={Link}
                             href={`/quiz/${quiz.quizBankId}`}
                             mt={5}
                         >
