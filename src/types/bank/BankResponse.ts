@@ -13,6 +13,7 @@ export default interface BankResponse {
   publicEditable: boolean;
   subCategories?: SubCategory[];
   draft?: boolean;
+  disabled?: boolean;
   totalQuestions?: number;
   createdBy: UserResponse;
   modifiedBy?: UserResponse;
