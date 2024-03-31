@@ -73,9 +73,6 @@ const MultipleChoice = () => {
     setData(data.filter((item, i) => i !== index));
   };
 
-  const [value, setValue] = useLocalStorage({
-    key: "question-draft",
-  });
   // const [textValue, setTextValue] = useState<string>();
   const editor = useEditor({
     extensions: [
