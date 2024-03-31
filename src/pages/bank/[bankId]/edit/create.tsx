@@ -3,6 +3,7 @@ import {
   FillInTheBlank,
   MultipleChoice,
 } from "@/components/questions/createQuestions";
+import { CreateQuestionRequest } from "@/types/question";
 // import QuestionRequest from "@/types/question/QuestionRequest";
 import { QuestionType } from "@/types/question/QuestionType";
 import { useRouter } from "next/router";
@@ -13,7 +14,12 @@ const QuestionTypes: Record<QuestionType, React.ReactNode> = {
   [QuestionType.FILL_IN_THE_BLANK]: <FillInTheBlank />,
 };
 
-export const DataContext = createContext<any>({} as any);
+interface Props {
+  dataQuestion: CreateQuestionRequest;
+  updateDataQuestion: (newValue: CreateQuestionRequest) => void;
+}
+
+export const DataContext = createContext<Props>({} as any);
 export const useMyContext = () => useContext(DataContext);
 const Create = () => {
   const router = useRouter();
@@ -21,9 +27,23 @@ const Create = () => {
   const bankId = router.query.bank;
   const questionType: QuestionType =
     QuestionType[type as keyof typeof QuestionType];
+  const question: CreateQuestionRequest = {
+    content: "",
+    point: 1,
+    duration: 30,
+    type: questionType,
+    answersMetadata: "",
+    correctAnswersMetadata: "",
+    explainAnswer: "",
+    questionIndex: 0,
+    disabled: false,
+    quizBankId: Number(bankId),
+  };
 
-  const [dataQuestion, setDataQuestion] = useState({});
-  const updateDataQuestion = (newValue: {}) => {
+  const [dataQuestion, setDataQuestion] =
+    useState<CreateQuestionRequest>(question);
+
+  const updateDataQuestion = (newValue: CreateQuestionRequest) => {
     setDataQuestion(newValue);
   };
 
