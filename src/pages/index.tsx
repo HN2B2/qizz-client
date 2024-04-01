@@ -13,6 +13,7 @@ import {
   Title,
   Group,
   Stack,
+  Flex,
 } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { Carousel } from "@mantine/carousel";
@@ -126,23 +127,19 @@ const Home = ({ categoryQuizBanksData }: Props) => {
               }}
             >
               <form onSubmit={form.onSubmit(console.log)}>
-                <TextInput
-                  placeholder="Enter code: "
-                  w={{ base: 300, sm: 400, lg: 500 }}
-                  size="lg"
-                  mx="auto"
-                  radius="md"
-                  {...form.getInputProps("code")}
-                />
-                <Button
-                  variant="filled"
-                  type="submit"
-                  size="lg"
-                  radius="md"
-                  mt="xs"
-                >
-                  Enter
-                </Button>
+                <Flex justify={"space-between"} gap={20}>
+                  <TextInput
+                    placeholder="Enter code: "
+                    w={{ base: 300, sm: 400, lg: 500 }}
+                    size="lg"
+                    mx="auto"
+                    radius="md"
+                    {...form.getInputProps("code")}
+                  />
+                  <Button variant="filled" type="submit" size="lg" radius="md">
+                    Join
+                  </Button>
+                </Flex>
               </form>
             </Paper>
           </Grid.Col>
