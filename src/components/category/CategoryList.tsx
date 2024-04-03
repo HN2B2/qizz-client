@@ -2,6 +2,7 @@ import { BankResponse } from "@/types/bank";
 import { SubCategory } from "@/types/category";
 import { instance } from "@/utils";
 import { ActionIcon, Group, Paper, Space, Table, Text } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons-react";
 import React from "react";
@@ -43,6 +44,20 @@ const CategoryList = ({
       {}
     )
   );
+  const showConfirmDelete = (id: number) => {
+    //how to prevent navigate link of a tag parent of this function
+
+    modals.openConfirmModal({
+      title: "Delete subcategory",
+      children: "Are you sure you want to delete this subcategory?",
+      labels: {
+        confirm: "Delete",
+        cancel: "Cancel",
+      },
+      onCancel: () => {},
+      onConfirm: () => handleDelete(id),
+    });
+  };
   const handleDelete = async (id: number) => {
     //use instance put method
     const ids = bank.subCategories
@@ -96,7 +111,7 @@ const CategoryList = ({
                   <ActionIcon
                     bg={"red"}
                     onClick={() => {
-                      handleDelete(item.subcategories[0].id);
+                      showConfirmDelete(item.subcategories[0].id);
                     }}
                   >
                     <IconTrash></IconTrash>
@@ -112,7 +127,7 @@ const CategoryList = ({
                     <ActionIcon
                       bg={"red"}
                       onClick={() => {
-                        handleDelete(sub.id);
+                        showConfirmDelete(sub.id);
                       }}
                     >
                       <IconTrash></IconTrash>

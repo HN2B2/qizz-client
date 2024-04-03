@@ -1,7 +1,12 @@
 import { QuestionResponse } from "@/types/question";
 import { QuestionType } from "@/types/question/QuestionType";
 import { Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
-import { IconCircleCheck, IconClock } from "@tabler/icons-react";
+import {
+  IconAlarm,
+  IconCircleCheck,
+  IconClock,
+  IconTrophy,
+} from "@tabler/icons-react";
 import React from "react";
 import MultipleChoice from "./questionsType/MultipleChoice";
 import FillInTheBlank from "./questionsType/FillInTheBlank";
@@ -39,14 +44,14 @@ const ViewQuestionPaper = ({
                 <Button
                   size="xs"
                   variant="default"
-                  leftSection={<IconClock size={14} />}
+                  leftSection={<IconAlarm size={14} />}
                 >
                   {question.duration} seconds
                 </Button>
                 <Button
                   size="xs"
                   variant="default"
-                  leftSection={<IconCircleCheck size={14} />}
+                  leftSection={<IconTrophy size={14} />}
                 >
                   {question.point} points
                 </Button>

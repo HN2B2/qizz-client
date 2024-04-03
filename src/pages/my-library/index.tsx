@@ -32,6 +32,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure, useListState } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import {
   IconActivity,

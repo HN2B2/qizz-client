@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import {
   IconAlarm,
+  IconClock,
   IconCopyPlus,
   IconGripVertical,
   IconTrash,
@@ -23,6 +24,7 @@ import EditQuestionButton from "./editQuestions/EditQuestionButton";
 import { instance } from "@/utils";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
+import { modals } from "@mantine/modals";
 
 const times = [
   {
@@ -83,6 +85,21 @@ const QuestionPaper = ({ type, data, bankId, setQuestion, index }: Props) => {
   const questionType: QuestionType =
     QuestionType[type as keyof typeof QuestionType];
   const query = useRouter().query;
+
+  const showConfirmDelete = () => {
+    //how to prevent navigate link of a tag parent of this function
+
+    modals.openConfirmModal({
+      title: "Delete question",
+      children: "Are you sure you want to delete this question?",
+      labels: {
+        confirm: "Delete",
+        cancel: "Cancel",
+      },
+      onCancel: () => {},
+      onConfirm: () => handleDelete(),
+    });
+  };
   const handleDelete = async () => {
     data.disabled = true;
     try {
@@ -141,7 +158,7 @@ const QuestionPaper = ({ type, data, bankId, setQuestion, index }: Props) => {
               p={6}
               mx={4}
               onClick={() => {
-                handleDelete();
+                showConfirmDelete();
               }}
             >
               <IconTrash size={16}></IconTrash>
@@ -152,31 +169,20 @@ const QuestionPaper = ({ type, data, bankId, setQuestion, index }: Props) => {
       {QuestionTypes[questionType]}
 
       <Group p={8}>
-        <Tooltip
-          label="Set time alloted to answer this question"
-          position="bottom"
+        <Button
+          size="xs"
+          variant="default"
+          leftSection={<IconAlarm size={14} />}
         >
-          <Select
-            w={150}
-            //   label=""
-            leftSection={<IconAlarm></IconAlarm>}
-            placeholder="Pick value"
-            data={times}
-            defaultValue={data.duration.toString()}
-            allowDeselect={false}
-          />
-        </Tooltip>
-        <Tooltip label="Change question points" position="bottom">
-          <Select
-            w={150}
-            //   label=""
-            leftSection={<IconTrophy></IconTrophy>}
-            placeholder="Pick value"
-            data={points}
-            defaultValue={data.point.toString()}
-            allowDeselect={false}
-          />
-        </Tooltip>
+          {data.duration} seconds
+        </Button>
+        <Button
+          size="xs"
+          variant="default"
+          leftSection={<IconTrophy size={14} />}
+        >
+          {data.point} points
+        </Button>
       </Group>
     </Paper>
   );
