@@ -29,6 +29,7 @@ import { GetServerSidePropsContext } from "next";
 import { instance } from "@/utils";
 import BankCard from "@/components/cards/BankCard";
 import { useRouter } from "next/router";
+import { getHotkeyHandler } from "@mantine/hooks";
 
 interface CategoryQuizBanks {
   category: Category;
@@ -79,6 +80,10 @@ const PopularQuiz = () => {
 const Home = ({ categoryQuizBanksData }: Props) => {
   const [data, setData] = useState([]);
   const icon = <IconInfoCircle />;
+  const [search, setSearch] = useState("");
+  const handleSearch = () => {
+    router.push(`/search?keyword=${search}`);
+  };
   const form = useForm({
     initialValues: { code: "" },
 
@@ -181,6 +186,15 @@ const Home = ({ categoryQuizBanksData }: Props) => {
           Popular Quizzes
         </Title>
         <PopularQuiz />
+        <Stack align="center">
+          <Title order={2}>Search for Quiz Bank</Title>
+          <TextInput
+            size="lg"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            onKeyDown={getHotkeyHandler([["Enter", handleSearch]])}
+          />
+        </Stack>
       </Container>
     </HeaderLayout>
   );
