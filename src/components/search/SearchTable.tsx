@@ -48,8 +48,8 @@ const SearchTable = () => {
               key={bank.quizBankId || bank.name} // Using a unique property from bank
               shadow="sm"
               component={Link}
-              href={"#"}
-              target="_blank"
+              href={"/bank/" + bank.quizBankId}
+              //   target="_blank"
               m="5px"
               onMouseEnter={() => {
                 handleOnMouseEnter(bank.quizBankId);
