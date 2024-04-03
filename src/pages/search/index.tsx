@@ -73,7 +73,7 @@ const BankPage = ({ bankData }: BankPageProps) => {
   const handleFetchBankData = async () => {
     try {
       const res: Bank = await instance
-        .get(`manageBanks`, {
+        .get(`bank`, {
           searchParams: removeEmpty({
             limit: PAGE_SIZE.toString(),
             page: page.toString(),
@@ -101,7 +101,7 @@ const BankPage = ({ bankData }: BankPageProps) => {
 
   const handleReset = () => {
     router.push({
-      pathname: "/bank",
+      pathname: "/search",
     });
   };
 
