@@ -12,11 +12,12 @@ import {
 } from "@mantine/core"
 import { DateInput } from "@mantine/dates"
 import { useForm } from "@mantine/form"
-import { useDisclosure } from "@mantine/hooks"
+import { useDisclosure, useForceUpdate } from "@mantine/hooks"
 import { modals } from "@mantine/modals"
 import { notifications } from "@mantine/notifications"
 import { IconChevronDown, IconEdit } from "@tabler/icons-react"
 import { log } from "console"
+import { useRouter } from "next/router"
 import React from "react"
 interface UserProfileProps {
     user: UserResponse | null
@@ -24,11 +25,16 @@ interface UserProfileProps {
 const EditProfileForm = ({ user }: UserProfileProps) => {
     const editProfileForm = useForm({
         initialValues: {
-            displayName: "",
-            username: "",
-            sex: "",
-            birthDate: new Date(),
-            phone: "",
+            displayName: user?.displayName || "",
+            username: user?.username || "",
+            sex: user?.metadata.find((m) => m.key === "sex")?.value || "male",
+            birthDate:
+                new Date(
+                    user?.metadata.find((m) => m.key === "birthDate")?.value!
+                ) || new Date(),
+            phone:
+                user?.metadata.find((m) => m.key === "phoneNumber")?.value ||
+                "",
         },
         validate: {
             displayName: (value) => {
@@ -74,6 +80,7 @@ const EditProfileForm = ({ user }: UserProfileProps) => {
     const [loading, { open: openLoading, close: closeLoading }] =
         useDisclosure(false)
 
+    const router = useRouter()
     const handleEditProfile = async () => {
         openLoading()
         editProfileForm.validate()
@@ -108,13 +115,13 @@ const EditProfileForm = ({ user }: UserProfileProps) => {
                 message: "Update profile successfully",
             })
             modals.closeAll()
+            router.reload()
         } catch (error) {
             notifications.show({
                 color: "red",
                 title: "Error",
                 message: getServerErrorNoti(error),
             })
-            console.log(error)
         } finally {
             closeLoading()
         }
