@@ -20,9 +20,15 @@ import {
   IconSortAscending,
   IconSortDescending,
 } from "@tabler/icons-react";
-import React, { useState } from "react";
-import { useDisclosure } from "@mantine/hooks";
 import ParticipantDetail from "./ParticipantDetail";
+import React, { useEffect, useState } from "react";
+import { useDisclosure, useListState } from "@mantine/hooks";
+import {
+  AllParticipantQuizResponse,
+  ParticipantQuizResponse,
+} from "@/types/report";
+import { instance } from "@/utils";
+import { useRouter } from "next/router";
 const Diagram = ({
   numberRight,
   numberWrong,
@@ -63,11 +69,15 @@ const Accuracy = ({
   numberNot: number;
   numberQuestion: number;
 }) => {
-  numberQuestion = numberRight + numberWrong + numberNot;
   return (
     <RingProgress
       size={100}
-      sections={[{ value: 40, color: "blue" }]}
+      sections={[
+        {
+          value: Math.round((numberRight / numberQuestion) * 100),
+          color: "blue",
+        },
+      ]}
       label={
         <Text c="blue" fw={500} ta="center" size="lg">
           {Math.round((numberRight / numberQuestion) * 100) + "%"}
@@ -136,8 +146,11 @@ const elements = [
 const Participants = () => {
   const [ascending, setAscending] = useState(true);
   const [opened, { open, close }] = useDisclosure(false);
-  const [sortedElements, setSortedElements] = useState(elements);
+  const [participants, listParticipants] =
+    useListState<ParticipantQuizResponse>([]);
+  const [sortedElements, setSortedElements] = useState(participants);
   const [selectedSortOption, setSelectedSortOption] = useState("Accuracy");
+  const { quizId } = useRouter().query;
   // const [selectedElement, setSelectedElement] = useState< | null>(null);
 
   // const handleClick = elements.map((element)) => {
@@ -145,6 +158,18 @@ const Participants = () => {
   //   open();
   // };
 
+  const fetchData = async () => {
+    const data: AllParticipantQuizResponse = await instance
+      .get(`reports/${quizId}/participant`)
+      .json();
+    if (data) {
+      listParticipants.setState(data.data);
+      setSortedElements(data.data);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   const handleSortChange = ({
     sortOption,
     IconSort,
@@ -157,24 +182,15 @@ const Participants = () => {
       case "Accuracy":
         sortedArray = [...sortedElements].sort((a, b) => {
           if (IconSort) {
-            return (
-              a.numberRight / (a.numberNot + a.numberRight + a.numberWrong) -
-              b.numberRight / (b.numberNot + b.numberRight + b.numberWrong)
-            );
+            return a.point / a.totalQuestion - b.point / b.totalQuestion;
           } else {
-            return (
-              -a.numberRight / (a.numberNot + a.numberRight + a.numberWrong) +
-              b.numberRight / (b.numberNot + b.numberRight + b.numberWrong)
-            );
+            return -a.point / a.totalQuestion + b.point / b.totalQuestion;
           }
         });
         break;
       case "Points":
         sortedArray = [...sortedElements].sort((a, b) => {
-          return (
-            a.numberRight / (a.numberNot + a.numberRight + a.numberWrong) -
-            b.numberRight / (b.numberNot + b.numberRight + b.numberWrong)
-          );
+          return a.point / a.totalQuestion - b.point / b.totalQuestion;
         });
         break;
       // Add cases for other sort options
@@ -188,39 +204,33 @@ const Participants = () => {
     handleSortChange({ sortOption, IconSort: ascending });
   };
   const sortedRows = sortedElements.map((element) => (
-    <Table.Tr key={element.username} onClick={() => open()}>
+    <Table.Tr key={element.userId} onClick={() => open()}>
       <Table.Td w={"20%"}>
         <Group>
-          <Avatar variant="filled" src={element.avatar} />
-          {element.username}
+          <Avatar variant="filled" />
+          {element.displayName}
         </Group>
       </Table.Td>
       <Table.Td w={"40%"}>
         <Diagram
-          numberRight={element.numberRight}
-          numberWrong={element.numberWrong}
-          numberNot={element.numberNot}
-          numberQuestion={
-            element.numberRight + element.numberWrong + element.numberNot
-          }
+          numberRight={element.point}
+          numberWrong={element.totalQuestion - element.point}
+          numberNot={0}
+          numberQuestion={element.totalQuestion}
         />
       </Table.Td>
       <Table.Td w={"20%"}>
         <Accuracy
-          numberRight={element.numberRight}
-          numberWrong={element.numberWrong}
-          numberNot={element.numberNot}
-          numberQuestion={
-            element.numberRight + element.numberWrong + element.numberNot
-          }
+          numberRight={element.point}
+          numberWrong={element.totalQuestion - element.point}
+          numberNot={0}
+          numberQuestion={element.totalQuestion}
         />
       </Table.Td>
       <Table.Td w={"10%"}>
         <Flex gap={0}>
-          <Text size="lg">{element.numberRight}</Text>
-          <Text size="sm">
-            /{element.numberRight + element.numberWrong + element.numberNot}
-          </Text>
+          <Text size="lg">{element.point}</Text>
+          <Text size="sm">/{element.totalQuestion}</Text>
         </Flex>
       </Table.Td>
       <Table.Td w={"10%"}>{element.score}</Table.Td>
@@ -276,10 +286,10 @@ const Participants = () => {
               <ColorSwatch color="red" radius={"sm"} size={20} />
               <Text size="sm">Incorrect</Text>
             </Group>
-            <Group gap={5}>
+            {/* <Group gap={5}>
               <ColorSwatch color="#f5f5f5" radius={"sm"} size={20} />
               <Text size="sm">Unattempted</Text>
-            </Group>
+            </Group> */}
           </Flex>
           <ScrollArea h={500}>
             <Table>
