@@ -86,62 +86,6 @@ const Accuracy = ({
     />
   );
 };
-const elements = [
-  {
-    avatar: "",
-    username: "Trang",
-    createdAt: "2022-10-10",
-    numberRight: 3,
-    numberWrong: 2,
-    numberNot: 1,
-    score: 100,
-  },
-  {
-    avatar: "",
-    username: "Thang",
-    createdAt: "2022-10-10",
-    numberRight: 4,
-    numberWrong: 2,
-    numberNot: 0,
-    score: 200,
-  },
-  {
-    avatar: "",
-    createdAt: "2022-10-10",
-    username: "Quy",
-    numberRight: 1,
-    numberWrong: 2,
-    numberNot: 3,
-    score: 3,
-  },
-  {
-    avatar: "",
-    createdAt: "2022-10-10",
-    username: "Dung",
-    numberRight: 2,
-    numberWrong: 3,
-    numberNot: 1,
-    score: 300,
-  },
-  {
-    avatar: "",
-    createdAt: "2022-10-10",
-    username: "B",
-    numberRight: 2,
-    numberWrong: 3,
-    numberNot: 1,
-    score: 300,
-  },
-  {
-    avatar: "",
-    createdAt: "2022-10-10",
-    username: "D",
-    numberRight: 2,
-    numberWrong: 3,
-    numberNot: 1,
-    score: 300,
-  },
-];
 
 const Participants = () => {
   const [ascending, setAscending] = useState(true);
@@ -151,6 +95,10 @@ const Participants = () => {
   const [sortedElements, setSortedElements] = useState(participants);
   const [selectedSortOption, setSelectedSortOption] = useState("Accuracy");
   const { quizId } = useRouter().query;
+  const [id, setId] = useState<number>(0);
+  const [participant, setParticipant] = useState<ParticipantQuizResponse>(
+    participants[0]
+  );
   // const [selectedElement, setSelectedElement] = useState< | null>(null);
 
   // const handleClick = elements.map((element)) => {
@@ -203,8 +151,17 @@ const Participants = () => {
     setAscending(!ascending);
     handleSortChange({ sortOption, IconSort: ascending });
   };
+
+  const handleClick = (id: number, participant: ParticipantQuizResponse) => {
+    setId(() => id);
+    setParticipant(() => participant);
+    open();
+  };
   const sortedRows = sortedElements.map((element) => (
-    <Table.Tr key={element.userId} onClick={() => open()}>
+    <Table.Tr
+      key={element.userId}
+      onClick={() => handleClick(element.quizJoinedUserId, element)}
+    >
       <Table.Td w={"20%"}>
         <Group>
           <Avatar variant="filled" />
@@ -321,7 +278,7 @@ const Participants = () => {
               timingFunction: "linear",
             }}
           >
-            <ParticipantDetail />
+            <ParticipantDetail participant={participant} id={id} />
           </Modal>
         </Stack>
       </Paper>

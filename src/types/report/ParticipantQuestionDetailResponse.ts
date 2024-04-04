@@ -4,5 +4,5 @@ export default interface ParticipantQuestionDetailResponse {
   question: QuestionResponse;
   score: number;
   answerMetadata: string;
-  isCorrect: boolean;
+  correct: boolean;
 }
