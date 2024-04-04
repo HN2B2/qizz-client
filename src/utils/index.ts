@@ -12,8 +12,6 @@ import SubScript from "@tiptap/extension-subscript"
 import Image from "@tiptap/extension-image"
 import Youtube from "@tiptap/extension-youtube"
 
-export const appUrl = process.env.NEXT_PUBLIC_APP_URl || "http://localhost:3000"
-
 export const instance = ky.create({
     prefixUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:6868/v1",
     credentials: "include",
@@ -43,7 +41,7 @@ export const getErrorStatusCode = (error: any) => {
 }
 
 export const localInstance = ky.create({
-    prefixUrl: appUrl,
+    prefixUrl: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
     credentials: "include",
 })
 
