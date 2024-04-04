@@ -10,11 +10,14 @@ import {
   Divider,
   Paper,
   RingProgress,
+  Grid,
 } from "@mantine/core";
 import {
   IconCheck,
+  IconCheckbox,
   IconExclamationMark,
   IconPin,
+  IconShieldCheckered,
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
@@ -73,6 +76,67 @@ const Accuracy = ({
     />
   );
 };
+
+const AnswerDetailPaper = ({ isCorrect }: { isCorrect: boolean }) => {
+  return (
+    <Paper p="lg" radius="md" withBorder>
+      <Stack>
+        <Flex justify={"space-between"}>
+          <Group>
+            {isCorrect ? (
+              <Button leftSection={<IconCheck />} variant="light" color="green">
+                Correct
+              </Button>
+            ) : (
+              <Button leftSection={<IconX />} variant="light" color="red">
+                Incorrect
+              </Button>
+            )}
+
+            <Button leftSection={<IconCheckbox />} variant="light" color="gray">
+              loại câu hỏi
+            </Button>
+          </Group>
+          <Group>
+            <Group gap={2}>
+              <Text fw={500}>{30}s</Text>
+              <Text>time</Text>
+            </Group>
+            <Divider orientation="vertical" />
+            <Group gap={2}>
+              <Text fw={500}>10</Text>
+              <Text>point</Text>
+            </Group>
+          </Group>
+        </Flex>
+        <Text fw={500}>Câu hỏi ở đây</Text>
+        <Grid>
+          <Grid.Col span={5}>
+            <Stack>
+              <Text fw={300}>Response</Text>
+              <Text>đáp án trả lời ở đây</Text>
+            </Stack>
+          </Grid.Col>
+          <Grid.Col span={7}>
+            <Stack>
+              {isCorrect ? (
+                <Text fw={300} c={"green"}>
+                  Correct Answer
+                </Text>
+              ) : (
+                <Text fw={300} c={"green"}>
+                  InCorrect Answer
+                </Text>
+              )}
+
+              <Text>Đáp án đúng ở đây</Text>
+            </Stack>
+          </Grid.Col>
+        </Grid>
+      </Stack>
+    </Paper>
+  );
+};
 const ParticipantDetail = () => {
   return (
     <Stack>
@@ -81,7 +145,7 @@ const ParticipantDetail = () => {
           <Flex justify={"space-between"}>
             <Group>
               <Avatar src="" size={50} radius="xl" />
-              <Text>Display name ở đây</Text>
+              <Text fw={700}>Display name ở đây</Text>
             </Group>
             <Button leftSection={<IconTrash />} variant="light" p={5}>
               Delete
@@ -100,7 +164,6 @@ const ParticipantDetail = () => {
             numberQuestion={6}
           />
         </Flex>
-
         <Flex justify={"center"} mt={10} gap={5}>
           <Button leftSection={<IconCheck />} variant="light" color="green">
             {2} Correct
@@ -116,7 +179,7 @@ const ParticipantDetail = () => {
             {1} Unattempted
           </Button>
         </Flex>
-        <Flex mt={30} gap={10} justify={"center"}>
+        <Flex mt={30} gap={10} justify={"center"} mb={30}>
           <Paper withBorder p={5} radius="md" w={120} h={120}>
             <Stack gap={5} justify="center">
               <Group justify="center" p={0}>
@@ -152,6 +215,8 @@ const ParticipantDetail = () => {
             </Stack>
           </Paper>
         </Flex>
+        <AnswerDetailPaper isCorrect={true} />
+        <AnswerDetailPaper isCorrect={false} />
       </ScrollArea>
     </Stack>
   );
