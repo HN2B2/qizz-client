@@ -1,5 +1,3 @@
-export const runtime = "experimental-edge"
-
 import React, { useState } from "react"
 import {
     Container,
@@ -97,7 +95,7 @@ const PopularQuiz = () => {
         </Carousel>
     )
 }
-const Home = ({ categoryQuizBanksData }: Props) => {
+const Home = () => {
     const [data, setData] = useState([])
     const icon = <IconInfoCircle />
     const [search, setSearch] = useState("")
@@ -234,35 +232,6 @@ const Home = ({ categoryQuizBanksData }: Props) => {
             </Container>
         </HeaderLayout>
     )
-}
-
-export const getServerSideProps = async (
-    context: GetServerSidePropsContext
-) => {
-    try {
-        const { req, query } = context
-        const { page = "1", keyword, order, sort } = query
-
-        const res = await instance
-            .get(`bank/all/categories/10`, {
-                headers: {
-                    Cookie: req.headers.cookie || "",
-                },
-            })
-            .json()
-        const categoryQuizBanksData = res
-
-        return {
-            props: {
-                categoryQuizBanksData,
-            },
-        }
-    } catch (error) {
-        console.log(error)
-        return {
-            notFound: true,
-        }
-    }
 }
 
 export default Home
