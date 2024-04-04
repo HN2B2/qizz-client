@@ -208,18 +208,18 @@ const CreateQuestionHeader = () => {
         // createQuestionForm.setValues(dataQuestion);
     }
 
+    const [submitLoading, setSubmitLoading] = useState(false)
     const handleSubmit = async () => {
+        setSubmitLoading(true)
         handleQuestion()
-        createQuestionForm.validate()
-        // console.log(createQuestionForm.values);
-
+        // createQuestionForm.validate()
         if (!createQuestionForm.isValid()) {
             notifications.show({
                 color: "red",
                 title: "Error",
                 message: Object.values(createQuestionForm.errors)[0],
             })
-
+            setSubmitLoading(false)
             return
         }
         try {
@@ -244,6 +244,8 @@ const CreateQuestionHeader = () => {
             })
         } catch (error) {
             console.log(error)
+        } finally {
+            setSubmitLoading(false)
         }
     }
 
@@ -322,6 +324,7 @@ const CreateQuestionHeader = () => {
                         variant="filled"
                         leftSection={<IconDeviceFloppy size={"1rem"} />}
                         onClick={handleSubmit}
+                        loading={submitLoading}
                     >
                         Save question
                     </Button>

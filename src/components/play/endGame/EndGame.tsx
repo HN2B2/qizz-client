@@ -7,6 +7,8 @@ import RankingResponse from "@/types/takeQuiz/playing/RankingResponse"
 import { useViewportSize } from "@mantine/hooks"
 import Confetti from "react-confetti"
 import { instance } from "@/utils"
+import { Affix, Button } from "@mantine/core"
+import Link from "next/link"
 const EndGame = () => {
     const { quiz } = useContext(QuizContext)!
 
@@ -34,6 +36,11 @@ const EndGame = () => {
 
     return (
         <GameBackground>
+            <Affix position={{ top: 20, left: 20 }}>
+                <Button component={Link} href="/">
+                    Back to home
+                </Button>
+            </Affix>
             {showConfetti && (
                 <Confetti
                     width={width}
@@ -63,7 +70,7 @@ const EndGame = () => {
                             className="absolute -top-12 -left-12 w-32 object-contain drop-shadow-lg"
                         />
                         <div className="mb-4 text-3xl">
-                            {players[1]?.displayName || "Somebody"}
+                            {players[1]?.displayName || "Nobody"}
                         </div>
                         <div>{players[1]?.score || 0}</div>
                     </div>
@@ -88,7 +95,7 @@ const EndGame = () => {
                             className="absolute -top-12 -left-12 w-32 object-contain drop-shadow-lg"
                         />
                         <div className="mb-4 text-3xl">
-                            {players[0]?.displayName || "Somebody"}
+                            {players[0]?.displayName || "Nobody"}
                         </div>
                         <div>{players[0]?.score || 0}</div>
                     </div>

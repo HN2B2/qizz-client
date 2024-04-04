@@ -8,6 +8,8 @@ import { useViewportSize } from "@mantine/hooks"
 import Confetti from "react-confetti"
 import { instance } from "@/utils"
 import { MonitorContext } from "@/pages/monitor/[quizCode]"
+import { Affix, Button } from "@mantine/core"
+import Link from "next/link"
 const EndGame = () => {
     const { quiz } = useContext(MonitorContext)!
 
@@ -35,15 +37,18 @@ const EndGame = () => {
 
     return (
         <GameBackground>
-            {showConfetti && (
-                <Confetti
-                    width={width}
-                    height={height}
-                    recycle={false}
-                    tweenDuration={50000}
-                    numberOfPieces={1000}
-                />
-            )}
+            <Affix position={{ top: 20, left: 20 }}>
+                <Button component={Link} href="/">
+                    Back to home
+                </Button>
+            </Affix>
+            <Confetti
+                width={width}
+                height={height}
+                recycle={false}
+                tweenDuration={50000}
+                numberOfPieces={1000}
+            />
             <div className="h-screen flex items-end justify-center gap-4 overflow-hidden">
                 <motion.div
                     initial="hidden"
@@ -89,7 +94,7 @@ const EndGame = () => {
                             className="absolute -top-12 -left-12 w-32 object-contain drop-shadow-lg"
                         />
                         <div className="mb-4 text-3xl">
-                            {players[0]?.displayName || "Somebody"}
+                            {players[0]?.displayName || "Nobody"}
                         </div>
                         <div>{players[0]?.score || 0}</div>
                     </div>
@@ -114,7 +119,7 @@ const EndGame = () => {
                             className="absolute -top-12 -right-12 w-32 object-contain drop-shadow-lg"
                         />
                         <div className="mb-4 text-3xl">
-                            {players[2]?.displayName || "Somebody"}
+                            {players[2]?.displayName || "Nobody"}
                         </div>
                         <div>{players[2]?.score || 0}</div>
                     </div>

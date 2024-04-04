@@ -70,20 +70,6 @@ export const middleware = async (req: NextRequest) => {
         return response
     }
 
-    if (req.nextUrl.pathname === "/auth/logout") {
-        const redirect = req.nextUrl.searchParams.get("r")
-
-        const response = NextResponse.redirect(
-            new URL(
-                redirect ? `/auth/login?r=${redirect}` : "/auth/login",
-                req.url
-            )
-        )
-        response.cookies.set("token", "", { expires: new Date(0) })
-        response.cookies.set("user", "", { expires: new Date(0) })
-        return response
-    }
-
     const protectedRoute = protectedRoutes.find((route) =>
         req.nextUrl.pathname.startsWith(route.path)
     )

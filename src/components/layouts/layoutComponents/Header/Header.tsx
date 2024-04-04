@@ -42,6 +42,15 @@ const Logo = () => {
 const MenuHeader = ({ user }: { user: UserResponse | null }) => {
     const [opened, { toggle }] = useDisclosure()
 
+    const router = useRouter()
+    const handleLogout = async () => {
+        try {
+            await instance.post("auth/logout")
+            router.reload()
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <Menu shadow="md" width={200}>
             <Menu.Target>
@@ -70,8 +79,7 @@ const MenuHeader = ({ user }: { user: UserResponse | null }) => {
                                 style={{ width: rem(20), height: rem(20) }}
                             />
                         }
-                        component={Link}
-                        href="/auth/logout"
+                        onClick={handleLogout}
                     >
                         Log out
                     </Menu.Item>

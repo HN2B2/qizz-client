@@ -3,7 +3,7 @@ import useUser from "@/hooks/useUser"
 import { checkEditable } from "@/pages/bank/[bankId]"
 import { BankResponse } from "@/types/bank"
 import { FavoriteResponse, UpvoteResponse } from "@/types/upvote"
-import { instance } from "@/utils"
+import { formatDate, instance } from "@/utils"
 import {
     ActionIcon,
     Avatar,
@@ -76,12 +76,8 @@ const QuizInfo = ({ bank, setBank, upvote, like }: QuizInfoProps) => {
             <Stack gap={20}>
                 <Flex justify="space-between">
                     <Group gap="xl" align="start">
-                        <Avatar src="" size={124} radius="sm" />
+                        <Avatar src="/common/quiz.jpg" size={124} radius="sm" />
                         <Stack gap={8}>
-                            <Text c="dimmed" size="sm">
-                                Quiz Bank abc
-                            </Text>
-                            <Text>{bank.modifiedBy?.displayName}</Text>
                             <Text size="xl" fw={500}>
                                 {bank.name}
                             </Text>
@@ -120,7 +116,7 @@ const QuizInfo = ({ bank, setBank, upvote, like }: QuizInfoProps) => {
                         <Avatar src="" size={40} />
                         <Stack gap={5}>
                             <Text size="xs"> {bank.createdBy.displayName}</Text>
-                            <Text size="xs"> {bank.createdAt}</Text>
+                            <Text size="xs"> {formatDate(bank.createdAt)}</Text>
                         </Stack>
                     </Group>
                     <Stack justify="space-between">
