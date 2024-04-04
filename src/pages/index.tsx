@@ -134,6 +134,8 @@ const Home = () => {
 
     const { user } = useUser()
 
+    console.log(user)
+
     return (
         <HeaderLayout>
             <Container size="xl">

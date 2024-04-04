@@ -3,7 +3,7 @@ import { UserResponse } from "@/types/user"
 import { localInstance } from "@/utils"
 import { useEffect, useState } from "react"
 
-const USER_PROFILE_ROUTE = "auth/profile"
+const USER_PROFILE_ROUTE = "api/profile"
 
 const useUser = () => {
     const [user, setUser] = useState<UserResponse | null>(null)
@@ -12,11 +12,10 @@ const useUser = () => {
     const [error, setError] = useState<unknown | null>(null)
     const handleGetUserData = async () => {
         try {
-            const data: AuthResponse = await localInstance
+            const data: { user: string; token: string } = await localInstance
                 .get(USER_PROFILE_ROUTE)
                 .json()
-
-            setUser(data.user)
+            setUser(JSON.parse(data.user))
             setToken(data.token)
         } catch (error) {
             setError(error)
