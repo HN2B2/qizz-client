@@ -22,6 +22,7 @@ import {
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
+import ParticipantDetail from "./ParticipantDetail";
 const Diagram = ({
   numberRight,
   numberWrong,
@@ -132,19 +133,6 @@ const elements = [
   },
 ];
 
-const ParticipantDetails = () => {
-  return (
-    <Stack>
-      <ScrollArea h={500}>
-        <Stack>
-          <Flex justify={"space-between"}>
-            <Avatar src="" size={50} radius="xl" />
-          </Flex>
-        </Stack>
-      </ScrollArea>
-    </Stack>
-  );
-};
 const Participants = () => {
   const [ascending, setAscending] = useState(true);
   const [opened, { open, close }] = useDisclosure(false);
@@ -323,7 +311,7 @@ const Participants = () => {
               timingFunction: "linear",
             }}
           >
-            <ParticipantDetails />
+            <ParticipantDetail />
           </Modal>
         </Stack>
       </Paper>
