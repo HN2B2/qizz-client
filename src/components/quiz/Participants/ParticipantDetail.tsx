@@ -1,4 +1,10 @@
 import {
+  AllParticipantQuestionDetailResponse,
+  ParticipantQuestionDetailResponse,
+  ParticipantQuizResponse,
+} from "@/types/report";
+import { instance } from "@/utils";
+import {
   Avatar,
   Button,
   Flex,
@@ -12,6 +18,7 @@ import {
   RingProgress,
   Grid,
 } from "@mantine/core";
+import { useListState } from "@mantine/hooks";
 import {
   IconCheck,
   IconCheckbox,
@@ -21,7 +28,8 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 const Diagram = ({
   numberRight,
   numberWrong,
@@ -77,13 +85,17 @@ const Accuracy = ({
   );
 };
 
-const AnswerDetailPaper = ({ isCorrect }: { isCorrect: boolean }) => {
+const AnswerDetailPaper = ({
+  question,
+}: {
+  question: ParticipantQuestionDetailResponse;
+}) => {
   return (
     <Paper p="lg" radius="md" withBorder>
       <Stack>
         <Flex justify={"space-between"}>
           <Group>
-            {isCorrect ? (
+            {question.correct ? (
               <Button leftSection={<IconCheck />} variant="light" color="green">
                 Correct
               </Button>
@@ -94,42 +106,42 @@ const AnswerDetailPaper = ({ isCorrect }: { isCorrect: boolean }) => {
             )}
 
             <Button leftSection={<IconCheckbox />} variant="light" color="gray">
-              loại câu hỏi
+              {question.question.type}
             </Button>
           </Group>
           <Group>
             <Group gap={2}>
-              <Text fw={500}>{30}s</Text>
+              <Text fw={500}>{question.question.duration}s</Text>
               <Text>time</Text>
             </Group>
             <Divider orientation="vertical" />
             <Group gap={2}>
-              <Text fw={500}>10</Text>
+              <Text fw={500}>{question.question.point}</Text>
               <Text>point</Text>
             </Group>
           </Group>
         </Flex>
-        <Text fw={500}>Câu hỏi ở đây</Text>
+        <Text fw={500}>{question.question.content}</Text>
         <Grid>
           <Grid.Col span={5}>
             <Stack>
               <Text fw={300}>Response</Text>
-              <Text>đáp án trả lời ở đây</Text>
+              <Text>{question.answerMetadata}</Text>
             </Stack>
           </Grid.Col>
           <Grid.Col span={7}>
             <Stack>
-              {isCorrect ? (
+              {question.correct ? (
                 <Text fw={300} c={"green"}>
                   Correct Answer
                 </Text>
               ) : (
-                <Text fw={300} c={"green"}>
+                <Text fw={300} c={"red"}>
                   InCorrect Answer
                 </Text>
               )}
 
-              <Text>Đáp án đúng ở đây</Text>
+              <Text>{question.question.correctAnswersMetadata}</Text>
             </Stack>
           </Grid.Col>
         </Grid>
@@ -137,57 +149,82 @@ const AnswerDetailPaper = ({ isCorrect }: { isCorrect: boolean }) => {
     </Paper>
   );
 };
-const ParticipantDetail = () => {
+const ParticipantDetail = ({
+  id,
+  participant,
+}: {
+  id: number;
+  participant: ParticipantQuizResponse;
+}) => {
+  const { quizId } = useRouter().query;
+  const [questions, listQuestions] =
+    useListState<ParticipantQuestionDetailResponse>([]);
+  const fetchData = async () => {
+    try {
+      const res: AllParticipantQuestionDetailResponse = await instance
+        .get(`reports/${quizId}/participant/${id}`)
+        .json();
+      if (res) {
+        listQuestions.setState(res.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <Stack>
       <ScrollArea h={500}>
         <Stack>
-          <Flex justify={"space-between"}>
-            <Group>
-              <Avatar src="" size={50} radius="xl" />
-              <Text fw={700}>Display name ở đây</Text>
-            </Group>
-            <Button leftSection={<IconTrash />} variant="light" p={5}>
+          {/* <Flex justify={"space-between"}> */}
+          <Group>
+            <Avatar src="" size={50} radius="xl" />
+            <Text fw={700}>{participant?.displayName}</Text>
+          </Group>
+          {/* <Button leftSection={<IconTrash />} variant="light" p={5}>
               Delete
-            </Button>
-          </Flex>
-          <Flex justify={"flex-start"}>
+            </Button> */}
+          {/* </Flex> */}
+          {/* <Flex justify={"flex-start"}>
             <Text>Ngày làm quiz</Text>
-          </Flex>
+          </Flex> */}
         </Stack>
         <Divider mt={30} mb={30} />
         <Flex justify={"center"}>
           <Diagram
-            numberNot={1}
-            numberRight={2}
-            numberWrong={3}
-            numberQuestion={6}
+            numberNot={0}
+            numberRight={participant.point}
+            numberWrong={participant.totalQuestion - participant?.point}
+            numberQuestion={participant.totalQuestion}
           />
         </Flex>
         <Flex justify={"center"} mt={10} gap={5}>
           <Button leftSection={<IconCheck />} variant="light" color="green">
-            {2} Correct
+            {participant.point} Correct
           </Button>
           <Button leftSection={<IconX />} variant="light" color="red">
-            {3} InCorrect
+            {participant.totalQuestion - participant.point} InCorrect
           </Button>
-          <Button
+          {/* <Button
             leftSection={<IconExclamationMark />}
             variant="light"
             color="gray"
           >
             {1} Unattempted
-          </Button>
+          </Button> */}
         </Flex>
         <Flex mt={30} gap={10} justify={"center"} mb={30}>
           <Paper withBorder p={5} radius="md" w={120} h={120}>
             <Stack gap={5} justify="center">
               <Group justify="center" p={0}>
                 <Accuracy
-                  numberNot={1}
-                  numberRight={2}
-                  numberWrong={3}
-                  numberQuestion={6}
+                  numberNot={0}
+                  numberRight={participant.point}
+                  numberWrong={participant.totalQuestion - participant.point}
+                  numberQuestion={participant.totalQuestion}
                 />
               </Group>
 
@@ -199,9 +236,9 @@ const ParticipantDetail = () => {
               <Flex gap={0} align={"center"} justify={"center"}>
                 {/* số câu đúng/tổng số câu hỏi */}
                 <Text size="lg" fw={500}>
-                  {2}
+                  {participant.point}
                 </Text>
-                <Text size="sm">/{6}</Text>
+                <Text size="sm">/{participant.totalQuestion}</Text>
               </Flex>
               <Text ta={"center"}>Points</Text>
             </Stack>
@@ -209,14 +246,16 @@ const ParticipantDetail = () => {
           <Paper withBorder p={5} radius="md" w={120} h={120}>
             <Stack gap={10} justify="center">
               <Text fw={500} ta={"center"}>
-                Điểm nè
+                {participant.score}
               </Text>
               <Text ta={"center"}>Score</Text>
             </Stack>
           </Paper>
         </Flex>
-        <AnswerDetailPaper isCorrect={true} />
-        <AnswerDetailPaper isCorrect={false} />
+        {questions.map((question, index) => (
+          <AnswerDetailPaper key={index} question={question} />
+        ))}
+        {/* <AnswerDetailPaper question={questions[0]} /> */}
       </ScrollArea>
     </Stack>
   );
