@@ -1,6 +1,5 @@
-import Quiz from "@/types/quiz/Quiz";
-import Question from "@/types/question/Question";
-import QuizQuestion from "@/types/quiz/QuizQuestion";
+import Quiz from "@/types/quiz/QuizResponse";
+// import QuizQuestion from "@/types/quiz/QuizQuestionResponse";
 import {
   Button,
   Flex,
@@ -24,14 +23,14 @@ import {
   IconShare3,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
+import ViewQuestionPaper from "@/components/questions/ViewQuestionPaper";
+import { QuestionResponse } from "@/types/question";
 
 interface QuizQuestionProps {
-  quizQuestion: QuizQuestion;
-  question: Question;
-  quiz: Quiz;
+  questions: QuestionResponse[];
 }
 
-const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
+const QuizQuestions = ({ questions }: QuizQuestionProps) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const toggleAnswer = () => {
     setShowAnswer(!showAnswer);
@@ -41,15 +40,11 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
       <Flex justify="space-between" mt={10}>
         <Group gap={"xs"}>
           {<IconListCheck size={20} />}
-          <Text>{quiz.totalQuestions} questions</Text>
+          {/* <Text>{quiz.totalQuestions} questions</Text> */}
         </Group>
         <Stack justify="space-between">
           <Group gap="sm" justify="flex-end">
-            <Button
-              variant="default"
-              //   leftSection={<IconEye size={14} />}
-              onClick={toggleAnswer}
-            >
+            <Button size="xs" variant="default" onClick={toggleAnswer}>
               {showAnswer ? (
                 <IconEye size={20} style={{ paddingRight: "5px" }} />
               ) : (
@@ -58,6 +53,7 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
               {showAnswer ? "Show Answer" : " Hide Answer"}
             </Button>
             <Button
+              size="xs"
               variant="default"
               leftSection={<IconPlayerPlayFilled size={14} />}
             >
@@ -66,7 +62,7 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
           </Group>
         </Stack>
       </Flex>
-      <Paper p="lg" radius="md" shadow="sm" mb="md">
+      {/* <Paper p="lg" radius="md" shadow="sm" mb="md">
         <Stack gap={20}>
           <Flex justify="space-between">
             <Text>
@@ -97,13 +93,20 @@ const QuizQuestions = ({ quizQuestion, question, quiz }: QuizQuestionProps) => {
         <SimpleGrid cols={2} verticalSpacing="lg" mt={20}>
           <div>
             {<IconCircleFilled size={10} />}
-            {question.answers_metadata}
+            {question.answersMetadata}
           </div>
-          <div>{question.answers_metadata}</div>
-          <div>{question.answers_metadata}</div>
-          <div>{question.answers_metadata}</div>
+          <div>{question.answersMetadata}</div>
+          <div>{question.answersMetadata}</div>
+          <div>{question.answersMetadata}</div>
         </SimpleGrid>
-      </Paper>
+      </Paper> */}
+      {questions.map((question, index) => (
+        <ViewQuestionPaper
+          question={question}
+          index={index}
+          show={showAnswer}
+        ></ViewQuestionPaper>
+      ))}
     </Stack>
   );
 };

@@ -1,7 +1,7 @@
-import { Container, Title, Text, Button, Group } from "@mantine/core"
-import { Illustration } from "./Illustration"
-import classes from "./NothingFoundBackground.module.css"
+import { Container, Title, Text, Button, Group, rem } from "@mantine/core"
+import Illustration from "./Illustration"
 import Head from "next/head"
+import Link from "next/link"
 
 export default function NothingFoundBackground() {
     return (
@@ -9,18 +9,21 @@ export default function NothingFoundBackground() {
             <Head>
                 <title>404</title>
             </Head>
-            <Container className={classes.root}>
-                <div className={classes.inner}>
-                    <Illustration className={classes.image} />
-                    <div className={classes.content}>
-                        <Title className={classes.title}>
+            <Container py={rem("80px")}>
+                <div className="relative">
+                    <Illustration className="absolute inset-0 opacity-75 dark:text-neutral-700 text-neutral-200" />
+                    <div className="pt-[220px] relative z-10">
+                        <Title className="text-center font-extrabold text-4xl">
                             Nothing to see here
                         </Title>
                         <Text
                             c="dimmed"
                             size="lg"
                             ta="center"
-                            className={classes.description}
+                            maw={rem("540px")}
+                            mt={32}
+                            mb={48}
+                            m={"auto"}
                         >
                             Page you are trying to open does not exist. You may
                             have mistyped the address, or the page has been
@@ -28,7 +31,11 @@ export default function NothingFoundBackground() {
                             contact support.
                         </Text>
                         <Group justify="center">
-                            <Button size="md" component="a" href="/auth/logout">
+                            <Button
+                                size="md"
+                                component={Link}
+                                href="/auth/logout"
+                            >
                                 Try login to another account
                             </Button>
                         </Group>

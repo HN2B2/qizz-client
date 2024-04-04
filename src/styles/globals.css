@@ -1,3 +1,15 @@
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+
+@layer tailwind {
+    @tailwind base;
+}
+
+/* @import "@mantine/core/styles.layer.css"; */
+@import "@mantine/core/styles.css";
+@import "@mantine/dates/styles.css";
+
 * {
     box-sizing: border-box;
     padding: 0;
@@ -18,15 +30,5 @@ a {
 @media (prefers-color-scheme: dark) {
     html {
         color-scheme: dark;
-    }
-}
-
-body {
-    @mixin light {
-        background-color: var(--mantine-color-gray-0);
-    }
-
-    @mixin dark {
-        background-color: var(--mantine-color-dark-8);
     }
 }

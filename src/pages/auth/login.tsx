@@ -19,6 +19,7 @@ import { useDisclosure, useHotkeys, useLocalStorage } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
 import { IconBrandGoogleFilled } from "@tabler/icons-react"
 import Head from "next/head"
+import Link from "next/link"
 import { useRouter } from "next/router"
 
 const LoginPage = () => {
@@ -55,13 +56,13 @@ const LoginPage = () => {
         },
     })
 
-    const [
-        loading,
-        { toggle: toggleLoading, close: closeLoading, open: openLoading },
-    ] = useDisclosure()
+    const [loading, { close: closeLoading, open: openLoading }] =
+        useDisclosure()
 
     const router = useRouter()
-    const handleLogin = async () => {
+    const { r } = router.query
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         openLoading()
 
         loginForm.validate()
@@ -71,13 +72,24 @@ const LoginPage = () => {
         }
 
         try {
-            const { data }: { data: AuthResponse } = await instance.post(
-                "/auth/login",
-                loginForm.values as LoginRequest
-            )
+            const data: AuthResponse = await instance
+                .post("auth/login", {
+                    json: loginForm.values as LoginRequest,
+                })
+                .json()
             setUser(data.user)
-            router.push("/")
+            if (r) {
+                router.push(r as string)
+            } else {
+                router.push("/")
+            }
         } catch (error) {
+            console.log(error)
+
+            if (getServerErrorNoti(error) === "User is disabled") {
+                router.push("/auth/verify")
+                return
+            }
             notifications.show({
                 title: "Error",
                 message: getServerErrorNoti(error),
@@ -88,7 +100,6 @@ const LoginPage = () => {
         }
     }
 
-    useHotkeys([["enter", handleLogin]])
     return (
         <>
             <Head>
@@ -105,36 +116,38 @@ const LoginPage = () => {
                         w={"400px"}
                     >
                         <Title mb={16} order={2}>
-                            Welcome back!
+                            <Link href="/">Qizz - Login</Link>
                         </Title>
-                        <TextInput
-                            label="Email"
-                            placeholder="email@qizz.tech"
-                            required
-                            {...loginForm.getInputProps("email")}
-                        />
-                        <PasswordInput
-                            label="Password"
-                            placeholder="Your password"
-                            required
-                            mt="md"
-                            {...loginForm.getInputProps("password")}
-                        />
-                        <Group justify="end" mt="lg">
-                            {/* <Checkbox label="Remember me" /> */}
-                            <Anchor component="button" size="sm">
-                                Forgot password?
-                            </Anchor>
-                        </Group>
-                        <Button
-                            fullWidth
-                            mt="xl"
-                            mb={12}
-                            loading={loading}
-                            onClick={handleLogin}
-                        >
-                            Sign in
-                        </Button>
+                        <form onSubmit={handleLogin}>
+                            <TextInput
+                                label="Email"
+                                placeholder="email@qizz.tech"
+                                required
+                                {...loginForm.getInputProps("email")}
+                            />
+                            <PasswordInput
+                                label="Password"
+                                placeholder="Your password"
+                                required
+                                mt="md"
+                                {...loginForm.getInputProps("password")}
+                            />
+                            <Group justify="end" mt="lg">
+                                {/* <Checkbox label="Remember me" /> */}
+                                <Anchor href="/auth/forgot-password" size="sm">
+                                    Forgot password?
+                                </Anchor>
+                            </Group>
+                            <Button
+                                fullWidth
+                                mt="xl"
+                                mb={12}
+                                loading={loading}
+                                type="submit"
+                            >
+                                Sign in
+                            </Button>
+                        </form>
                         <Divider label="Or continue with" />
                         <Button
                             fullWidth
@@ -158,8 +171,12 @@ const LoginPage = () => {
                             Do not have an account yet?{" "}
                             <Anchor
                                 size="sm"
-                                component="a"
-                                href="/auth/register"
+                                component={Link}
+                                href={
+                                    r
+                                        ? `/auth/register?r=${r}`
+                                        : "/auth/register"
+                                }
                             >
                                 Create account
                             </Anchor>

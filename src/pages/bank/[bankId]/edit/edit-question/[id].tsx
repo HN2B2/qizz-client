@@ -1,8 +1,10 @@
+export const runtime = "experimental-edge";
+
 import EditQuestionLayout from "@/components/layouts/layoutComponents/EditQuestionLayout";
 import EditFillInTheBlank from "@/components/questions/editQuestions/EditFillInTheBlank";
 import EditMultipleChoice from "@/components/questions/editQuestions/EditMultipleChoice";
-import { Question } from "@/types/question";
-import QuestionRequest from "@/types/question/QuestionRequest";
+import { QuestionResponse } from "@/types/question";
+// import QuestionRequest from "@/types/question/QuestionRequest";
 import { QuestionType } from "@/types/question/QuestionType";
 import { instance } from "@/utils";
 import { GetServerSidePropsContext } from "next";
@@ -13,13 +15,13 @@ const questionTypes: Record<QuestionType, React.ReactNode> = {
   [QuestionType.FILL_IN_THE_BLANK]: <EditFillInTheBlank />,
 };
 
-interface MyContextValue {
-  dataQuestion: QuestionRequest;
-  updateDataQuestion: (newValue: QuestionRequest) => void;
-}
+// interface MyContextValue {
+//   dataQuestion: QuestionRequest;
+//   updateDataQuestion: (newValue: QuestionRequest) => void;
+// }
 
 interface Props {
-  questionData: Question;
+  questionData: QuestionResponse;
 }
 
 export const DataContext = createContext<any>({} as any);
@@ -34,7 +36,7 @@ const EditQuestion = ({ questionData }: Props) => {
 
   const [dataQuestion, setDataQuestion] = useState(questionData);
 
-  const updateDataQuestion = (newValue: Question) => {
+  const updateDataQuestion = (newValue: QuestionResponse) => {
     setDataQuestion(newValue);
   };
 
@@ -51,13 +53,14 @@ export const getServerSideProps = async (
   try {
     const { req, query } = context;
     // const { page = PAGE, keyword } = query;
-    const res = await instance.get(`/question/${query.id}`, {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie || "",
-      },
-    });
-    const questionData = res.data;
+    const res = await instance
+      .get(`question/${query.id}`, {
+        headers: {
+          Cookie: req.headers.cookie || "",
+        },
+      })
+      .json();
+    const questionData = res;
     return {
       props: {
         questionData,

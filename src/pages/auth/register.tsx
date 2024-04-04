@@ -22,6 +22,7 @@ import { useDisclosure, useHotkeys, useLocalStorage } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
 import { IconBrandGoogleFilled, IconCheck, IconX } from "@tabler/icons-react"
 import Head from "next/head"
+import Link from "next/link"
 import { useRouter } from "next/router"
 
 const requirements = [
@@ -69,8 +70,9 @@ function getStrength(password: string) {
 
 const RegisterPage = () => {
     const router = useRouter()
+    const { r } = router.query
 
-    const [user, setUser] = useLocalStorage<UserResponse>({
+    const [_, setUser] = useLocalStorage<UserResponse>({
         key: "user",
     })
 
@@ -121,13 +123,13 @@ const RegisterPage = () => {
 
     const strength = getStrength(registerForm.values.password)
     const color = strength === 100 ? "teal" : strength > 50 ? "yellow" : "red"
-    const [
-        loading,
-        { toggle: toggleLoading, close: closeLoading, open: openLoading },
-    ] = useDisclosure()
+    const [loading, { close: closeLoading, open: openLoading }] =
+        useDisclosure()
 
-    const handleRegister = async () => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         openLoading()
+        closePopover()
 
         registerForm.validate()
         if (!registerForm.isValid()) {
@@ -136,13 +138,16 @@ const RegisterPage = () => {
         }
 
         try {
-            const { data }: { data: AuthResponse } = await instance.post(
-                "/auth/register",
-                registerForm.values as RegisterRequest
-            )
+            const data: AuthResponse = await instance
+                .post("auth/register", {
+                    json: registerForm.values as RegisterRequest,
+                })
+                .json()
             setUser(data.user)
-            router.push("/")
+            router.push("/auth/verify")
         } catch (error) {
+            console.log(error)
+
             notifications.show({
                 title: "Error",
                 message: getServerErrorNoti(error),
@@ -153,7 +158,6 @@ const RegisterPage = () => {
         }
     }
 
-    useHotkeys([["enter", handleRegister]])
     return (
         <>
             <Head>
@@ -170,68 +174,71 @@ const RegisterPage = () => {
                         w={"400px"}
                     >
                         <Title mb={16} order={2}>
-                            Register
+                            <Link href="/">Qizz - Register</Link>
                         </Title>
-                        <TextInput
-                            label="Email"
-                            placeholder="email@qizz.tech"
-                            required
-                            {...registerForm.getInputProps("email")}
-                        />
-                        <TextInput
-                            label="Username"
-                            placeholder="Your username"
-                            required
-                            mt="md"
-                            {...registerForm.getInputProps("username")}
-                        />
-                        <Popover
-                            opened={popoverOpened}
-                            position="bottom"
-                            width="target"
-                            transitionProps={{ transition: "pop" }}
-                        >
-                            <Popover.Target>
-                                <div
-                                    onFocusCapture={openPopover}
-                                    onBlurCapture={closePopover}
-                                >
-                                    <PasswordInput
-                                        label="Password"
-                                        placeholder="Your password"
-                                        required
-                                        mt="md"
-                                        {...registerForm.getInputProps(
-                                            "password"
-                                        )}
+                        <form onSubmit={handleRegister}>
+                            <TextInput
+                                label="Email"
+                                placeholder="email@qizz.tech"
+                                required
+                                {...registerForm.getInputProps("email")}
+                            />
+                            <TextInput
+                                label="Username"
+                                placeholder="Your username"
+                                required
+                                mt="md"
+                                {...registerForm.getInputProps("username")}
+                            />
+                            <Popover
+                                opened={popoverOpened}
+                                position="bottom"
+                                width="target"
+                                transitionProps={{ transition: "pop" }}
+                            >
+                                <Popover.Target>
+                                    <div
+                                        onFocusCapture={openPopover}
+                                        onBlurCapture={closePopover}
+                                    >
+                                        <PasswordInput
+                                            label="Password"
+                                            placeholder="Your password"
+                                            required
+                                            mt="md"
+                                            {...registerForm.getInputProps(
+                                                "password"
+                                            )}
+                                        />
+                                    </div>
+                                </Popover.Target>
+                                <Popover.Dropdown>
+                                    <Progress
+                                        color={color}
+                                        value={strength}
+                                        size={5}
+                                        mb="xs"
                                     />
-                                </div>
-                            </Popover.Target>
-                            <Popover.Dropdown>
-                                <Progress
-                                    color={color}
-                                    value={strength}
-                                    size={5}
-                                    mb="xs"
-                                />
-                                <PasswordRequirement
-                                    label="Includes at least 6 characters"
-                                    meets={
-                                        registerForm.values.password.length > 5
-                                    }
-                                />
-                                {checks}
-                            </Popover.Dropdown>
-                        </Popover>
-                        <Button
-                            fullWidth
-                            mt="xl"
-                            mb={12}
-                            loading={loading}
-                            onClick={handleRegister}
-                        >
-                            Register
-                        </Button>
+                                    <PasswordRequirement
+                                        label="Includes at least 6 characters"
+                                        meets={
+                                            registerForm.values.password
+                                                .length > 5
+                                        }
+                                    />
+                                    {checks}
+                                </Popover.Dropdown>
+                            </Popover>
+                            <Button
+                                fullWidth
+                                mt="xl"
+                                mb={12}
+                                loading={loading}
+                                type="submit"
+                            >
+                                Register
+                            </Button>
+                        </form>
                         <Divider label="Or continue with" />
                         <Button
                             fullWidth
@@ -253,7 +260,13 @@ const RegisterPage = () => {
                         </Button>
                         <Text c="dimmed" size="sm" ta="center" mt={5}>
                             Have account?{" "}
-                            <Anchor size="sm" component="a" href="/auth/login">
+                            <Anchor
+                                size="sm"
+                                component={Link}
+                                href={
+                                    r ? ` /auth/login?r=${r} ` : "/auth/login"
+                                }
+                            >
                                 Login now
                             </Anchor>
                         </Text>
