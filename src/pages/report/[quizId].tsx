@@ -32,6 +32,7 @@ import {
     IconUsersGroup,
 } from "@tabler/icons-react"
 import { GetServerSidePropsContext } from "next"
+import Link from "next/link"
 import React, { useState } from "react"
 
 interface ReportDetailProps {
@@ -95,6 +96,8 @@ const ReportDetail = ({ quizReport }: ReportDetailProps) => {
                         quizReport.state === QuizState.WAITING) && (
                         <Group>
                             <Button
+                                component={Link}
+                                href={`/monitor/${quizReport.quizCode}`}
                                 variant="outline"
                                 color="red"
                                 pos="relative"

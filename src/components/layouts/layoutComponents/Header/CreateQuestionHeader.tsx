@@ -238,10 +238,7 @@ const CreateQuestionHeader = () => {
                 title: "SUCCESS",
                 message: "Create question successfully",
             })
-            router.push({
-                pathname: "/bank/[bankId]/edit",
-                query: { bankId },
-            })
+            router.push(`/bank/${bankId}/edit`)
         } catch (error) {
             console.log(error)
         } finally {

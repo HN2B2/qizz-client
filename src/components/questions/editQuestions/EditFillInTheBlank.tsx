@@ -2,6 +2,7 @@ import { TextEditor } from "@/components/common"
 import { useMyContext } from "@/pages/bank/[bankId]/edit/create"
 import { useEditContext } from "@/pages/bank/[bankId]/edit/edit-question/[id]"
 import { QuestionResponse } from "@/types/question"
+import { renderHTML } from "@/utils"
 import {
     Box,
     Container,
@@ -54,7 +55,7 @@ const EditFillInTheBlank = () => {
                 autoplay: true,
             }),
         ],
-        content: dataQuestion.content,
+        content: renderHTML(dataQuestion.content),
         onUpdate: ({ editor }) => {
             let newData = dataQuestion
             newData = {

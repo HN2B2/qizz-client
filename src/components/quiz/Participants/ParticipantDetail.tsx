@@ -17,6 +17,7 @@ import {
     Paper,
     RingProgress,
     Grid,
+    TypographyStylesProvider,
 } from "@mantine/core"
 import { useListState } from "@mantine/hooks"
 import {
@@ -138,11 +139,13 @@ const AnswerDetailPaper = ({
                         </Group>
                     </Group>
                 </Flex>
-                <div
-                    dangerouslySetInnerHTML={{
-                        __html: renderHTML(question.question.content),
-                    }}
-                />
+                <TypographyStylesProvider>
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: renderHTML(question.question.content),
+                        }}
+                    />
+                </TypographyStylesProvider>
                 <Grid>
                     <Grid.Col span={5}>
                         <Stack>

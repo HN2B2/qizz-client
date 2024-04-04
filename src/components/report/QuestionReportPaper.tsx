@@ -8,6 +8,7 @@ import {
     RingProgress,
     Stack,
     Text,
+    TypographyStylesProvider,
     rem,
 } from "@mantine/core"
 import { IconCheck, IconCheckbox, IconTrophy, IconX } from "@tabler/icons-react"
@@ -146,11 +147,13 @@ const QuestionReportPaper = ({
                 <Text size="sm" fw={700} c={"gray"}>
                     Question
                 </Text>
-                <div
-                    dangerouslySetInnerHTML={{
-                        __html: renderHTML(question?.content),
-                    }}
-                />
+                <TypographyStylesProvider>
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: renderHTML(question?.content),
+                        }}
+                    />
+                </TypographyStylesProvider>
                 <Group mt={10}>
                     <Stack w={"70%"}>
                         <Text size="sm" fw={700} c={"gray"}>

@@ -18,10 +18,12 @@ const questionTypes = [
 ]
 
 const EditQuestionButton = ({
+    quizBankId,
     questionId,
     type,
 }: {
     questionId: number
+    quizBankId: number
     type: string
 }) => {
     return (
@@ -30,7 +32,7 @@ const EditQuestionButton = ({
             p={6}
             mx={4}
             component={Link}
-            href={`edit/edit-question/${questionId}?type=${type}`}
+            href={`/bank/${quizBankId}/edit/edit-question/${questionId}?type=${type}`}
         >
             <IconPencil size={16}></IconPencil>Edit
         </Button>

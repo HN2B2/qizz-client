@@ -8,7 +8,13 @@ import { CompatClient } from "@stomp/stompjs"
 import { QuizResponse } from "@/types/quiz"
 import { QuizContext } from "@/pages/play/[quizCode]"
 import PlayingQuestionResponse from "@/types/takeQuiz/playing/PlayingQuestionResponse"
-import { Container, Group, Paper, Stack } from "@mantine/core"
+import {
+    Container,
+    Group,
+    Paper,
+    Stack,
+    TypographyStylesProvider,
+} from "@mantine/core"
 import { QuestionType } from "@/types/question/QuestionType"
 import { motion } from "framer-motion"
 import { IconClock } from "@tabler/icons-react"
@@ -79,15 +85,17 @@ const Answering = () => {
                             shadow="md"
                             bg="indigo"
                         >
-                            <div
-                                className="flex items-center justify-center h-60"
-                                dangerouslySetInnerHTML={{
-                                    __html:
-                                        renderHTML(
-                                            playingData?.data.content!
-                                        ) || "",
-                                }}
-                            />
+                            <TypographyStylesProvider>
+                                <div
+                                    className="flex items-center justify-center h-60"
+                                    dangerouslySetInnerHTML={{
+                                        __html:
+                                            renderHTML(
+                                                playingData?.data.content!
+                                            ) || "",
+                                    }}
+                                />
+                            </TypographyStylesProvider>
                         </Paper>
                     </motion.div>
                     {playingData?.data.type === QuestionType.MULTIPLE_CHOICE ? (

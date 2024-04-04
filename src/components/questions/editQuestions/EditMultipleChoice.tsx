@@ -1,6 +1,6 @@
 import { TextEditor } from "@/components/common"
 import { useMyContext } from "@/pages/bank/[bankId]/edit/create"
-import { instance } from "@/utils"
+import { instance, renderHTML } from "@/utils"
 import {
     ActionIcon,
     Box,
@@ -101,7 +101,7 @@ const EditMultipleChoice = () => {
                 autoplay: true,
             }),
         ],
-        content: dataQuestion.content,
+        content: renderHTML(dataQuestion.content),
         onUpdate: ({ editor }) => {
             let newData = dataQuestion
             newData = {

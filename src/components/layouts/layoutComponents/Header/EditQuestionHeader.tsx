@@ -235,7 +235,7 @@ const EditQuestionHeader = () => {
                 message: "Create question successfully",
             })
             router.push({
-                pathname: "/bank/[bankId]/edit",
+                pathname: `/bank/${bankId}/edit`,
                 query: { bankId },
             })
         } catch (error) {
