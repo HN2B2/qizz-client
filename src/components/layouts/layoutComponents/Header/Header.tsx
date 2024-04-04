@@ -54,10 +54,7 @@ const MenuHeader = ({ user }: { user: UserResponse | null }) => {
 
             <Menu.Dropdown>
                 {user && (
-                    <Menu.Item
-                        component={Link}
-                        href={`/profile/${user?.username}`}
-                    >
+                    <Menu.Item component={Link} href={`/profile`}>
                         <Text fw={700}>{user?.username}</Text>
                         <Text fw={200} c="dimmed">
                             {user?.email}
@@ -66,16 +63,6 @@ const MenuHeader = ({ user }: { user: UserResponse | null }) => {
                 )}
 
                 <Menu.Divider />
-
-                <Menu.Item
-                    leftSection={
-                        <IconSettings
-                            style={{ width: rem(20), height: rem(20) }}
-                        />
-                    }
-                >
-                    Settings
-                </Menu.Item>
                 {user !== null ? (
                     <Menu.Item
                         leftSection={

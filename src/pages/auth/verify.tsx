@@ -35,7 +35,10 @@ export const getServerSideProps = async (
     if (token) {
         try {
             const response = await instance.post("auth/verify", {
-                json: { token },
+                body: JSON.stringify({ token }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
             })
             const setCookieHeader = response.headers.get("set-cookie")
             if (setCookieHeader) {

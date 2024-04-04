@@ -79,8 +79,9 @@ const QuizInfo = ({ bank, setBank, upvote, like }: QuizInfoProps) => {
                         <Avatar src="" size={124} radius="sm" />
                         <Stack gap={8}>
                             <Text c="dimmed" size="sm">
-                                Quiz Bank
+                                Quiz Bank abc
                             </Text>
+                            <Text>{bank.modifiedBy?.displayName}</Text>
                             <Text size="xl" fw={500}>
                                 {bank.name}
                             </Text>

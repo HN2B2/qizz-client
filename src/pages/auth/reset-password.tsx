@@ -167,14 +167,17 @@ export const getServerSideProps = async (
     } else {
         try {
             await instance.post("auth/check-reset-token", {
-                json: {
-                    token: token as string,
+                body: JSON.stringify({ token }),
+                headers: {
+                    "Content-Type": "application/json",
                 },
             })
             return {
                 props: {},
             }
         } catch (error) {
+            console.log(error)
+
             return {
                 notFound: true,
             }

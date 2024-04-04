@@ -133,7 +133,9 @@ const EditBank = ({ bankData, questionData }: Props) => {
         </Pill>
     ))
 
+    const [loading, setLoading] = useState(false)
     const handleSubmit = async (values: BankResponse) => {
+        setLoading(true)
         try {
             const body = {
                 name: values.name,
@@ -159,13 +161,15 @@ const EditBank = ({ bankData, questionData }: Props) => {
                 message: "Bank updated successfully",
                 color: "green",
             })
-            router.push("/")
+            router.push("/my-library")
         } catch (error) {
             notifications.show({
                 title: "Error",
                 message: "Something went wrong",
                 color: "red",
             })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -287,7 +291,9 @@ const EditBank = ({ bankData, questionData }: Props) => {
                             </Flex>
 
                             <Group justify="flex-end" mt="xl">
-                                <Button type="submit">Submit</Button>
+                                <Button type="submit" loading={loading}>
+                                    Submit
+                                </Button>
                             </Group>
                         </form>
                     </Grid.Col>
