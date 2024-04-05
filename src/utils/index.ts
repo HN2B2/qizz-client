@@ -56,7 +56,9 @@ export const getServerErrorNoti = (error: any) => {
 }
 
 export const socketUrl = () => {
-    return new SockJS(`${process.env.API_URL || "http://localhost:6868/v1"}/ws`)
+    return new SockJS(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6868/v1"}/ws`
+    )
 }
 
 export const extractUserAvatar = (usermetadata: UserMetadataResponse[]) => {
