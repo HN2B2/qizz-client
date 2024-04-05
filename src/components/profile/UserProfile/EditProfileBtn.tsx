@@ -28,10 +28,7 @@ const EditProfileForm = ({ user }: UserProfileProps) => {
             displayName: user?.displayName || "",
             username: user?.username || "",
             sex: user?.metadata.find((m) => m.key === "sex")?.value || "male",
-            birthDate:
-                new Date(
-                    user?.metadata.find((m) => m.key === "birthDate")?.value!
-                ) || new Date(),
+            birthDate: new Date(),
             phone:
                 user?.metadata.find((m) => m.key === "phoneNumber")?.value ||
                 "",
