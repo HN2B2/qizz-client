@@ -52,6 +52,7 @@ export const checkEditable = (
     if (bank.createdBy?.id === user?.id) {
         return true
     }
+    if (bank.quizPublicity) return true
     if (
         bank.manageBanks?.find(
             (item) => item.user.id === user?.id && item.editable
