@@ -19,6 +19,7 @@ const EndGame = () => {
                 .get(`take-quiz/result/${quiz.code}`)
                 .json()
             setPlayers(data.data.players)
+            setPlayers((prev) => prev.sort((a, b) => b.score - a.score))
         } catch (e) {
             console.log(e)
         }
