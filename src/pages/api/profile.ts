@@ -8,7 +8,7 @@ export default async function (req: any) {
     const cookies = new RequestCookies(req.headers)
     return new Response(
         JSON.stringify({
-            user: cookies.get("user")?.value || null,
+            user: cookies.get("user")?.value.replaceAll("+", " ") || null,
             token: cookies.get("token")?.value || null,
         }),
         {
