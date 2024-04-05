@@ -212,7 +212,7 @@ const CreateQuestionHeader = () => {
     const handleSubmit = async () => {
         setSubmitLoading(true)
         handleQuestion()
-        // createQuestionForm.validate()
+        createQuestionForm.validate()
         if (!createQuestionForm.isValid()) {
             notifications.show({
                 color: "red",
