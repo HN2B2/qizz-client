@@ -155,15 +155,9 @@ const AnswerDetailPaper = ({
                     </Grid.Col>
                     <Grid.Col span={7}>
                         <Stack>
-                            {question.correct ? (
-                                <Text fw={300} c={"green"}>
-                                    Correct Answer
-                                </Text>
-                            ) : (
-                                <Text fw={300} c={"red"}>
-                                    InCorrect Answer
-                                </Text>
-                            )}
+                            <Text fw={300} c={"green"}>
+                                Correct Answer
+                            </Text>
 
                             <Text>
                                 {JSON.parse(
