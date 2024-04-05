@@ -99,9 +99,7 @@ const Home = () => {
     const [data, setData] = useState([])
     const icon = <IconInfoCircle />
     const [search, setSearch] = useState("")
-    const handleSearch = () => {
-        router.push(`/search?keyword=${search}`)
-    }
+
     const form = useForm({
         initialValues: { code: "" },
 
@@ -220,15 +218,6 @@ const Home = () => {
                     Popular Quizzes
                 </Title>
                 <PopularQuiz />
-                <Stack align="center">
-                    <Title order={2}>Search for Quiz Bank</Title>
-                    <TextInput
-                        size="lg"
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                        onKeyDown={getHotkeyHandler([["Enter", handleSearch]])}
-                    />
-                </Stack>
             </Container>
         </HeaderLayout>
     )

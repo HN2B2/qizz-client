@@ -10,11 +10,13 @@ import {
     useMantineColorScheme,
     Text,
     rem,
+    TextInput,
 } from "@mantine/core"
 import {
     IconLogout,
     IconMoon,
     IconPlus,
+    IconSearch,
     IconSettings,
     IconSun,
 } from "@tabler/icons-react"
@@ -25,6 +27,9 @@ import { UserResponse } from "@/types/user"
 import { useDisclosure } from "@mantine/hooks"
 import useUser from "@/hooks/useUser"
 import { BankResponse } from "@/types/bank"
+import { Spotlight, SpotlightActionData, spotlight } from "@mantine/spotlight"
+import { useState } from "react"
+import { modals } from "@mantine/modals"
 
 const Logo = () => {
     const colorScheme = useComputedColorScheme("light")
@@ -100,6 +105,28 @@ const MenuHeader = ({ user }: { user: UserResponse | null }) => {
         </Menu>
     )
 }
+
+const SearchForm = () => {
+    const [search, setSearch] = useState("")
+
+    const router = useRouter()
+    const handleSearch = (event: React.FormEvent<HTMLFormElement>): void => {
+        event.preventDefault()
+        router.push(`/search?keyword=${search}`)
+        modals.closeAll()
+    }
+    return (
+        <form onSubmit={handleSearch}>
+            <TextInput
+                placeholder="Search..."
+                value={search}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setSearch(event.target.value)
+                }
+            />
+        </form>
+    )
+}
 interface HeaderProps {
     burger?: boolean
     mobileOpened?: boolean
@@ -150,6 +177,14 @@ const Header = ({
         }
     }
     const { user } = useUser()
+
+    const handleShowSearchForm = () => {
+        modals.open({
+            title: "Search",
+            children: <SearchForm />,
+        })
+    }
+
     return (
         <AppShell.Header>
             <Group h="100%" px="md" justify="space-between">
@@ -173,6 +208,16 @@ const Header = ({
                     <Logo />
                 </Group>
                 <Group>
+                    <Button
+                        variant="default"
+                        leftSection={<IconSearch />}
+                        radius={"md"}
+                        c={"gray"}
+                        w={200}
+                        onClick={handleShowSearchForm}
+                    >
+                        Search
+                    </Button>
                     <ActionIcon
                         color="gray"
                         size="lg"
