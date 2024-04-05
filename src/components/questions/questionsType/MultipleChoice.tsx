@@ -5,6 +5,7 @@ import {
     Divider,
     Paper,
     SimpleGrid,
+    Skeleton,
     Text,
     TypographyStylesProvider,
 } from "@mantine/core"
@@ -23,11 +24,15 @@ const MultipleChoice = ({ data, show }: Props) => {
     return (
         <Paper px="xl" py="xs" shadow="xs">
             <TypographyStylesProvider>
-                <div
-                    dangerouslySetInnerHTML={{
-                        __html: renderHTML(data.content),
-                    }}
-                ></div>
+                {data.content ? (
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: renderHTML(data.content),
+                        }}
+                    />
+                ) : (
+                    <Skeleton height={60} />
+                )}
             </TypographyStylesProvider>
 
             <Divider

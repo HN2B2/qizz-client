@@ -5,6 +5,7 @@ import {
     Divider,
     Paper,
     SimpleGrid,
+    Skeleton,
     Text,
     TypographyStylesProvider,
 } from "@mantine/core"
@@ -22,11 +23,15 @@ const FillInTheBlank = ({ data, show }: Props) => {
         <Paper px="xl" py="xs" shadow="xs">
             {/* <Text>{data.content}</Text> */}
             <TypographyStylesProvider>
-                <div
-                    dangerouslySetInnerHTML={{
-                        __html: renderHTML(data.content),
-                    }}
-                />
+                {data.content ? (
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: renderHTML(data.content),
+                        }}
+                    />
+                ) : (
+                    <Skeleton height={60} />
+                )}
             </TypographyStylesProvider>
             {show && (
                 <Divider

@@ -6,6 +6,7 @@ import {
     Flex,
     Group,
     RingProgress,
+    Skeleton,
     Stack,
     Text,
     TypographyStylesProvider,
@@ -148,11 +149,15 @@ const QuestionReportPaper = ({
                     Question
                 </Text>
                 <TypographyStylesProvider>
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: renderHTML(question?.content),
-                        }}
-                    />
+                    {question.content ? (
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: renderHTML(question.content),
+                            }}
+                        />
+                    ) : (
+                        <Skeleton height={60} />
+                    )}
                 </TypographyStylesProvider>
                 <Group mt={10}>
                     <Stack w={"70%"}>
